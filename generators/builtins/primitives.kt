@@ -207,6 +207,7 @@ class GeneratePrimitives(out: PrintWriter) : BuiltInsSourceGenerator(out) {
      * Returns zero if this value is equal to the specified other value, a negative number if it's less than other,
      * or a positive number if it's greater than other.
      */""")
+            out.println("    @CompileTimeCalculation")
             out.print("    public ")
             if (otherKind == thisKind) out.print("override ")
             out.println("operator fun compareTo(other: ${otherKind.capitalized}): Int")
@@ -229,6 +230,7 @@ class GeneratePrimitives(out: PrintWriter) : BuiltInsSourceGenerator(out) {
                 "rem" ->
                     out.println("    @SinceKotlin(\"1.1\")")
             }
+            out.println("    @CompileTimeCalculation")
             out.println("    public operator fun $name(other: ${otherKind.capitalized}): ${returnType.capitalized}")
         }
         out.println()
@@ -258,6 +260,7 @@ class GeneratePrimitives(out: PrintWriter) : BuiltInsSourceGenerator(out) {
         for ((name, doc) in unaryPlusMinusOperators) {
             val returnType = if (kind in listOf(PrimitiveType.SHORT, PrimitiveType.BYTE, PrimitiveType.CHAR)) "Int" else kind.capitalized
             out.println("    /** $doc */")
+            if (name !in listOf("inc", "dec")) out.println("    @CompileTimeCalculation")
             out.println("    public operator fun $name(): $returnType")
         }
         out.println()
@@ -272,6 +275,7 @@ class GeneratePrimitives(out: PrintWriter) : BuiltInsSourceGenerator(out) {
             out.println("     *")
             out.println(detail.replaceIndent("     "))
             out.println("     */")
+            out.println("    @CompileTimeCalculation")
             out.println("    public infix fun $name(bitCount: Int): $className")
             out.println()
         }
@@ -280,10 +284,12 @@ class GeneratePrimitives(out: PrintWriter) : BuiltInsSourceGenerator(out) {
         for ((name, doc) in bitwiseOperators) {
             out.println("    /** $doc */")
             since?.let { out.println("    @SinceKotlin(\"$it\")") }
+            out.println("    @CompileTimeCalculation")
             out.println("    public infix fun $name(other: $className): $className")
         }
         out.println("    /** Inverts the bits in this value. */")
         since?.let { out.println("    @SinceKotlin(\"$it\")") }
+        out.println("    @CompileTimeCalculation")
         out.println("    public fun inv(): $className")
         out.println()
     }
@@ -440,6 +446,7 @@ class GeneratePrimitives(out: PrintWriter) : BuiltInsSourceGenerator(out) {
                 "    /**\n     * Converts this [$thisName] value to [$otherName].\n     *\n" + detail.replaceIndent("     ")
             }
             out.println(doc)
+            out.println("    @CompileTimeCalculation")
 
             if (isFpToIntConversionDeprecated(otherKind)) {
                 out.println("    @Deprecated(\"Unclear conversion. To achieve the same result convert to Int explicitly and then to $otherName.\", ReplaceWith(\"toInt().to$otherName()\"))")
