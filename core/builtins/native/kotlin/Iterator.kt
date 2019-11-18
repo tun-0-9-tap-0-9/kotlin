@@ -20,6 +20,7 @@ package kotlin.collections
  * An iterator over a collection or another entity that can be represented as a sequence of elements.
  * Allows to sequentially access the elements.
  */
+@CompileTimeCalculation
 public interface Iterator<out T> {
     /**
      * Returns the next element in the iteration.
@@ -36,6 +37,7 @@ public interface Iterator<out T> {
  * An iterator over a mutable collection. Provides the ability to remove elements while iterating.
  * @see MutableCollection.iterator
  */
+@CompileTimeCalculation
 public interface MutableIterator<out T> : Iterator<T> {
     /**
      * Removes from the underlying collection the last element returned by this iterator.

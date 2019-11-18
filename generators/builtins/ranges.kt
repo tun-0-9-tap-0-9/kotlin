@@ -52,6 +52,7 @@ class GenerateRanges(out: PrintWriter) : BuiltInsSourceGenerator(out) {
 """/**
  * A range of values of type `$t`.
  */
+@CompileTimeCalculation
 public class $range(start: $t, endInclusive: $t) : ${t}Progression(start, endInclusive, $increment), ClosedRange<$t> {
     override val start: $t get() = first
     override val endInclusive: $t get() = last

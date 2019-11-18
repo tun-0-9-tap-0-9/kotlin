@@ -8,6 +8,7 @@
 package kotlin.collections
 
 /** An iterator over a sequence of values of type `Byte`. */
+@CompileTimeCalculation
 public abstract class ByteIterator : Iterator<Byte> {
     override final fun next() = nextByte()
 
@@ -16,6 +17,7 @@ public abstract class ByteIterator : Iterator<Byte> {
 }
 
 /** An iterator over a sequence of values of type `Char`. */
+@CompileTimeCalculation
 public abstract class CharIterator : Iterator<Char> {
     override final fun next() = nextChar()
 
@@ -24,6 +26,7 @@ public abstract class CharIterator : Iterator<Char> {
 }
 
 /** An iterator over a sequence of values of type `Short`. */
+@CompileTimeCalculation
 public abstract class ShortIterator : Iterator<Short> {
     override final fun next() = nextShort()
 
@@ -32,6 +35,7 @@ public abstract class ShortIterator : Iterator<Short> {
 }
 
 /** An iterator over a sequence of values of type `Int`. */
+@CompileTimeCalculation
 public abstract class IntIterator : Iterator<Int> {
     override final fun next() = nextInt()
 
@@ -40,6 +44,7 @@ public abstract class IntIterator : Iterator<Int> {
 }
 
 /** An iterator over a sequence of values of type `Long`. */
+@CompileTimeCalculation
 public abstract class LongIterator : Iterator<Long> {
     override final fun next() = nextLong()
 
@@ -48,6 +53,7 @@ public abstract class LongIterator : Iterator<Long> {
 }
 
 /** An iterator over a sequence of values of type `Float`. */
+@CompileTimeCalculation
 public abstract class FloatIterator : Iterator<Float> {
     override final fun next() = nextFloat()
 
@@ -56,6 +62,7 @@ public abstract class FloatIterator : Iterator<Float> {
 }
 
 /** An iterator over a sequence of values of type `Double`. */
+@CompileTimeCalculation
 public abstract class DoubleIterator : Iterator<Double> {
     override final fun next() = nextDouble()
 
@@ -64,6 +71,7 @@ public abstract class DoubleIterator : Iterator<Double> {
 }
 
 /** An iterator over a sequence of values of type `Boolean`. */
+@CompileTimeCalculation
 public abstract class BooleanIterator : Iterator<Boolean> {
     override final fun next() = nextBoolean()
 

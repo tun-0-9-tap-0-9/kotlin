@@ -10,6 +10,7 @@ package kotlin.ranges
 /**
  * A range of values of type `Char`.
  */
+@CompileTimeCalculation
 public class CharRange(start: Char, endInclusive: Char) : CharProgression(start, endInclusive, 1), ClosedRange<Char> {
     override val start: Char get() = first
     override val endInclusive: Char get() = last
@@ -41,6 +42,7 @@ public class CharRange(start: Char, endInclusive: Char) : CharProgression(start,
 /**
  * A range of values of type `Int`.
  */
+@CompileTimeCalculation
 public class IntRange(start: Int, endInclusive: Int) : IntProgression(start, endInclusive, 1), ClosedRange<Int> {
     override val start: Int get() = first
     override val endInclusive: Int get() = last
@@ -72,6 +74,7 @@ public class IntRange(start: Int, endInclusive: Int) : IntProgression(start, end
 /**
  * A range of values of type `Long`.
  */
+@CompileTimeCalculation
 public class LongRange(start: Long, endInclusive: Long) : LongProgression(start, endInclusive, 1), ClosedRange<Long> {
     override val start: Long get() = first
     override val endInclusive: Long get() = last

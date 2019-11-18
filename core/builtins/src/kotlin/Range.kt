@@ -9,6 +9,7 @@ package kotlin.ranges
  * Represents a range of values (for example, numbers or characters).
  * See the [Kotlin language documentation](https://kotlinlang.org/docs/reference/ranges.html) for more information.
  */
+@CompileTimeCalculation
 public interface ClosedRange<T: Comparable<T>> {
     /**
      * The minimum value in the range.

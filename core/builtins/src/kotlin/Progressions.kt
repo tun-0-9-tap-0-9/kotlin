@@ -12,6 +12,7 @@ import kotlin.internal.getProgressionLastElement
 /**
  * A progression of values of type `Char`.
  */
+@CompileTimeCalculation
 public open class CharProgression
     internal constructor
     (
@@ -74,6 +75,7 @@ public open class CharProgression
 /**
  * A progression of values of type `Int`.
  */
+@CompileTimeCalculation
 public open class IntProgression
     internal constructor
     (
@@ -136,6 +138,7 @@ public open class IntProgression
 /**
  * A progression of values of type `Long`.
  */
+@CompileTimeCalculation
 public open class LongProgression
     internal constructor
     (

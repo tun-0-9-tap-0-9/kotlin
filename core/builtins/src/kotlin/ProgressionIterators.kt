@@ -11,6 +11,7 @@ package kotlin.ranges
  * An iterator over a progression of values of type `Char`.
  * @property step the number by which the value is incremented on each step.
  */
+@CompileTimeCalculation
 internal class CharProgressionIterator(first: Char, last: Char, val step: Int) : CharIterator() {
     private val finalElement: Int = last.code
     private var hasNext: Boolean = if (step > 0) first <= last else first >= last
@@ -35,6 +36,7 @@ internal class CharProgressionIterator(first: Char, last: Char, val step: Int) :
  * An iterator over a progression of values of type `Int`.
  * @property step the number by which the value is incremented on each step.
  */
+@CompileTimeCalculation
 internal class IntProgressionIterator(first: Int, last: Int, val step: Int) : IntIterator() {
     private val finalElement: Int = last
     private var hasNext: Boolean = if (step > 0) first <= last else first >= last
@@ -59,6 +61,7 @@ internal class IntProgressionIterator(first: Int, last: Int, val step: Int) : In
  * An iterator over a progression of values of type `Long`.
  * @property step the number by which the value is incremented on each step.
  */
+@CompileTimeCalculation
 internal class LongProgressionIterator(first: Long, last: Long, val step: Long) : LongIterator() {
     private val finalElement: Long = last
     private var hasNext: Boolean = if (step > 0) first <= last else first >= last

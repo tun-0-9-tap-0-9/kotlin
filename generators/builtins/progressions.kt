@@ -61,6 +61,7 @@ class GenerateProgressions(out: PrintWriter) : BuiltInsSourceGenerator(out) {
                 """/**
  * A progression of values of type `$t`.
  */
+@CompileTimeCalculation
 public open class $progression
     internal constructor
     (

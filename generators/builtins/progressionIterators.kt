@@ -35,6 +35,7 @@ fun integerProgressionIterator(kind: ProgressionKind): String {
  * An iterator over a progression of values of type `$t`.
  * @property step the number by which the value is incremented on each step.
  */
+@CompileTimeCalculation
 internal class ${t}ProgressionIterator(first: $t, last: $t, val step: $incrementType) : ${t}Iterator() {
     private val finalElement: $incrementType = last$toInt
     private var hasNext: Boolean = if (step > 0) first <= last else first >= last
