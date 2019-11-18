@@ -232,12 +232,16 @@ public class Byte private constructor() : Number(), Comparable<Byte> {
     public operator fun unaryMinus(): Int
 
      /** Creates a range from this value to the specified [other] value. */
+    @CompileTimeCalculation
     public operator fun rangeTo(other: Byte): IntRange
      /** Creates a range from this value to the specified [other] value. */
+    @CompileTimeCalculation
     public operator fun rangeTo(other: Short): IntRange
      /** Creates a range from this value to the specified [other] value. */
+    @CompileTimeCalculation
     public operator fun rangeTo(other: Int): IntRange
      /** Creates a range from this value to the specified [other] value. */
+    @CompileTimeCalculation
     public operator fun rangeTo(other: Long): LongRange
 
     /** Returns this value. */
@@ -534,12 +538,16 @@ public class Short private constructor() : Number(), Comparable<Short> {
     public operator fun unaryMinus(): Int
 
      /** Creates a range from this value to the specified [other] value. */
+    @CompileTimeCalculation
     public operator fun rangeTo(other: Byte): IntRange
      /** Creates a range from this value to the specified [other] value. */
+    @CompileTimeCalculation
     public operator fun rangeTo(other: Short): IntRange
      /** Creates a range from this value to the specified [other] value. */
+    @CompileTimeCalculation
     public operator fun rangeTo(other: Int): IntRange
      /** Creates a range from this value to the specified [other] value. */
+    @CompileTimeCalculation
     public operator fun rangeTo(other: Long): LongRange
 
     /**
@@ -831,12 +839,16 @@ public class Int private constructor() : Number(), Comparable<Int> {
     public operator fun unaryMinus(): Int
 
      /** Creates a range from this value to the specified [other] value. */
+    @CompileTimeCalculation
     public operator fun rangeTo(other: Byte): IntRange
      /** Creates a range from this value to the specified [other] value. */
+    @CompileTimeCalculation
     public operator fun rangeTo(other: Short): IntRange
      /** Creates a range from this value to the specified [other] value. */
+    @CompileTimeCalculation
     public operator fun rangeTo(other: Int): IntRange
      /** Creates a range from this value to the specified [other] value. */
+    @CompileTimeCalculation
     public operator fun rangeTo(other: Long): LongRange
 
     /**

@@ -51,6 +51,7 @@ constructor(code: UShort) : Comparable<Char> {
     public operator fun dec(): Char = (value - 1).toChar()
 
     /** Creates a range from this value to the specified [other] value. */
+    @CompileTimeCalculation
     public operator fun rangeTo(other: Char): CharRange = CharRange(this, other)
 
     /** Returns the value of this character as a `Byte`. */
