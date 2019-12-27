@@ -1492,6 +1492,20 @@ object ArrayOps : TemplateGroupBase() {
         on(Platform.JS) {
             body { """return ArrayList<T>(this.unsafeCast<Array<Any?>>())""" }
         }
+        // TODO remove after introducing constexpr modifier
+        specialFor(ArraysOfObjects, ArraysOfPrimitives) {
+            on(Platform.JVM) {
+                annotation("""@CompileTimeCalculation""")
+                annotation("""@EvaluateIntrinsic("kotlin.collections.ArraysKt")""")
+            }
+            on(Platform.JS) {
+                annotation("""@CompileTimeCalculation""")
+                annotation("""@EvaluateIntrinsic("kotlin.collections.ArraysKt")""")
+            }
+            on(Platform.Common) {
+                annotation("""@CompileTimeCalculation""")
+            }
+        }
 
         val objectLiteralImpl = if (primitive in PrimitiveType.floatingPointPrimitives) """
             return object : AbstractList<T>(), RandomAccess {

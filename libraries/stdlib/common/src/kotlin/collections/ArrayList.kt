@@ -5,6 +5,7 @@
 
 package kotlin.collections
 
+@CompileTimeCalculation
 expect class ArrayList<E> : MutableList<E>, RandomAccess {
     constructor()
     constructor(initialCapacity: Int)

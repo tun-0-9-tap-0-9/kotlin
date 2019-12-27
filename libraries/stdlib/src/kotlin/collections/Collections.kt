@@ -12,6 +12,7 @@ package kotlin.collections
 import kotlin.contracts.*
 import kotlin.random.Random
 
+@CompileTimeCalculation
 internal object EmptyIterator : ListIterator<Nothing> {
     override fun hasNext(): Boolean = false
     override fun hasPrevious(): Boolean = false
@@ -21,6 +22,7 @@ internal object EmptyIterator : ListIterator<Nothing> {
     override fun previous(): Nothing = throw NoSuchElementException()
 }
 
+@CompileTimeCalculation
 internal object EmptyList : List<Nothing>, Serializable, RandomAccess {
     private const val serialVersionUID: Long = -7390468764508069838L
 
@@ -68,18 +70,21 @@ private class ArrayAsCollection<T>(val values: Array<out T>, val isVarargs: Bool
  * Returns an empty read-only list.  The returned list is serializable (JVM).
  * @sample samples.collections.Collections.Lists.emptyReadOnlyList
  */
+@CompileTimeCalculation
 public fun <T> emptyList(): List<T> = EmptyList
 
 /**
  * Returns a new read-only list of given elements.  The returned list is serializable (JVM).
  * @sample samples.collections.Collections.Lists.readOnlyList
  */
+@CompileTimeCalculation
 public fun <T> listOf(vararg elements: T): List<T> = if (elements.size > 0) elements.asList() else emptyList()
 
 /**
  * Returns an empty read-only list.  The returned list is serializable (JVM).
  * @sample samples.collections.Collections.Lists.emptyReadOnlyList
  */
+@CompileTimeCalculation
 @kotlin.internal.InlineOnly
 public inline fun <T> listOf(): List<T> = emptyList()
 
@@ -87,6 +92,7 @@ public inline fun <T> listOf(): List<T> = emptyList()
  * Returns an empty new [MutableList].
  * @sample samples.collections.Collections.Lists.emptyMutableList
  */
+@CompileTimeCalculation
 @SinceKotlin("1.1")
 @kotlin.internal.InlineOnly
 public inline fun <T> mutableListOf(): MutableList<T> = ArrayList()
@@ -103,6 +109,8 @@ public inline fun <T> arrayListOf(): ArrayList<T> = ArrayList()
  * Returns a new [MutableList] with the given elements.
  * @sample samples.collections.Collections.Lists.mutableList
  */
+@CompileTimeCalculation
+@EvaluateIntrinsic("kotlin.collections.CollectionsKt")
 public fun <T> mutableListOf(vararg elements: T): MutableList<T> =
     if (elements.size == 0) ArrayList() else ArrayList(ArrayAsCollection(elements, isVarargs = true))
 

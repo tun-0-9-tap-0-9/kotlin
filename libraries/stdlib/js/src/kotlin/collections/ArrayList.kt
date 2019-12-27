@@ -12,6 +12,8 @@ package kotlin.collections
  * There is no speed advantage to pre-allocating array sizes in JavaScript, so this implementation does not include any of the
  * capacity and "growth increment" concepts.
  */
+@CompileTimeCalculation
+@EvaluateIntrinsic("java.util.ArrayList")
 public actual open class ArrayList<E> internal constructor(private var array: Array<Any?>) : AbstractMutableList<E>(), MutableList<E>, RandomAccess {
     private var isReadOnly: Boolean = false
 

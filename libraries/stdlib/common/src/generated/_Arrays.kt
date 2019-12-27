@@ -6698,46 +6698,55 @@ public fun CharArray.sortedWith(comparator: Comparator<in Char>): List<Char> {
 /**
  * Returns a [List] that wraps the original array.
  */
+@CompileTimeCalculation
 public expect fun <T> Array<out T>.asList(): List<T>
 
 /**
  * Returns a [List] that wraps the original array.
  */
+@CompileTimeCalculation
 public expect fun ByteArray.asList(): List<Byte>
 
 /**
  * Returns a [List] that wraps the original array.
  */
+@CompileTimeCalculation
 public expect fun ShortArray.asList(): List<Short>
 
 /**
  * Returns a [List] that wraps the original array.
  */
+@CompileTimeCalculation
 public expect fun IntArray.asList(): List<Int>
 
 /**
  * Returns a [List] that wraps the original array.
  */
+@CompileTimeCalculation
 public expect fun LongArray.asList(): List<Long>
 
 /**
  * Returns a [List] that wraps the original array.
  */
+@CompileTimeCalculation
 public expect fun FloatArray.asList(): List<Float>
 
 /**
  * Returns a [List] that wraps the original array.
  */
+@CompileTimeCalculation
 public expect fun DoubleArray.asList(): List<Double>
 
 /**
  * Returns a [List] that wraps the original array.
  */
+@CompileTimeCalculation
 public expect fun BooleanArray.asList(): List<Boolean>
 
 /**
  * Returns a [List] that wraps the original array.
  */
+@CompileTimeCalculation
 public expect fun CharArray.asList(): List<Char>
 
 /**

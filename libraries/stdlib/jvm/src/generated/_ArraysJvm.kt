@@ -129,6 +129,8 @@ public fun <C : MutableCollection<in R>, R> Array<*>.filterIsInstanceTo(destinat
 /**
  * Returns a [List] that wraps the original array.
  */
+@CompileTimeCalculation
+@EvaluateIntrinsic("kotlin.collections.ArraysKt")
 public actual fun <T> Array<out T>.asList(): List<T> {
     return ArraysUtilJVM.asList(this)
 }
@@ -136,6 +138,8 @@ public actual fun <T> Array<out T>.asList(): List<T> {
 /**
  * Returns a [List] that wraps the original array.
  */
+@CompileTimeCalculation
+@EvaluateIntrinsic("kotlin.collections.ArraysKt")
 public actual fun ByteArray.asList(): List<Byte> {
     return object : AbstractList<Byte>(), RandomAccess {
         override val size: Int get() = this@asList.size
@@ -150,6 +154,8 @@ public actual fun ByteArray.asList(): List<Byte> {
 /**
  * Returns a [List] that wraps the original array.
  */
+@CompileTimeCalculation
+@EvaluateIntrinsic("kotlin.collections.ArraysKt")
 public actual fun ShortArray.asList(): List<Short> {
     return object : AbstractList<Short>(), RandomAccess {
         override val size: Int get() = this@asList.size
@@ -164,6 +170,8 @@ public actual fun ShortArray.asList(): List<Short> {
 /**
  * Returns a [List] that wraps the original array.
  */
+@CompileTimeCalculation
+@EvaluateIntrinsic("kotlin.collections.ArraysKt")
 public actual fun IntArray.asList(): List<Int> {
     return object : AbstractList<Int>(), RandomAccess {
         override val size: Int get() = this@asList.size
@@ -178,6 +186,8 @@ public actual fun IntArray.asList(): List<Int> {
 /**
  * Returns a [List] that wraps the original array.
  */
+@CompileTimeCalculation
+@EvaluateIntrinsic("kotlin.collections.ArraysKt")
 public actual fun LongArray.asList(): List<Long> {
     return object : AbstractList<Long>(), RandomAccess {
         override val size: Int get() = this@asList.size
@@ -192,6 +202,8 @@ public actual fun LongArray.asList(): List<Long> {
 /**
  * Returns a [List] that wraps the original array.
  */
+@CompileTimeCalculation
+@EvaluateIntrinsic("kotlin.collections.ArraysKt")
 public actual fun FloatArray.asList(): List<Float> {
     return object : AbstractList<Float>(), RandomAccess {
         override val size: Int get() = this@asList.size
@@ -206,6 +218,8 @@ public actual fun FloatArray.asList(): List<Float> {
 /**
  * Returns a [List] that wraps the original array.
  */
+@CompileTimeCalculation
+@EvaluateIntrinsic("kotlin.collections.ArraysKt")
 public actual fun DoubleArray.asList(): List<Double> {
     return object : AbstractList<Double>(), RandomAccess {
         override val size: Int get() = this@asList.size
@@ -220,6 +234,8 @@ public actual fun DoubleArray.asList(): List<Double> {
 /**
  * Returns a [List] that wraps the original array.
  */
+@CompileTimeCalculation
+@EvaluateIntrinsic("kotlin.collections.ArraysKt")
 public actual fun BooleanArray.asList(): List<Boolean> {
     return object : AbstractList<Boolean>(), RandomAccess {
         override val size: Int get() = this@asList.size
@@ -234,6 +250,8 @@ public actual fun BooleanArray.asList(): List<Boolean> {
 /**
  * Returns a [List] that wraps the original array.
  */
+@CompileTimeCalculation
+@EvaluateIntrinsic("kotlin.collections.ArraysKt")
 public actual fun CharArray.asList(): List<Char> {
     return object : AbstractList<Char>(), RandomAccess {
         override val size: Int get() = this@asList.size

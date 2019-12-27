@@ -100,6 +100,8 @@ public actual fun CharArray.elementAt(index: Int): Char {
 /**
  * Returns a [List] that wraps the original array.
  */
+@CompileTimeCalculation
+@EvaluateIntrinsic("kotlin.collections.ArraysKt")
 public actual fun <T> Array<out T>.asList(): List<T> {
     return ArrayList<T>(this.unsafeCast<Array<Any?>>())
 }
@@ -107,6 +109,8 @@ public actual fun <T> Array<out T>.asList(): List<T> {
 /**
  * Returns a [List] that wraps the original array.
  */
+@CompileTimeCalculation
+@EvaluateIntrinsic("kotlin.collections.ArraysKt")
 @kotlin.internal.InlineOnly
 public actual inline fun ByteArray.asList(): List<Byte> {
     return this.unsafeCast<Array<Byte>>().asList()
@@ -115,6 +119,8 @@ public actual inline fun ByteArray.asList(): List<Byte> {
 /**
  * Returns a [List] that wraps the original array.
  */
+@CompileTimeCalculation
+@EvaluateIntrinsic("kotlin.collections.ArraysKt")
 @kotlin.internal.InlineOnly
 public actual inline fun ShortArray.asList(): List<Short> {
     return this.unsafeCast<Array<Short>>().asList()
@@ -123,6 +129,8 @@ public actual inline fun ShortArray.asList(): List<Short> {
 /**
  * Returns a [List] that wraps the original array.
  */
+@CompileTimeCalculation
+@EvaluateIntrinsic("kotlin.collections.ArraysKt")
 @kotlin.internal.InlineOnly
 public actual inline fun IntArray.asList(): List<Int> {
     return this.unsafeCast<Array<Int>>().asList()
@@ -131,6 +139,8 @@ public actual inline fun IntArray.asList(): List<Int> {
 /**
  * Returns a [List] that wraps the original array.
  */
+@CompileTimeCalculation
+@EvaluateIntrinsic("kotlin.collections.ArraysKt")
 @kotlin.internal.InlineOnly
 public actual inline fun LongArray.asList(): List<Long> {
     return this.unsafeCast<Array<Long>>().asList()
@@ -139,6 +149,8 @@ public actual inline fun LongArray.asList(): List<Long> {
 /**
  * Returns a [List] that wraps the original array.
  */
+@CompileTimeCalculation
+@EvaluateIntrinsic("kotlin.collections.ArraysKt")
 @kotlin.internal.InlineOnly
 public actual inline fun FloatArray.asList(): List<Float> {
     return this.unsafeCast<Array<Float>>().asList()
@@ -147,6 +159,8 @@ public actual inline fun FloatArray.asList(): List<Float> {
 /**
  * Returns a [List] that wraps the original array.
  */
+@CompileTimeCalculation
+@EvaluateIntrinsic("kotlin.collections.ArraysKt")
 @kotlin.internal.InlineOnly
 public actual inline fun DoubleArray.asList(): List<Double> {
     return this.unsafeCast<Array<Double>>().asList()
@@ -155,6 +169,8 @@ public actual inline fun DoubleArray.asList(): List<Double> {
 /**
  * Returns a [List] that wraps the original array.
  */
+@CompileTimeCalculation
+@EvaluateIntrinsic("kotlin.collections.ArraysKt")
 @kotlin.internal.InlineOnly
 public actual inline fun BooleanArray.asList(): List<Boolean> {
     return this.unsafeCast<Array<Boolean>>().asList()
@@ -163,6 +179,8 @@ public actual inline fun BooleanArray.asList(): List<Boolean> {
 /**
  * Returns a [List] that wraps the original array.
  */
+@CompileTimeCalculation
+@EvaluateIntrinsic("kotlin.collections.ArraysKt")
 public actual fun CharArray.asList(): List<Char> {
     return object : AbstractList<Char>(), RandomAccess {
         override val size: Int get() = this@asList.size
