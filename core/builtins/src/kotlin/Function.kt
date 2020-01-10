@@ -21,4 +21,5 @@ package kotlin
  *
  * @param R return type of the function.
  */
+@CompileTimeCalculation
 public interface Function<out R>
