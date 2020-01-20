@@ -5,7 +5,7 @@
 
 package kotlin
 
-
+@CompileTimeCalculation
 public expect open class Error : Throwable {
     constructor()
     constructor(message: String?)
@@ -13,6 +13,7 @@ public expect open class Error : Throwable {
     constructor(cause: Throwable?)
 }
 
+@CompileTimeCalculation
 public expect open class Exception : Throwable {
     constructor()
     constructor(message: String?)
@@ -20,6 +21,7 @@ public expect open class Exception : Throwable {
     constructor(cause: Throwable?)
 }
 
+@CompileTimeCalculation
 public expect open class RuntimeException : Exception {
     constructor()
     constructor(message: String?)
@@ -27,6 +29,7 @@ public expect open class RuntimeException : Exception {
     constructor(cause: Throwable?)
 }
 
+@CompileTimeCalculation
 public expect open class IllegalArgumentException : RuntimeException {
     constructor()
     constructor(message: String?)
@@ -34,6 +37,7 @@ public expect open class IllegalArgumentException : RuntimeException {
     constructor(cause: Throwable?)
 }
 
+@CompileTimeCalculation
 public expect open class IllegalStateException : RuntimeException {
     constructor()
     constructor(message: String?)
@@ -41,11 +45,13 @@ public expect open class IllegalStateException : RuntimeException {
     constructor(cause: Throwable?)
 }
 
+@CompileTimeCalculation
 public expect open class IndexOutOfBoundsException : RuntimeException {
     constructor()
     constructor(message: String?)
 }
 
+@CompileTimeCalculation
 public expect open class ConcurrentModificationException : RuntimeException {
     constructor()
     constructor(message: String?)
@@ -55,6 +61,7 @@ public expect open class ConcurrentModificationException : RuntimeException {
     constructor(cause: Throwable?)
 }
 
+@CompileTimeCalculation
 public expect open class UnsupportedOperationException : RuntimeException {
     constructor()
     constructor(message: String?)
@@ -62,31 +69,37 @@ public expect open class UnsupportedOperationException : RuntimeException {
     constructor(cause: Throwable?)
 }
 
+@CompileTimeCalculation
 public expect open class NumberFormatException : IllegalArgumentException {
     constructor()
     constructor(message: String?)
 }
 
+@CompileTimeCalculation
 public expect open class NullPointerException : RuntimeException {
     constructor()
     constructor(message: String?)
 }
 
+@CompileTimeCalculation
 public expect open class ClassCastException : RuntimeException {
     constructor()
     constructor(message: String?)
 }
 
+@CompileTimeCalculation
 public expect open class AssertionError : Error {
     constructor()
     constructor(message: Any?)
 }
 
+@CompileTimeCalculation
 public expect open class NoSuchElementException : RuntimeException {
     constructor()
     constructor(message: String?)
 }
 
+@CompileTimeCalculation
 @SinceKotlin("1.3")
 public expect open class ArithmeticException : RuntimeException {
     constructor()

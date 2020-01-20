@@ -22,6 +22,7 @@ package kotlin
  * @param message the detail message string.
  * @param cause the cause of this throwable.
  */
+@CompileTimeCalculation
 public open class Throwable(open val message: String?, open val cause: Throwable?) {
     constructor(message: String?) : this(message, null)
 

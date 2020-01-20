@@ -12,6 +12,8 @@ package kotlin
  * @param cause the cause of this throwable.
  */
 @JsName("Error")
+@CompileTimeCalculation
+@EvaluateIntrinsic("java.lang.Throwable")
 public external open class Throwable {
     public open val message: String?
     public open val cause: Throwable?
