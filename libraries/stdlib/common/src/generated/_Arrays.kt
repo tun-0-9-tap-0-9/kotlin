@@ -515,6 +515,7 @@ public inline operator fun CharArray.component5(): Char {
 /**
  * Returns `true` if [element] is found in the array.
  */
+@CompileTimeCalculation
 public operator fun <@kotlin.internal.OnlyInputTypes T> Array<out T>.contains(element: T): Boolean {
     return indexOf(element) >= 0
 }
@@ -522,6 +523,7 @@ public operator fun <@kotlin.internal.OnlyInputTypes T> Array<out T>.contains(el
 /**
  * Returns `true` if [element] is found in the array.
  */
+@CompileTimeCalculation
 public operator fun ByteArray.contains(element: Byte): Boolean {
     return indexOf(element) >= 0
 }
@@ -529,6 +531,7 @@ public operator fun ByteArray.contains(element: Byte): Boolean {
 /**
  * Returns `true` if [element] is found in the array.
  */
+@CompileTimeCalculation
 public operator fun ShortArray.contains(element: Short): Boolean {
     return indexOf(element) >= 0
 }
@@ -536,6 +539,7 @@ public operator fun ShortArray.contains(element: Short): Boolean {
 /**
  * Returns `true` if [element] is found in the array.
  */
+@CompileTimeCalculation
 public operator fun IntArray.contains(element: Int): Boolean {
     return indexOf(element) >= 0
 }
@@ -543,6 +547,7 @@ public operator fun IntArray.contains(element: Int): Boolean {
 /**
  * Returns `true` if [element] is found in the array.
  */
+@CompileTimeCalculation
 public operator fun LongArray.contains(element: Long): Boolean {
     return indexOf(element) >= 0
 }
@@ -550,6 +555,7 @@ public operator fun LongArray.contains(element: Long): Boolean {
 /**
  * Returns `true` if [element] is found in the array.
  */
+@CompileTimeCalculation
 @Deprecated("The function has unclear behavior when searching for NaN or zero values and will be removed soon. Use 'any { it == element }' instead to continue using this behavior, or '.asList().contains(element: T)' to get the same search behavior as in a list.", ReplaceWith("any { it == element }"))
 @DeprecatedSinceKotlin(warningSince = "1.4")
 @Suppress("DEPRECATION")
@@ -560,6 +566,7 @@ public operator fun FloatArray.contains(element: Float): Boolean {
 /**
  * Returns `true` if [element] is found in the array.
  */
+@CompileTimeCalculation
 @Deprecated("The function has unclear behavior when searching for NaN or zero values and will be removed soon. Use 'any { it == element }' instead to continue using this behavior, or '.asList().contains(element: T)' to get the same search behavior as in a list.", ReplaceWith("any { it == element }"))
 @DeprecatedSinceKotlin(warningSince = "1.4")
 @Suppress("DEPRECATION")
@@ -570,6 +577,7 @@ public operator fun DoubleArray.contains(element: Double): Boolean {
 /**
  * Returns `true` if [element] is found in the array.
  */
+@CompileTimeCalculation
 public operator fun BooleanArray.contains(element: Boolean): Boolean {
     return indexOf(element) >= 0
 }
@@ -577,6 +585,7 @@ public operator fun BooleanArray.contains(element: Boolean): Boolean {
 /**
  * Returns `true` if [element] is found in the array.
  */
+@CompileTimeCalculation
 public operator fun CharArray.contains(element: Char): Boolean {
     return indexOf(element) >= 0
 }
@@ -1496,6 +1505,7 @@ public fun CharArray.getOrNull(index: Int): Char? {
 /**
  * Returns first index of [element], or -1 if the array does not contain element.
  */
+@CompileTimeCalculation
 public fun <@kotlin.internal.OnlyInputTypes T> Array<out T>.indexOf(element: T): Int {
     if (element == null) {
         for (index in indices) {
@@ -1516,6 +1526,7 @@ public fun <@kotlin.internal.OnlyInputTypes T> Array<out T>.indexOf(element: T):
 /**
  * Returns first index of [element], or -1 if the array does not contain element.
  */
+@CompileTimeCalculation
 public fun ByteArray.indexOf(element: Byte): Int {
     for (index in indices) {
         if (element == this[index]) {
@@ -1528,6 +1539,7 @@ public fun ByteArray.indexOf(element: Byte): Int {
 /**
  * Returns first index of [element], or -1 if the array does not contain element.
  */
+@CompileTimeCalculation
 public fun ShortArray.indexOf(element: Short): Int {
     for (index in indices) {
         if (element == this[index]) {
@@ -1540,6 +1552,7 @@ public fun ShortArray.indexOf(element: Short): Int {
 /**
  * Returns first index of [element], or -1 if the array does not contain element.
  */
+@CompileTimeCalculation
 public fun IntArray.indexOf(element: Int): Int {
     for (index in indices) {
         if (element == this[index]) {
@@ -1552,6 +1565,7 @@ public fun IntArray.indexOf(element: Int): Int {
 /**
  * Returns first index of [element], or -1 if the array does not contain element.
  */
+@CompileTimeCalculation
 public fun LongArray.indexOf(element: Long): Int {
     for (index in indices) {
         if (element == this[index]) {
@@ -1564,6 +1578,7 @@ public fun LongArray.indexOf(element: Long): Int {
 /**
  * Returns first index of [element], or -1 if the array does not contain element.
  */
+@CompileTimeCalculation
 @Deprecated("The function has unclear behavior when searching for NaN or zero values and will be removed soon. Use 'indexOfFirst { it == element }' instead to continue using this behavior, or '.asList().indexOf(element: T)' to get the same search behavior as in a list.", ReplaceWith("indexOfFirst { it == element }"))
 @DeprecatedSinceKotlin(warningSince = "1.4")
 public fun FloatArray.indexOf(element: Float): Int {
@@ -1578,6 +1593,7 @@ public fun FloatArray.indexOf(element: Float): Int {
 /**
  * Returns first index of [element], or -1 if the array does not contain element.
  */
+@CompileTimeCalculation
 @Deprecated("The function has unclear behavior when searching for NaN or zero values and will be removed soon. Use 'indexOfFirst { it == element }' instead to continue using this behavior, or '.asList().indexOf(element: T)' to get the same search behavior as in a list.", ReplaceWith("indexOfFirst { it == element }"))
 @DeprecatedSinceKotlin(warningSince = "1.4")
 public fun DoubleArray.indexOf(element: Double): Int {
@@ -1592,6 +1608,7 @@ public fun DoubleArray.indexOf(element: Double): Int {
 /**
  * Returns first index of [element], or -1 if the array does not contain element.
  */
+@CompileTimeCalculation
 public fun BooleanArray.indexOf(element: Boolean): Int {
     for (index in indices) {
         if (element == this[index]) {
@@ -1604,6 +1621,7 @@ public fun BooleanArray.indexOf(element: Boolean): Int {
 /**
  * Returns first index of [element], or -1 if the array does not contain element.
  */
+@CompileTimeCalculation
 public fun CharArray.indexOf(element: Char): Int {
     for (index in indices) {
         if (element == this[index]) {
@@ -10332,7 +10350,7 @@ public inline fun <T, R> Array<out T>.flatMap(transform: (T) -> Sequence<R>): Li
 /**
  * Returns a single list of all elements yielded from results of [transform] function being invoked on each element
  * and its index in the original array.
- * 
+ *
  * @sample samples.collections.Collections.Transformations.flatMapIndexed
  */
 @SinceKotlin("1.4")
@@ -10347,7 +10365,7 @@ public inline fun <T, R> Array<out T>.flatMapIndexed(transform: (index: Int, T) 
 /**
  * Returns a single list of all elements yielded from results of [transform] function being invoked on each element
  * and its index in the original array.
- * 
+ *
  * @sample samples.collections.Collections.Transformations.flatMapIndexed
  */
 @SinceKotlin("1.4")
@@ -10362,7 +10380,7 @@ public inline fun <R> ByteArray.flatMapIndexed(transform: (index: Int, Byte) -> 
 /**
  * Returns a single list of all elements yielded from results of [transform] function being invoked on each element
  * and its index in the original array.
- * 
+ *
  * @sample samples.collections.Collections.Transformations.flatMapIndexed
  */
 @SinceKotlin("1.4")
@@ -10377,7 +10395,7 @@ public inline fun <R> ShortArray.flatMapIndexed(transform: (index: Int, Short) -
 /**
  * Returns a single list of all elements yielded from results of [transform] function being invoked on each element
  * and its index in the original array.
- * 
+ *
  * @sample samples.collections.Collections.Transformations.flatMapIndexed
  */
 @SinceKotlin("1.4")
@@ -10392,7 +10410,7 @@ public inline fun <R> IntArray.flatMapIndexed(transform: (index: Int, Int) -> It
 /**
  * Returns a single list of all elements yielded from results of [transform] function being invoked on each element
  * and its index in the original array.
- * 
+ *
  * @sample samples.collections.Collections.Transformations.flatMapIndexed
  */
 @SinceKotlin("1.4")
@@ -10407,7 +10425,7 @@ public inline fun <R> LongArray.flatMapIndexed(transform: (index: Int, Long) -> 
 /**
  * Returns a single list of all elements yielded from results of [transform] function being invoked on each element
  * and its index in the original array.
- * 
+ *
  * @sample samples.collections.Collections.Transformations.flatMapIndexed
  */
 @SinceKotlin("1.4")
@@ -10422,7 +10440,7 @@ public inline fun <R> FloatArray.flatMapIndexed(transform: (index: Int, Float) -
 /**
  * Returns a single list of all elements yielded from results of [transform] function being invoked on each element
  * and its index in the original array.
- * 
+ *
  * @sample samples.collections.Collections.Transformations.flatMapIndexed
  */
 @SinceKotlin("1.4")
@@ -10437,7 +10455,7 @@ public inline fun <R> DoubleArray.flatMapIndexed(transform: (index: Int, Double)
 /**
  * Returns a single list of all elements yielded from results of [transform] function being invoked on each element
  * and its index in the original array.
- * 
+ *
  * @sample samples.collections.Collections.Transformations.flatMapIndexed
  */
 @SinceKotlin("1.4")
@@ -10452,7 +10470,7 @@ public inline fun <R> BooleanArray.flatMapIndexed(transform: (index: Int, Boolea
 /**
  * Returns a single list of all elements yielded from results of [transform] function being invoked on each element
  * and its index in the original array.
- * 
+ *
  * @sample samples.collections.Collections.Transformations.flatMapIndexed
  */
 @SinceKotlin("1.4")
@@ -10467,7 +10485,7 @@ public inline fun <R> CharArray.flatMapIndexed(transform: (index: Int, Char) -> 
 /**
  * Returns a single list of all elements yielded from results of [transform] function being invoked on each element
  * and its index in the original array.
- * 
+ *
  * @sample samples.collections.Collections.Transformations.flatMapIndexed
  */
 @SinceKotlin("1.4")
@@ -15528,7 +15546,7 @@ public inline fun <R> CharArray.maxOfWithOrNull(comparator: Comparator<in R>, se
 
 /**
  * Returns the largest element or `null` if there are no elements.
- * 
+ *
  * If any of elements is `NaN` returns `NaN`.
  */
 @SinceKotlin("1.4")
@@ -15544,7 +15562,7 @@ public fun Array<out Double>.maxOrNull(): Double? {
 
 /**
  * Returns the largest element or `null` if there are no elements.
- * 
+ *
  * If any of elements is `NaN` returns `NaN`.
  */
 @SinceKotlin("1.4")
@@ -15630,7 +15648,7 @@ public fun LongArray.maxOrNull(): Long? {
 
 /**
  * Returns the largest element or `null` if there are no elements.
- * 
+ *
  * If any of elements is `NaN` returns `NaN`.
  */
 @SinceKotlin("1.4")
@@ -15646,7 +15664,7 @@ public fun FloatArray.maxOrNull(): Float? {
 
 /**
  * Returns the largest element or `null` if there are no elements.
- * 
+ *
  * If any of elements is `NaN` returns `NaN`.
  */
 @SinceKotlin("1.4")
@@ -17691,7 +17709,7 @@ public inline fun <R> CharArray.minOfWithOrNull(comparator: Comparator<in R>, se
 
 /**
  * Returns the smallest element or `null` if there are no elements.
- * 
+ *
  * If any of elements is `NaN` returns `NaN`.
  */
 @SinceKotlin("1.4")
@@ -17707,7 +17725,7 @@ public fun Array<out Double>.minOrNull(): Double? {
 
 /**
  * Returns the smallest element or `null` if there are no elements.
- * 
+ *
  * If any of elements is `NaN` returns `NaN`.
  */
 @SinceKotlin("1.4")
@@ -17793,7 +17811,7 @@ public fun LongArray.minOrNull(): Long? {
 
 /**
  * Returns the smallest element or `null` if there are no elements.
- * 
+ *
  * If any of elements is `NaN` returns `NaN`.
  */
 @SinceKotlin("1.4")
@@ -17809,7 +17827,7 @@ public fun FloatArray.minOrNull(): Float? {
 
 /**
  * Returns the smallest element or `null` if there are no elements.
- * 
+ *
  * If any of elements is `NaN` returns `NaN`.
  */
 @SinceKotlin("1.4")

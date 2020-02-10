@@ -47,6 +47,12 @@ object Elements : TemplateGroupBase() {
             annotation("""@Suppress("DEPRECATION")""")
         }
         returns("Boolean")
+
+        // TODO remove after introducing constexpr modifier
+        specialFor(ArraysOfObjects, ArraysOfPrimitives) {
+            annotation("""@CompileTimeCalculation""")
+        }
+
         body(Iterables) {
             """
             if (this is Collection)
@@ -75,6 +81,12 @@ object Elements : TemplateGroupBase() {
             deprecate(Deprecation(message, replacement, warningSince = "1.4"))
         }
         returns("Int")
+
+        // TODO remove after introducing constexpr modifier
+        specialFor(ArraysOfObjects, ArraysOfPrimitives) {
+            annotation("""@CompileTimeCalculation""")
+        }
+
         body {
             """
             ${if (f == Iterables) "if (this is List) return this.indexOf(element)" else ""}
