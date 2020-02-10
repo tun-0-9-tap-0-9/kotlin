@@ -49,6 +49,12 @@ object ArrayOps : TemplateGroupBase() {
     } builder {
         doc { "Returns the last valid index for the array." }
         returns("Int")
+
+        // TODO remove after introducing constexpr modifier
+        specialFor(ArraysOfObjects, ArraysOfPrimitives) {
+            annotation("""@CompileTimeCalculation""")
+        }
+
         body {
             "get() = size - 1"
         }
@@ -68,6 +74,12 @@ object ArrayOps : TemplateGroupBase() {
     } builder {
         doc { "Returns the range of valid indices for the array." }
         returns("IntRange")
+
+        // TODO remove after introducing constexpr modifier
+        specialFor(ArraysOfObjects, ArraysOfPrimitives) {
+            annotation("""@CompileTimeCalculation""")
+        }
+
         body {
             "get() = IntRange(0, lastIndex)"
         }

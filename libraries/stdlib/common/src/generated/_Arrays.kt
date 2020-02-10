@@ -7872,54 +7872,63 @@ public expect fun CharArray.fill(element: Char, fromIndex: Int = 0, toIndex: Int
 /**
  * Returns the range of valid indices for the array.
  */
+@CompileTimeCalculation
 public val <T> Array<out T>.indices: IntRange
     get() = IntRange(0, lastIndex)
 
 /**
  * Returns the range of valid indices for the array.
  */
+@CompileTimeCalculation
 public val ByteArray.indices: IntRange
     get() = IntRange(0, lastIndex)
 
 /**
  * Returns the range of valid indices for the array.
  */
+@CompileTimeCalculation
 public val ShortArray.indices: IntRange
     get() = IntRange(0, lastIndex)
 
 /**
  * Returns the range of valid indices for the array.
  */
+@CompileTimeCalculation
 public val IntArray.indices: IntRange
     get() = IntRange(0, lastIndex)
 
 /**
  * Returns the range of valid indices for the array.
  */
+@CompileTimeCalculation
 public val LongArray.indices: IntRange
     get() = IntRange(0, lastIndex)
 
 /**
  * Returns the range of valid indices for the array.
  */
+@CompileTimeCalculation
 public val FloatArray.indices: IntRange
     get() = IntRange(0, lastIndex)
 
 /**
  * Returns the range of valid indices for the array.
  */
+@CompileTimeCalculation
 public val DoubleArray.indices: IntRange
     get() = IntRange(0, lastIndex)
 
 /**
  * Returns the range of valid indices for the array.
  */
+@CompileTimeCalculation
 public val BooleanArray.indices: IntRange
     get() = IntRange(0, lastIndex)
 
 /**
  * Returns the range of valid indices for the array.
  */
+@CompileTimeCalculation
 public val CharArray.indices: IntRange
     get() = IntRange(0, lastIndex)
 
@@ -8070,54 +8079,63 @@ public inline fun CharArray.isNotEmpty(): Boolean {
 /**
  * Returns the last valid index for the array.
  */
+@CompileTimeCalculation
 public val <T> Array<out T>.lastIndex: Int
     get() = size - 1
 
 /**
  * Returns the last valid index for the array.
  */
+@CompileTimeCalculation
 public val ByteArray.lastIndex: Int
     get() = size - 1
 
 /**
  * Returns the last valid index for the array.
  */
+@CompileTimeCalculation
 public val ShortArray.lastIndex: Int
     get() = size - 1
 
 /**
  * Returns the last valid index for the array.
  */
+@CompileTimeCalculation
 public val IntArray.lastIndex: Int
     get() = size - 1
 
 /**
  * Returns the last valid index for the array.
  */
+@CompileTimeCalculation
 public val LongArray.lastIndex: Int
     get() = size - 1
 
 /**
  * Returns the last valid index for the array.
  */
+@CompileTimeCalculation
 public val FloatArray.lastIndex: Int
     get() = size - 1
 
 /**
  * Returns the last valid index for the array.
  */
+@CompileTimeCalculation
 public val DoubleArray.lastIndex: Int
     get() = size - 1
 
 /**
  * Returns the last valid index for the array.
  */
+@CompileTimeCalculation
 public val BooleanArray.lastIndex: Int
     get() = size - 1
 
 /**
  * Returns the last valid index for the array.
  */
+@CompileTimeCalculation
 public val CharArray.lastIndex: Int
     get() = size - 1
 
