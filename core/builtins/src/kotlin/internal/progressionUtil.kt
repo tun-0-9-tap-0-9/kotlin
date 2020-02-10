@@ -6,21 +6,25 @@
 package kotlin.internal
 
 // a mod b (in arithmetical sense)
+@CompileTimeCalculation
 private fun mod(a: Int, b: Int): Int {
     val mod = a % b
     return if (mod >= 0) mod else mod + b
 }
 
+@CompileTimeCalculation
 private fun mod(a: Long, b: Long): Long {
     val mod = a % b
     return if (mod >= 0) mod else mod + b
 }
 
 // (a - b) mod c
+@CompileTimeCalculation
 private fun differenceModulo(a: Int, b: Int, c: Int): Int {
     return mod(mod(a, c) - mod(b, c), c)
 }
 
+@CompileTimeCalculation
 private fun differenceModulo(a: Long, b: Long, c: Long): Long {
     return mod(mod(a, c) - mod(b, c), c)
 }
@@ -42,6 +46,7 @@ private fun differenceModulo(a: Long, b: Long, c: Long): Long {
  * @suppress
  */
 @PublishedApi
+@CompileTimeCalculation
 internal fun getProgressionLastElement(start: Int, end: Int, step: Int): Int = when {
     step > 0 -> if (start >= end) end else end - differenceModulo(end, start, step)
     step < 0 -> if (start <= end) end else end + differenceModulo(start, end, -step)
@@ -65,6 +70,7 @@ internal fun getProgressionLastElement(start: Int, end: Int, step: Int): Int = w
  * @suppress
  */
 @PublishedApi
+@CompileTimeCalculation
 internal fun getProgressionLastElement(start: Long, end: Long, step: Long): Long = when {
     step > 0 -> if (start >= end) end else end - differenceModulo(end, start, step)
     step < 0 -> if (start <= end) end else end + differenceModulo(start, end, -step)
