@@ -43,6 +43,7 @@ public interface ConditionalEffect : Effect
 @ContractsDsl
 @ExperimentalContracts
 @SinceKotlin("1.3")
+@CompileTimeCalculation
 public interface SimpleEffect : Effect {
     /**
      * Specifies that this effect, when observed, guarantees [booleanExpression] to be true.
