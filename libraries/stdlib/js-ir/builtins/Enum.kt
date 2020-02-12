@@ -7,6 +7,7 @@ package kotlin
 
 import kotlin.js.*
 
+@CompileTimeCalculation
 abstract class Enum<E : Enum<E>>(val name: String, val ordinal: Int) : Comparable<E> {
 
     final override fun compareTo(other: E) = ordinal.compareTo(other.ordinal)
