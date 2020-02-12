@@ -94,10 +94,14 @@ public inline fun booleanArrayOf(vararg elements: Boolean): BooleanArray = eleme
  * Returns an array containing enum T entries.
  */
 @SinceKotlin("1.1")
+@CompileTimeCalculation
+@EvaluateIntrinsic("")
 public inline fun <reified T : Enum<T>> enumValues(): Array<T> = enumValuesIntrinsic<T>()
 
 /**
  * Returns an enum entry with specified name.
  */
 @SinceKotlin("1.1")
+@CompileTimeCalculation
+@EvaluateIntrinsic("")
 public inline fun <reified T : Enum<T>> enumValueOf(name: String): T = enumValueOfIntrinsic<T>(name)
