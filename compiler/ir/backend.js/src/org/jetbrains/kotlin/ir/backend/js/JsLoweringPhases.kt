@@ -720,8 +720,7 @@ val compileTimeEvaluationPhase = makeJsModulePhase(
     ::CompileTimeCalculationLowering,
     name = "CompileTimeEvaluation",
     //TODO change annotation to modifier
-    description = "Evaluate calls that are marked with @CompileTimeCalculation annotation"
-    //TODO find best position
+    description = "Evaluate calls that are marked with @CompileTimeCalculation annotation",
 ).toModuleLowering()
 
 private val cleanupLoweringPhase = makeBodyLoweringPhase(
@@ -734,6 +733,7 @@ private val loweringList = listOf<Lowering>(
     scriptRemoveReceiverLowering,
     validateIrBeforeLowering,
     expectDeclarationsRemovingPhase,
+    compileTimeEvaluationPhase,
     stripTypeAliasDeclarationsPhase,
     jsCodeOutliningPhase,
     arrayConstructorReferencePhase,
@@ -765,7 +765,6 @@ private val loweringList = listOf<Lowering>(
     delegateToPrimaryConstructorLoweringPhase,
     annotationConstructorLowering,
     initializersLoweringPhase,
-    compileTimeEvaluationPhase,
     initializersCleanupLoweringPhase,
     kotlinNothingValueExceptionPhase,
     // Common prefix ends
