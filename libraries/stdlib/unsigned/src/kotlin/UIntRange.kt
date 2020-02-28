@@ -16,15 +16,16 @@ import kotlin.internal.*
  */
 @SinceKotlin("1.5")
 @WasExperimental(ExperimentalUnsignedTypes::class)
+@CompileTimeCalculation
 public class UIntRange(start: UInt, endInclusive: UInt) : UIntProgression(start, endInclusive, 1), ClosedRange<UInt> {
     override val start: UInt get() = first
     override val endInclusive: UInt get() = last
 
     override fun contains(value: UInt): Boolean = first <= value && value <= last
 
-    /** 
+    /**
      * Checks if the range is empty.
-     
+
      * The range is empty if its start value is greater than the end value.
      */
     override fun isEmpty(): Boolean = first > last
@@ -49,6 +50,7 @@ public class UIntRange(start: UInt, endInclusive: UInt) : UIntProgression(start,
  */
 @SinceKotlin("1.5")
 @WasExperimental(ExperimentalUnsignedTypes::class)
+@CompileTimeCalculation
 public open class UIntProgression
 internal constructor(
     start: UInt,
@@ -77,9 +79,9 @@ internal constructor(
 
     final override fun iterator(): Iterator<UInt> = UIntProgressionIterator(first, last, step)
 
-    /** 
+    /**
      * Checks if the progression is empty.
-     
+
      * Progression with a positive step is empty if its first element is greater than the last element.
      * Progression with a negative step is empty if its first element is less than the last element.
      */
@@ -114,6 +116,7 @@ internal constructor(
  */
 @SinceKotlin("1.3")
 @Suppress("DEPRECATION_ERROR")
+@CompileTimeCalculation
 private class UIntProgressionIterator(first: UInt, last: UInt, step: Int) : UIntIterator() {
     private val finalElement = last
     private var hasNext: Boolean = if (step > 0) first <= last else first >= last

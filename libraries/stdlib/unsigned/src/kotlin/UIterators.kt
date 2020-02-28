@@ -10,6 +10,7 @@ package kotlin.collections
 /** An iterator over a sequence of values of type `UByte`. */
 @Deprecated("This class is not going to be stabilized and is to be removed soon.", level = DeprecationLevel.ERROR)
 @SinceKotlin("1.3")
+@CompileTimeCalculation
 public abstract class UByteIterator : Iterator<UByte> {
     final override fun next() = nextUByte()
 
@@ -20,6 +21,7 @@ public abstract class UByteIterator : Iterator<UByte> {
 /** An iterator over a sequence of values of type `UShort`. */
 @Deprecated("This class is not going to be stabilized and is to be removed soon.", level = DeprecationLevel.ERROR)
 @SinceKotlin("1.3")
+@CompileTimeCalculation
 public abstract class UShortIterator : Iterator<UShort> {
     final override fun next() = nextUShort()
 
@@ -30,6 +32,7 @@ public abstract class UShortIterator : Iterator<UShort> {
 /** An iterator over a sequence of values of type `UInt`. */
 @Deprecated("This class is not going to be stabilized and is to be removed soon.", level = DeprecationLevel.ERROR)
 @SinceKotlin("1.3")
+@CompileTimeCalculation
 public abstract class UIntIterator : Iterator<UInt> {
     final override fun next() = nextUInt()
 
@@ -40,6 +43,7 @@ public abstract class UIntIterator : Iterator<UInt> {
 /** An iterator over a sequence of values of type `ULong`. */
 @Deprecated("This class is not going to be stabilized and is to be removed soon.", level = DeprecationLevel.ERROR)
 @SinceKotlin("1.3")
+@CompileTimeCalculation
 public abstract class ULongIterator : Iterator<ULong> {
     final override fun next() = nextULong()
 

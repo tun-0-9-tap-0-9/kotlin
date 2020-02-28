@@ -13,6 +13,7 @@ import kotlin.jvm.*
 @SinceKotlin("1.5")
 @WasExperimental(ExperimentalUnsignedTypes::class)
 @JvmInline
+@CompileTimeCalculation
 public value class UInt @PublishedApi internal constructor(@PublishedApi internal val data: Int) : Comparable<UInt> {
 
     companion object {
@@ -124,28 +125,28 @@ public value class UInt @PublishedApi internal constructor(@PublishedApi interna
 
     /**
      * Calculates the remainder of truncating division of this value by the other value.
-     * 
+     *
      * The result is always less than the divisor.
      */
     @kotlin.internal.InlineOnly
     public inline operator fun rem(other: UByte): UInt = this.rem(other.toUInt())
     /**
      * Calculates the remainder of truncating division of this value by the other value.
-     * 
+     *
      * The result is always less than the divisor.
      */
     @kotlin.internal.InlineOnly
     public inline operator fun rem(other: UShort): UInt = this.rem(other.toUInt())
     /**
      * Calculates the remainder of truncating division of this value by the other value.
-     * 
+     *
      * The result is always less than the divisor.
      */
     @kotlin.internal.InlineOnly
     public inline operator fun rem(other: UInt): UInt = uintRemainder(this, other)
     /**
      * Calculates the remainder of truncating division of this value by the other value.
-     * 
+     *
      * The result is always less than the divisor.
      */
     @kotlin.internal.InlineOnly
@@ -153,28 +154,28 @@ public value class UInt @PublishedApi internal constructor(@PublishedApi interna
 
     /**
      * Divides this value by the other value, flooring the result to an integer that is closer to negative infinity.
-     * 
+     *
      * For unsigned types, the results of flooring division and truncating division are the same.
      */
     @kotlin.internal.InlineOnly
     public inline fun floorDiv(other: UByte): UInt = this.floorDiv(other.toUInt())
     /**
      * Divides this value by the other value, flooring the result to an integer that is closer to negative infinity.
-     * 
+     *
      * For unsigned types, the results of flooring division and truncating division are the same.
      */
     @kotlin.internal.InlineOnly
     public inline fun floorDiv(other: UShort): UInt = this.floorDiv(other.toUInt())
     /**
      * Divides this value by the other value, flooring the result to an integer that is closer to negative infinity.
-     * 
+     *
      * For unsigned types, the results of flooring division and truncating division are the same.
      */
     @kotlin.internal.InlineOnly
     public inline fun floorDiv(other: UInt): UInt = div(other)
     /**
      * Divides this value by the other value, flooring the result to an integer that is closer to negative infinity.
-     * 
+     *
      * For unsigned types, the results of flooring division and truncating division are the same.
      */
     @kotlin.internal.InlineOnly
@@ -182,36 +183,36 @@ public value class UInt @PublishedApi internal constructor(@PublishedApi interna
 
     /**
      * Calculates the remainder of flooring division of this value by the other value.
-     * 
+     *
      * The result is always less than the divisor.
-     * 
+     *
      * For unsigned types, the remainders of flooring division and truncating division are the same.
      */
     @kotlin.internal.InlineOnly
     public inline fun mod(other: UByte): UByte = this.mod(other.toUInt()).toUByte()
     /**
      * Calculates the remainder of flooring division of this value by the other value.
-     * 
+     *
      * The result is always less than the divisor.
-     * 
+     *
      * For unsigned types, the remainders of flooring division and truncating division are the same.
      */
     @kotlin.internal.InlineOnly
     public inline fun mod(other: UShort): UShort = this.mod(other.toUInt()).toUShort()
     /**
      * Calculates the remainder of flooring division of this value by the other value.
-     * 
+     *
      * The result is always less than the divisor.
-     * 
+     *
      * For unsigned types, the remainders of flooring division and truncating division are the same.
      */
     @kotlin.internal.InlineOnly
     public inline fun mod(other: UInt): UInt = rem(other)
     /**
      * Calculates the remainder of flooring division of this value by the other value.
-     * 
+     *
      * The result is always less than the divisor.
-     * 
+     *
      * For unsigned types, the remainders of flooring division and truncating division are the same.
      */
     @kotlin.internal.InlineOnly
@@ -377,6 +378,7 @@ public value class UInt @PublishedApi internal constructor(@PublishedApi interna
 @SinceKotlin("1.5")
 @WasExperimental(ExperimentalUnsignedTypes::class)
 @kotlin.internal.InlineOnly
+@CompileTimeCalculation
 public inline fun Byte.toUInt(): UInt = UInt(this.toInt())
 /**
  * Converts this [Short] value to [UInt].
@@ -389,6 +391,7 @@ public inline fun Byte.toUInt(): UInt = UInt(this.toInt())
 @SinceKotlin("1.5")
 @WasExperimental(ExperimentalUnsignedTypes::class)
 @kotlin.internal.InlineOnly
+@CompileTimeCalculation
 public inline fun Short.toUInt(): UInt = UInt(this.toInt())
 /**
  * Converts this [Int] value to [UInt].
@@ -400,6 +403,7 @@ public inline fun Short.toUInt(): UInt = UInt(this.toInt())
 @SinceKotlin("1.5")
 @WasExperimental(ExperimentalUnsignedTypes::class)
 @kotlin.internal.InlineOnly
+@CompileTimeCalculation
 public inline fun Int.toUInt(): UInt = UInt(this)
 /**
  * Converts this [Long] value to [UInt].
@@ -412,6 +416,7 @@ public inline fun Int.toUInt(): UInt = UInt(this)
 @SinceKotlin("1.5")
 @WasExperimental(ExperimentalUnsignedTypes::class)
 @kotlin.internal.InlineOnly
+@CompileTimeCalculation
 public inline fun Long.toUInt(): UInt = UInt(this.toInt())
 
 /**
@@ -423,6 +428,7 @@ public inline fun Long.toUInt(): UInt = UInt(this.toInt())
 @SinceKotlin("1.5")
 @WasExperimental(ExperimentalUnsignedTypes::class)
 @kotlin.internal.InlineOnly
+@CompileTimeCalculation
 public inline fun Float.toUInt(): UInt = doubleToUInt(this.toDouble())
 /**
  * Converts this [Double] value to [UInt].
@@ -433,4 +439,5 @@ public inline fun Float.toUInt(): UInt = doubleToUInt(this.toDouble())
 @SinceKotlin("1.5")
 @WasExperimental(ExperimentalUnsignedTypes::class)
 @kotlin.internal.InlineOnly
+@CompileTimeCalculation
 public inline fun Double.toUInt(): UInt = doubleToUInt(this)
