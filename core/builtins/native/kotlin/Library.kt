@@ -22,6 +22,7 @@ import kotlin.internal.PureReifiable
  * Returns a string representation of the object. Can be called with a null receiver, in which case
  * it returns the string "null".
  */
+@CompileTimeCalculation
 public fun Any?.toString(): String
 
 /**
