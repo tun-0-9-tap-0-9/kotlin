@@ -12,6 +12,8 @@ package kotlin
  * Not-a-Number (NaN) value, `false` otherwise.
  */
 @kotlin.internal.InlineOnly
+@CompileTimeCalculation
+@EvaluateIntrinsic("kotlin.NumbersKt")
 public actual inline fun Double.isNaN(): Boolean = java.lang.Double.isNaN(this)
 
 /**
@@ -19,6 +21,8 @@ public actual inline fun Double.isNaN(): Boolean = java.lang.Double.isNaN(this)
  * Not-a-Number (NaN) value, `false` otherwise.
  */
 @kotlin.internal.InlineOnly
+@CompileTimeCalculation
+@EvaluateIntrinsic("kotlin.NumbersKt")
 public actual inline fun Float.isNaN(): Boolean = java.lang.Float.isNaN(this)
 
 /**

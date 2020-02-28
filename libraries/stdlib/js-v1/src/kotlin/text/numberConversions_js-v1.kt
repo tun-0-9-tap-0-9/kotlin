@@ -11,4 +11,6 @@ package kotlin.text
  * @throws IllegalArgumentException when [radix] is not a valid radix for number to string conversion.
  */
 @SinceKotlin("1.2")
+@CompileTimeCalculation
+@EvaluateIntrinsic("kotlin.text.StringsKt")
 public actual fun Long.toString(radix: Int): String = asDynamic().toString(checkRadix(radix))

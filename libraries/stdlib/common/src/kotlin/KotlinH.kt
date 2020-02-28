@@ -7,8 +7,9 @@ package kotlin
 
 
 // From numbers.kt
-
+@CompileTimeCalculation
 expect fun Double.isNaN(): Boolean
+@CompileTimeCalculation
 expect fun Float.isNaN(): Boolean
 expect fun Double.isInfinite(): Boolean
 expect fun Float.isInfinite(): Boolean

@@ -16,6 +16,8 @@ package kotlin.text
  */
 @SinceKotlin("1.1")
 @kotlin.internal.InlineOnly
+@CompileTimeCalculation
+@EvaluateIntrinsic("kotlin.text.StringsKt")
 public actual inline fun Byte.toString(radix: Int): String = this.toInt().toString(checkRadix(radix))
 
 /**
@@ -25,6 +27,8 @@ public actual inline fun Byte.toString(radix: Int): String = this.toInt().toStri
  */
 @SinceKotlin("1.1")
 @kotlin.internal.InlineOnly
+@CompileTimeCalculation
+@EvaluateIntrinsic("kotlin.text.StringsKt")
 public actual inline fun Short.toString(radix: Int): String = this.toInt().toString(checkRadix(radix))
 
 /**
@@ -34,6 +38,8 @@ public actual inline fun Short.toString(radix: Int): String = this.toInt().toStr
  */
 @SinceKotlin("1.1")
 @kotlin.internal.InlineOnly
+@CompileTimeCalculation
+@EvaluateIntrinsic("kotlin.text.StringsKt")
 public actual inline fun Int.toString(radix: Int): String = java.lang.Integer.toString(this, checkRadix(radix))
 
 /**
@@ -43,6 +49,8 @@ public actual inline fun Int.toString(radix: Int): String = java.lang.Integer.to
  */
 @SinceKotlin("1.1")
 @kotlin.internal.InlineOnly
+@CompileTimeCalculation
+@EvaluateIntrinsic("kotlin.text.StringsKt")
 public actual inline fun Long.toString(radix: Int): String = java.lang.Long.toString(this, checkRadix(radix))
 
 /**

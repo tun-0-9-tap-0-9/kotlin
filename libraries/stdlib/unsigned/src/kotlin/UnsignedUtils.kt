@@ -6,19 +6,24 @@
 package kotlin
 
 @PublishedApi
+@CompileTimeCalculation
 internal fun uintCompare(v1: Int, v2: Int): Int = (v1 xor Int.MIN_VALUE).compareTo(v2 xor Int.MIN_VALUE)
 @PublishedApi
+@CompileTimeCalculation
 internal fun ulongCompare(v1: Long, v2: Long): Int = (v1 xor Long.MIN_VALUE).compareTo(v2 xor Long.MIN_VALUE)
 
 @PublishedApi
+@CompileTimeCalculation
 internal fun uintDivide(v1: UInt, v2: UInt): UInt = (v1.toLong() / v2.toLong()).toUInt()
 @PublishedApi
+@CompileTimeCalculation
 internal fun uintRemainder(v1: UInt, v2: UInt): UInt = (v1.toLong() % v2.toLong()).toUInt()
 
 // Division and remainder are based on Guava's UnsignedLongs implementation
 // Copyright 2011 The Guava Authors
 
 @PublishedApi
+@CompileTimeCalculation
 internal fun ulongDivide(v1: ULong, v2: ULong): ULong {
     val dividend = v1.toLong()
     val divisor = v2.toLong()
@@ -39,6 +44,7 @@ internal fun ulongDivide(v1: ULong, v2: ULong): ULong {
 }
 
 @PublishedApi
+@CompileTimeCalculation
 internal fun ulongRemainder(v1: ULong, v2: ULong): ULong {
     val dividend = v1.toLong()
     val divisor = v2.toLong()
@@ -62,6 +68,7 @@ internal fun ulongRemainder(v1: ULong, v2: ULong): ULong {
 }
 
 @PublishedApi
+@CompileTimeCalculation
 internal fun doubleToUInt(v: Double): UInt = when {
     v.isNaN() -> 0u
     v <= UInt.MIN_VALUE.toDouble() -> UInt.MIN_VALUE
@@ -71,6 +78,7 @@ internal fun doubleToUInt(v: Double): UInt = when {
 }
 
 @PublishedApi
+@CompileTimeCalculation
 internal fun doubleToULong(v: Double): ULong = when {
     v.isNaN() -> 0u
     v <= ULong.MIN_VALUE.toDouble() -> ULong.MIN_VALUE
@@ -83,14 +91,18 @@ internal fun doubleToULong(v: Double): ULong = when {
 
 
 @PublishedApi
+@CompileTimeCalculation
 internal fun uintToDouble(v: Int): Double = (v and Int.MAX_VALUE).toDouble() + (v ushr 31 shl 30).toDouble() * 2
 
 @PublishedApi
+@CompileTimeCalculation
 internal fun ulongToDouble(v: Long): Double = (v ushr 11).toDouble() * 2048 + (v and 2047)
 
 
+@CompileTimeCalculation
 internal fun ulongToString(v: Long): String = ulongToString(v, 10)
 
+@CompileTimeCalculation
 internal fun ulongToString(v: Long, base: Int): String {
     if (v >= 0) return v.toString(base)
 
