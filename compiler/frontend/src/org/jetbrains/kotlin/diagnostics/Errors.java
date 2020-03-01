@@ -301,6 +301,7 @@ public interface Errors {
     DiagnosticFactory1<PsiElement, KotlinType> TYPE_CANT_BE_USED_FOR_CONST_VAL = DiagnosticFactory1.create(ERROR);
     DiagnosticFactory0<PsiElement> CONST_VAL_WITHOUT_INITIALIZER = DiagnosticFactory0.create(ERROR);
     DiagnosticFactory0<KtExpression> CONST_VAL_WITH_NON_CONST_INITIALIZER = DiagnosticFactory0.create(ERROR);
+    DiagnosticFactory0<KtExpression> NON_COMPILE_TIME_EXPRESSION_IN_COMPILE_TIME_DECLARATION = DiagnosticFactory0.create(ERROR);
 
     DiagnosticFactory0<KtExpression> NON_CONST_VAL_USED_IN_CONSTANT_EXPRESSION = DiagnosticFactory0.create(ERROR);
 
