@@ -17,6 +17,9 @@
 package org.jetbrains.kotlin.resolve.checkers
 
 import com.intellij.psi.PsiElement
+import org.jetbrains.kotlin.config.LanguageFeature
+import org.jetbrains.kotlin.config.LanguageVersionSettings
+import org.jetbrains.kotlin.config.LanguageVersionSettingsImpl
 import org.jetbrains.kotlin.descriptors.*
 import org.jetbrains.kotlin.diagnostics.Diagnostic
 import org.jetbrains.kotlin.diagnostics.Errors
@@ -31,7 +34,7 @@ object ConstModifierChecker : DeclarationChecker {
 
         val constModifierPsiElement = declaration.modifierList!!.getModifier(KtTokens.CONST_KEYWORD)!!
 
-        val diagnostic = checkCanBeConst(declaration, constModifierPsiElement, descriptor).diagnostic
+        val diagnostic = checkCanBeConst(declaration, constModifierPsiElement, descriptor, context.languageVersionSettings).diagnostic
         if (diagnostic != null) {
             context.trace.report(diagnostic)
         }
@@ -43,12 +46,14 @@ object ConstModifierChecker : DeclarationChecker {
     private fun checkCanBeConst(
         declaration: KtDeclaration,
         constModifierPsiElement: PsiElement,
-        descriptor: VariableDescriptor
+        descriptor: VariableDescriptor,
+        languageSettings: LanguageVersionSettings = LanguageVersionSettingsImpl.DEFAULT
     ): ConstApplicability {
         if (descriptor.isVar) {
             return Errors.WRONG_MODIFIER_TARGET.on(constModifierPsiElement, KtTokens.CONST_KEYWORD, "vars").nonApplicable()
         }
 
+        // TODO remove the following check after introducing constexpr modifier
         val containingDeclaration = descriptor.containingDeclaration
         if (containingDeclaration is ClassDescriptor && containingDeclaration.kind != ClassKind.OBJECT) {
             return Errors.CONST_VAL_NOT_TOP_LEVEL_OR_OBJECT.on(constModifierPsiElement).nonApplicable()
@@ -76,7 +81,7 @@ object ConstModifierChecker : DeclarationChecker {
             return Errors.CONST_VAL_WITHOUT_INITIALIZER.on(constModifierPsiElement).nonApplicable()
         }
 
-        if (descriptor.compileTimeInitializer == null) {
+        if (!languageSettings.supportsFeature(LanguageFeature.CompileTimeCalculations) && descriptor.compileTimeInitializer == null) {
             return Errors.CONST_VAL_WITH_NON_CONST_INITIALIZER.on(declaration.initializer!!).nonApplicable()
         }
 

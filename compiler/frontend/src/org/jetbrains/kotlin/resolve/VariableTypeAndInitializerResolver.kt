@@ -5,6 +5,7 @@
 
 package org.jetbrains.kotlin.resolve
 
+import org.jetbrains.kotlin.config.LanguageFeature
 import org.jetbrains.kotlin.config.LanguageVersionSettings
 import org.jetbrains.kotlin.descriptors.VariableDescriptorWithAccessors
 import org.jetbrains.kotlin.descriptors.impl.VariableDescriptorWithInitializerImpl
@@ -127,7 +128,8 @@ class VariableTypeAndInitializerResolver(
                     val constant = constantExpressionEvaluator.evaluateExpression(initializer, trace, initializerType)
                             ?: return@computeInitializer null
 
-                    if (constant.usesNonConstValAsConstant && variableDescriptor.isConst) {
+                    val supportsCompileTime = languageVersionSettings.supportsFeature(LanguageFeature.CompileTimeCalculations)
+                    if (!supportsCompileTime && constant.usesNonConstValAsConstant && variableDescriptor.isConst) {
                         trace.report(Errors.NON_CONST_VAL_USED_IN_CONSTANT_EXPRESSION.on(initializer))
                     }
 

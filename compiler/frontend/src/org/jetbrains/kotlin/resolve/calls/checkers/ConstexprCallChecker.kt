@@ -7,6 +7,7 @@ package org.jetbrains.kotlin.resolve.calls.checkers
 
 import com.intellij.psi.PsiElement
 import org.jetbrains.kotlin.builtins.functions.FunctionInvokeDescriptor
+import org.jetbrains.kotlin.config.LanguageFeature
 import org.jetbrains.kotlin.descriptors.*
 import org.jetbrains.kotlin.descriptors.impl.AnonymousFunctionDescriptor
 import org.jetbrains.kotlin.descriptors.impl.TypeAliasConstructorDescriptor
@@ -22,6 +23,7 @@ object ConstexprCallChecker : CallChecker {
     private val compileTimeAnnotationName = FqName("kotlin.CompileTimeCalculation")
 
     override fun check(resolvedCall: ResolvedCall<*>, reportOn: PsiElement, context: CallCheckerContext) {
+        if (!context.languageVersionSettings.supportsFeature(LanguageFeature.CompileTimeCalculations)) return
         if (resolvedCall.call.callElement is KtAnnotationEntry || resolvedCall.candidateDescriptor.isAnnotationConstructor()) return
         if (hasEnclosingIntrinsicDeclaration(context)) return
 
