@@ -991,6 +991,7 @@ public class DefaultErrorMessages {
         MAP.put(CONST_VAL_WITHOUT_INITIALIZER, "Const 'val' should have an initializer");
         MAP.put(CONST_VAL_WITH_NON_CONST_INITIALIZER, "Const 'val' initializer should be a constant value");
         MAP.put(NON_COMPILE_TIME_EXPRESSION_IN_COMPILE_TIME_DECLARATION, "Compile time declaration must contains only compile time expressions");
+        MAP.put(COMPILE_TIME_MEMBER_NOT_IMPLEMENTED, "{0} is marked as compile time and method ''{1}'' must be also compile time", RENDER_CLASS_OR_OBJECT, DECLARATION_NAME);
         MAP.put(NON_CONST_VAL_USED_IN_CONSTANT_EXPRESSION, "Only 'const val' can be used in constant expressions");
 
         MAP.put(DEFAULT_VALUE_NOT_ALLOWED_IN_OVERRIDE, "An overriding function is not allowed to specify default values for its parameters");
