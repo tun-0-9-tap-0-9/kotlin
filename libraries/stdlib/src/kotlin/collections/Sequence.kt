@@ -18,6 +18,7 @@ package kotlin.sequences
  *
  * @param T the type of elements in the sequence.
  */
+@CompileTimeCalculation
 public interface Sequence<out T> {
     /**
      * Returns an [Iterator] that returns the values from the sequence.

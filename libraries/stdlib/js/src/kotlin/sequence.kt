@@ -5,6 +5,7 @@
 
 package kotlin.sequences
 
+@CompileTimeCalculation
 internal actual class ConstrainedOnceSequence<T> actual constructor(sequence: Sequence<T>) : Sequence<T> {
     private var sequenceRef: Sequence<T>? = sequence
 

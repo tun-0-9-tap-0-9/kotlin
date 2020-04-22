@@ -11,4 +11,5 @@ package kotlin.collections
  * @property value the underlying value.
  * @property index the index of the value in the collection or sequence.
  */
+@CompileTimeCalculation
 public data class IndexedValue<out T>(public val index: Int, public val value: T)

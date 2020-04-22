@@ -15,6 +15,7 @@ import kotlin.contracts.contract
  *
  * @sample samples.misc.Preconditions.failRequireWithLazyMessage
  */
+@CompileTimeCalculation
 @kotlin.internal.InlineOnly
 public inline fun require(value: Boolean): Unit {
     contract {
@@ -28,6 +29,7 @@ public inline fun require(value: Boolean): Unit {
  *
  * @sample samples.misc.Preconditions.failRequireWithLazyMessage
  */
+@CompileTimeCalculation
 @kotlin.internal.InlineOnly
 public inline fun require(value: Boolean, lazyMessage: () -> Any): Unit {
     contract {
@@ -42,6 +44,7 @@ public inline fun require(value: Boolean, lazyMessage: () -> Any): Unit {
 /**
  * Throws an [IllegalArgumentException] if the [value] is null. Otherwise returns the not null value.
  */
+@CompileTimeCalculation
 @kotlin.internal.InlineOnly
 public inline fun <T : Any> requireNotNull(value: T?): T {
     contract {
@@ -56,6 +59,7 @@ public inline fun <T : Any> requireNotNull(value: T?): T {
  *
  * @sample samples.misc.Preconditions.failRequireNotNullWithLazyMessage
  */
+@CompileTimeCalculation
 @kotlin.internal.InlineOnly
 public inline fun <T : Any> requireNotNull(value: T?, lazyMessage: () -> Any): T {
     contract {
@@ -75,6 +79,7 @@ public inline fun <T : Any> requireNotNull(value: T?, lazyMessage: () -> Any): T
  *
  * @sample samples.misc.Preconditions.failCheckWithLazyMessage
  */
+@CompileTimeCalculation
 @kotlin.internal.InlineOnly
 public inline fun check(value: Boolean): Unit {
     contract {
@@ -88,6 +93,7 @@ public inline fun check(value: Boolean): Unit {
  *
  * @sample samples.misc.Preconditions.failCheckWithLazyMessage
  */
+@CompileTimeCalculation
 @kotlin.internal.InlineOnly
 public inline fun check(value: Boolean, lazyMessage: () -> Any): Unit {
     contract {
@@ -105,6 +111,7 @@ public inline fun check(value: Boolean, lazyMessage: () -> Any): Unit {
  *
  * @sample samples.misc.Preconditions.failCheckWithLazyMessage
  */
+@CompileTimeCalculation
 @kotlin.internal.InlineOnly
 public inline fun <T : Any> checkNotNull(value: T?): T {
     contract {
@@ -119,6 +126,7 @@ public inline fun <T : Any> checkNotNull(value: T?): T {
  *
  * @sample samples.misc.Preconditions.failCheckWithLazyMessage
  */
+@CompileTimeCalculation
 @kotlin.internal.InlineOnly
 public inline fun <T : Any> checkNotNull(value: T?, lazyMessage: () -> Any): T {
     contract {
@@ -139,5 +147,6 @@ public inline fun <T : Any> checkNotNull(value: T?, lazyMessage: () -> Any): T {
  *
  * @sample samples.misc.Preconditions.failWithError
  */
+@CompileTimeCalculation
 @kotlin.internal.InlineOnly
 public inline fun error(message: Any): Nothing = throw IllegalStateException(message.toString())
