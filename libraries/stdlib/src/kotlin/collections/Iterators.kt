@@ -13,6 +13,7 @@ package kotlin.collections
  * Returns the given iterator itself. This allows to use an instance of iterator in a `for` loop.
  * @sample samples.collections.Iterators.iterator
  */
+@CompileTimeCalculation
 @kotlin.internal.InlineOnly
 public inline operator fun <T> Iterator<T>.iterator(): Iterator<T> = this
 
@@ -22,12 +23,14 @@ public inline operator fun <T> Iterator<T>.iterator(): Iterator<T> = this
  *
  * @sample samples.collections.Iterators.withIndexIterator
  */
+@CompileTimeCalculation
 public fun <T> Iterator<T>.withIndex(): Iterator<IndexedValue<T>> = IndexingIterator(this)
 
 /**
  * Performs the given [operation] on each element of this [Iterator].
  * @sample samples.collections.Iterators.forEachIterator
  */
+@CompileTimeCalculation
 public inline fun <T> Iterator<T>.forEach(operation: (T) -> Unit): Unit {
     for (element in this) operation(element)
 }
@@ -35,6 +38,7 @@ public inline fun <T> Iterator<T>.forEach(operation: (T) -> Unit): Unit {
 /**
  * Iterator transforming original `iterator` into iterator of [IndexedValue], counting index from zero.
  */
+@CompileTimeCalculation
 internal class IndexingIterator<out T>(private val iterator: Iterator<T>) : Iterator<IndexedValue<T>> {
     private var index = 0
     final override fun hasNext(): Boolean = iterator.hasNext()
