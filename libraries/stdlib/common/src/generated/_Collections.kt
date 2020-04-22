@@ -3374,6 +3374,7 @@ public inline fun <T> Iterable<T>.asIterable(): Iterable<T> {
  * 
  * @sample samples.collections.Sequences.Building.sequenceFromCollection
  */
+@CompileTimeCalculation
 public fun <T> Iterable<T>.asSequence(): Sequence<T> {
     return Sequence { this.iterator() }
 }

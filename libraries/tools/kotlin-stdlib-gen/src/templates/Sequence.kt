@@ -44,6 +44,7 @@ object SequenceOps : TemplateGroupBase() {
             """
         }
         specialFor(ArraysOfPrimitives, ArraysOfObjects, Iterables) {
+            annotation("""@CompileTimeCalculation""")
             sample("samples.collections.Sequences.Building.sequenceFrom${f.doc.collection.capitalize()}")
         }
 
