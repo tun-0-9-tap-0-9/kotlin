@@ -8,6 +8,7 @@ package kotlin
 /**
  * Provides a comparison function for imposing a total ordering between instances of the type [T].
  */
+@CompileTimeCalculation
 public expect fun interface Comparator<T> {
     /**
      * Compares its two arguments for order. Returns zero if the arguments are equal,
