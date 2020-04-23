@@ -26,6 +26,7 @@ object ArrayOps : TemplateGroupBase() {
     } builder {
         inlineOnly()
         doc { "Returns `true` if the array is empty." }
+        annotation("""@CompileTimeCalculation""")
         returns("Boolean")
         body {
             "return size == 0"
@@ -37,6 +38,7 @@ object ArrayOps : TemplateGroupBase() {
     } builder {
         inlineOnly()
         doc { "Returns `true` if the array is not empty." }
+        annotation("""@CompileTimeCalculation""")
         returns("Boolean")
         body {
             "return !isEmpty()"
