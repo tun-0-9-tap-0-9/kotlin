@@ -52,6 +52,7 @@ object Filtering : TemplateGroupBase() {
             Returns a list containing all elements except first [n] elements.
             """
         }
+        annotation("""@CompileTimeCalculation""")
         throws("IllegalArgumentException", "if [n] is negative.")
         sample("${sampleClass(f)}.drop")
         returns("List<T>")
@@ -139,6 +140,7 @@ object Filtering : TemplateGroupBase() {
             Returns a list containing first [n] elements.
             """
         }
+        annotation("""@CompileTimeCalculation""")
         throws("IllegalArgumentException", "if [n] is negative.")
         sample("${sampleClass(f)}.take")
         returns("List<T>")
@@ -220,6 +222,7 @@ object Filtering : TemplateGroupBase() {
             Returns a list containing all elements except last [n] elements.
             """
         }
+        annotation("""@CompileTimeCalculation""")
         throws("IllegalArgumentException", "if [n] is negative.")
         sample("${sampleClass(f)}.drop")
         returns("List<T>")
@@ -250,6 +253,7 @@ object Filtering : TemplateGroupBase() {
             Returns a list containing last [n] elements.
             """
         }
+        annotation("""@CompileTimeCalculation""")
         throws("IllegalArgumentException", "if [n] is negative.")
         sample("${sampleClass(f)}.take")
         returns("List<T>")
@@ -317,6 +321,7 @@ object Filtering : TemplateGroupBase() {
             Returns a list containing all elements except first elements that satisfy the given [predicate].
             """
         }
+        annotation("""@CompileTimeCalculation""")
         sample("${sampleClass(f)}.drop")
         returns("List<T>")
         body {
@@ -374,6 +379,7 @@ object Filtering : TemplateGroupBase() {
             Returns a list containing first elements satisfying the given [predicate].
             """
         }
+        annotation("""@CompileTimeCalculation""")
         sample("${sampleClass(f)}.take")
         returns("List<T>")
         body {
@@ -426,6 +432,7 @@ object Filtering : TemplateGroupBase() {
             Returns a list containing all elements except last elements that satisfy the given [predicate].
             """
         }
+        annotation("""@CompileTimeCalculation""")
         sample("${sampleClass(f)}.drop")
         returns("List<T>")
 
@@ -484,6 +491,7 @@ object Filtering : TemplateGroupBase() {
             Returns a list containing last elements satisfying the given [predicate].
             """
         }
+        annotation("""@CompileTimeCalculation""")
         sample("${sampleClass(f)}.take")
         returns("List<T>")
 
@@ -548,6 +556,7 @@ object Filtering : TemplateGroupBase() {
         specialFor(ArraysOfUnsigned) { inlineOnly() }
 
         doc { "Returns a ${f.mapResult} containing only ${f.element.pluralize()} matching the given [predicate]." }
+        annotation("""@CompileTimeCalculation""")
         sample("samples.collections.Collections.Filtering.filter")
         returns("List<T>")
         body {
@@ -579,6 +588,7 @@ object Filtering : TemplateGroupBase() {
 
         doc { "Appends all ${f.element.pluralize()} matching the given [predicate] to the given [destination]." }
         sample("samples.collections.Collections.Filtering.filterTo")
+        annotation("""@CompileTimeCalculation""")
         typeParam("C : TCollection")
         returns("C")
 
@@ -615,6 +625,7 @@ object Filtering : TemplateGroupBase() {
             """
         }
         sample("samples.collections.Collections.Filtering.filterIndexed")
+        annotation("""@CompileTimeCalculation""")
         returns("List<T>")
         body {
             """
@@ -660,6 +671,7 @@ object Filtering : TemplateGroupBase() {
             and returns the result of predicate evaluation on the ${f.element}.
             """ }
         sample("samples.collections.Collections.Filtering.filterIndexedTo")
+        annotation("""@CompileTimeCalculation""")
         typeParam("C : TCollection")
         returns("C")
 
@@ -681,6 +693,7 @@ object Filtering : TemplateGroupBase() {
         specialFor(ArraysOfUnsigned) { inlineOnly() }
 
         doc { "Returns a list containing all elements not matching the given [predicate]." }
+        annotation("""@CompileTimeCalculation""")
         sample("samples.collections.Collections.Filtering.filter")
         returns("List<T>")
         body {
@@ -713,6 +726,7 @@ object Filtering : TemplateGroupBase() {
 
         doc { "Appends all elements not matching the given [predicate] to the given [destination]." }
         sample("samples.collections.Collections.Filtering.filterTo")
+        annotation("""@CompileTimeCalculation""")
         typeParam("C : TCollection")
         returns("C")
 
@@ -738,6 +752,7 @@ object Filtering : TemplateGroupBase() {
         include(Iterables, Sequences, ArraysOfObjects)
     } builder {
         doc { "Returns a list containing all elements that are not `null`." }
+        annotation("""@CompileTimeCalculation""")
         sample("samples.collections.Collections.Filtering.filterNotNull")
         typeParam("T : Any")
         returns("List<T>")
@@ -765,6 +780,7 @@ object Filtering : TemplateGroupBase() {
     } builder {
         doc { "Appends all elements that are not `null` to the given [destination]." }
         sample("samples.collections.Collections.Filtering.filterNotNullTo")
+        annotation("""@CompileTimeCalculation""")
         returns("C")
         typeParam("C : TCollection")
         typeParam("T : Any")
@@ -782,6 +798,7 @@ object Filtering : TemplateGroupBase() {
     } builder {
         doc { "Appends all elements that are instances of specified type parameter R to the given [destination]." }
         sample("samples.collections.Collections.Filtering.filterIsInstanceTo")
+        annotation("""@CompileTimeCalculation""")
         typeParam("reified R")
         typeParam("C : MutableCollection<in R>")
         inline()

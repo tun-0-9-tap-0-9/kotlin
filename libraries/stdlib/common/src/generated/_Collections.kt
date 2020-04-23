@@ -708,6 +708,7 @@ public inline fun <T> Iterable<T>.singleOrNull(predicate: (T) -> Boolean): T? {
  * 
  * @sample samples.collections.Collections.Transformations.drop
  */
+@CompileTimeCalculation
 public fun <T> Iterable<T>.drop(n: Int): List<T> {
     require(n >= 0) { "Requested element count $n is less than zero." }
     if (n == 0) return toList()
@@ -747,6 +748,7 @@ public fun <T> Iterable<T>.drop(n: Int): List<T> {
  * 
  * @sample samples.collections.Collections.Transformations.drop
  */
+@CompileTimeCalculation
 public fun <T> List<T>.dropLast(n: Int): List<T> {
     require(n >= 0) { "Requested element count $n is less than zero." }
     return take((size - n).coerceAtLeast(0))
@@ -757,6 +759,7 @@ public fun <T> List<T>.dropLast(n: Int): List<T> {
  * 
  * @sample samples.collections.Collections.Transformations.drop
  */
+@CompileTimeCalculation
 public inline fun <T> List<T>.dropLastWhile(predicate: (T) -> Boolean): List<T> {
     if (!isEmpty()) {
         val iterator = listIterator(size)
@@ -774,6 +777,7 @@ public inline fun <T> List<T>.dropLastWhile(predicate: (T) -> Boolean): List<T> 
  * 
  * @sample samples.collections.Collections.Transformations.drop
  */
+@CompileTimeCalculation
 public inline fun <T> Iterable<T>.dropWhile(predicate: (T) -> Boolean): List<T> {
     var yielding = false
     val list = ArrayList<T>()
@@ -792,6 +796,7 @@ public inline fun <T> Iterable<T>.dropWhile(predicate: (T) -> Boolean): List<T> 
  * 
  * @sample samples.collections.Collections.Filtering.filter
  */
+@CompileTimeCalculation
 public inline fun <T> Iterable<T>.filter(predicate: (T) -> Boolean): List<T> {
     return filterTo(ArrayList<T>(), predicate)
 }
@@ -803,6 +808,7 @@ public inline fun <T> Iterable<T>.filter(predicate: (T) -> Boolean): List<T> {
  * 
  * @sample samples.collections.Collections.Filtering.filterIndexed
  */
+@CompileTimeCalculation
 public inline fun <T> Iterable<T>.filterIndexed(predicate: (index: Int, T) -> Boolean): List<T> {
     return filterIndexedTo(ArrayList<T>(), predicate)
 }
@@ -814,6 +820,7 @@ public inline fun <T> Iterable<T>.filterIndexed(predicate: (index: Int, T) -> Bo
  * 
  * @sample samples.collections.Collections.Filtering.filterIndexedTo
  */
+@CompileTimeCalculation
 public inline fun <T, C : MutableCollection<in T>> Iterable<T>.filterIndexedTo(destination: C, predicate: (index: Int, T) -> Boolean): C {
     forEachIndexed { index, element ->
         if (predicate(index, element)) destination.add(element)
@@ -835,6 +842,7 @@ public inline fun <reified R> Iterable<*>.filterIsInstance(): List<@kotlin.inter
  * 
  * @sample samples.collections.Collections.Filtering.filterIsInstanceTo
  */
+@CompileTimeCalculation
 public inline fun <reified R, C : MutableCollection<in R>> Iterable<*>.filterIsInstanceTo(destination: C): C {
     for (element in this) if (element is R) destination.add(element)
     return destination
@@ -845,6 +853,7 @@ public inline fun <reified R, C : MutableCollection<in R>> Iterable<*>.filterIsI
  * 
  * @sample samples.collections.Collections.Filtering.filter
  */
+@CompileTimeCalculation
 public inline fun <T> Iterable<T>.filterNot(predicate: (T) -> Boolean): List<T> {
     return filterNotTo(ArrayList<T>(), predicate)
 }
@@ -854,6 +863,7 @@ public inline fun <T> Iterable<T>.filterNot(predicate: (T) -> Boolean): List<T> 
  * 
  * @sample samples.collections.Collections.Filtering.filterNotNull
  */
+@CompileTimeCalculation
 public fun <T : Any> Iterable<T?>.filterNotNull(): List<T> {
     return filterNotNullTo(ArrayList<T>())
 }
@@ -863,6 +873,7 @@ public fun <T : Any> Iterable<T?>.filterNotNull(): List<T> {
  * 
  * @sample samples.collections.Collections.Filtering.filterNotNullTo
  */
+@CompileTimeCalculation
 public fun <C : MutableCollection<in T>, T : Any> Iterable<T?>.filterNotNullTo(destination: C): C {
     for (element in this) if (element != null) destination.add(element)
     return destination
@@ -873,6 +884,7 @@ public fun <C : MutableCollection<in T>, T : Any> Iterable<T?>.filterNotNullTo(d
  * 
  * @sample samples.collections.Collections.Filtering.filterTo
  */
+@CompileTimeCalculation
 public inline fun <T, C : MutableCollection<in T>> Iterable<T>.filterNotTo(destination: C, predicate: (T) -> Boolean): C {
     for (element in this) if (!predicate(element)) destination.add(element)
     return destination
@@ -883,6 +895,7 @@ public inline fun <T, C : MutableCollection<in T>> Iterable<T>.filterNotTo(desti
  * 
  * @sample samples.collections.Collections.Filtering.filterTo
  */
+@CompileTimeCalculation
 public inline fun <T, C : MutableCollection<in T>> Iterable<T>.filterTo(destination: C, predicate: (T) -> Boolean): C {
     for (element in this) if (predicate(element)) destination.add(element)
     return destination
@@ -916,6 +929,7 @@ public fun <T> List<T>.slice(indices: Iterable<Int>): List<T> {
  * 
  * @sample samples.collections.Collections.Transformations.take
  */
+@CompileTimeCalculation
 public fun <T> Iterable<T>.take(n: Int): List<T> {
     require(n >= 0) { "Requested element count $n is less than zero." }
     if (n == 0) return emptyList()
@@ -940,6 +954,7 @@ public fun <T> Iterable<T>.take(n: Int): List<T> {
  * 
  * @sample samples.collections.Collections.Transformations.take
  */
+@CompileTimeCalculation
 public fun <T> List<T>.takeLast(n: Int): List<T> {
     require(n >= 0) { "Requested element count $n is less than zero." }
     if (n == 0) return emptyList()
@@ -962,6 +977,7 @@ public fun <T> List<T>.takeLast(n: Int): List<T> {
  * 
  * @sample samples.collections.Collections.Transformations.take
  */
+@CompileTimeCalculation
 public inline fun <T> List<T>.takeLastWhile(predicate: (T) -> Boolean): List<T> {
     if (isEmpty())
         return emptyList()
@@ -985,6 +1001,7 @@ public inline fun <T> List<T>.takeLastWhile(predicate: (T) -> Boolean): List<T> 
  * 
  * @sample samples.collections.Collections.Transformations.take
  */
+@CompileTimeCalculation
 public inline fun <T> Iterable<T>.takeWhile(predicate: (T) -> Boolean): List<T> {
     val list = ArrayList<T>()
     for (item in this) {

@@ -222,9 +222,13 @@ internal inline fun String.nativeStartsWith(s: String, position: Int): Boolean =
 @kotlin.internal.InlineOnly
 internal inline fun String.nativeEndsWith(s: String): Boolean = asDynamic().endsWith(s)
 
+@CompileTimeCalculation
+@EvaluateIntrinsic("kotlin.text.StringsKt")
 @kotlin.internal.InlineOnly
 public actual inline fun String.substring(startIndex: Int): String = asDynamic().substring(startIndex)
 
+@CompileTimeCalculation
+@EvaluateIntrinsic("kotlin.text.StringsKt")
 @kotlin.internal.InlineOnly
 public actual inline fun String.substring(startIndex: Int, endIndex: Int): String = asDynamic().substring(startIndex, endIndex)
 

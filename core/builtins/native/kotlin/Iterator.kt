@@ -49,6 +49,7 @@ public interface MutableIterator<out T> : Iterator<T> {
  * An iterator over a collection that supports indexed access.
  * @see List.listIterator
  */
+@CompileTimeCalculation
 public interface ListIterator<out T> : Iterator<T> {
     // Query Operations
     override fun next(): T
@@ -79,6 +80,7 @@ public interface ListIterator<out T> : Iterator<T> {
  * An iterator over a mutable collection that supports indexed access. Provides the ability
  * to add, modify and remove elements while iterating.
  */
+@CompileTimeCalculation
 public interface MutableListIterator<T> : ListIterator<T>, MutableIterator<T> {
     // Query Operations
     override fun next(): T

@@ -198,7 +198,9 @@ internal expect fun String.nativeIndexOf(str: String, fromIndex: Int): Int
 internal expect fun String.nativeLastIndexOf(str: String, fromIndex: Int): Int
 
 
+@CompileTimeCalculation
 public expect fun String.substring(startIndex: Int): String
+@CompileTimeCalculation
 public expect fun String.substring(startIndex: Int, endIndex: Int): String
 
 /**

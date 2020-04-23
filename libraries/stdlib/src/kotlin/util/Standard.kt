@@ -156,6 +156,7 @@ public inline fun <T> T.takeUnless(predicate: (T) -> Boolean): T? {
  * @sample samples.misc.ControlFlow.repeat
  */
 @kotlin.internal.InlineOnly
+@CompileTimeCalculation
 public inline fun repeat(times: Int, action: (Int) -> Unit) {
     contract { callsInPlace(action) }
 

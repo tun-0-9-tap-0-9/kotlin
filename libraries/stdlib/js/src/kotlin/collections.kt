@@ -63,6 +63,7 @@ internal actual fun <T> copyToArrayImpl(collection: Collection<*>, array: Array<
 /**
  * Returns an immutable list containing only the specified object [element].
  */
+@CompileTimeCalculation
 public fun <T> listOf(element: T): List<T> = arrayListOf(element)
 
 @PublishedApi

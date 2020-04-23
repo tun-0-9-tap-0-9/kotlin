@@ -422,12 +422,14 @@ public inline fun String.subSequence(start: Int, end: Int): CharSequence = subSe
  * @param startIndex the start index (inclusive).
  * @param endIndex the end index (exclusive). If not specified, the length of the char sequence is used.
  */
+@CompileTimeCalculation
 @kotlin.internal.InlineOnly
 public inline fun CharSequence.substring(startIndex: Int, endIndex: Int = length): String = subSequence(startIndex, endIndex).toString()
 
 /**
  * Returns a substring of chars at indices from the specified [range] of this char sequence.
  */
+@CompileTimeCalculation
 public fun CharSequence.substring(range: IntRange): String = subSequence(range.start, range.endInclusive + 1).toString()
 
 /**

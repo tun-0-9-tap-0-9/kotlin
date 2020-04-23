@@ -101,6 +101,7 @@ public inline fun <T> mutableListOf(): MutableList<T> = ArrayList()
  * Returns an empty new [ArrayList].
  * @sample samples.collections.Collections.Lists.emptyArrayList
  */
+@CompileTimeCalculation
 @SinceKotlin("1.1")
 @kotlin.internal.InlineOnly
 public inline fun <T> arrayListOf(): ArrayList<T> = ArrayList()
@@ -118,6 +119,8 @@ public fun <T> mutableListOf(vararg elements: T): MutableList<T> =
  * Returns a new [ArrayList] with the given elements.
  * @sample samples.collections.Collections.Lists.arrayList
  */
+@CompileTimeCalculation
+@EvaluateIntrinsic("kotlin.collections.CollectionsKt")
 public fun <T> arrayListOf(vararg elements: T): ArrayList<T> =
     if (elements.size == 0) ArrayList() else ArrayList(ArrayAsCollection(elements, isVarargs = true))
 
@@ -125,12 +128,14 @@ public fun <T> arrayListOf(vararg elements: T): ArrayList<T> =
  * Returns a new read-only list either of single given element, if it is not null, or empty list if the element is null. The returned list is serializable (JVM).
  * @sample samples.collections.Collections.Lists.listOfNotNull
  */
+@CompileTimeCalculation
 public fun <T : Any> listOfNotNull(element: T?): List<T> = if (element != null) listOf(element) else emptyList()
 
 /**
  * Returns a new read-only list only of those given elements, that are not null.  The returned list is serializable (JVM).
  * @sample samples.collections.Collections.Lists.listOfNotNull
  */
+@CompileTimeCalculation
 public fun <T : Any> listOfNotNull(vararg elements: T?): List<T> = elements.filterNotNull()
 
 /**
@@ -142,6 +147,7 @@ public fun <T : Any> listOfNotNull(vararg elements: T?): List<T> = elements.filt
  *
  * @sample samples.collections.Collections.Lists.readOnlyListFromInitializer
  */
+@CompileTimeCalculation
 @SinceKotlin("1.1")
 @kotlin.internal.InlineOnly
 public inline fun <T> List(size: Int, init: (index: Int) -> T): List<T> = MutableList(size, init)
@@ -155,6 +161,7 @@ public inline fun <T> List(size: Int, init: (index: Int) -> T): List<T> = Mutabl
  *
  * @sample samples.collections.Collections.Lists.mutableListFromInitializer
  */
+@CompileTimeCalculation
 @SinceKotlin("1.1")
 @kotlin.internal.InlineOnly
 public inline fun <T> MutableList(size: Int, init: (index: Int) -> T): MutableList<T> {
@@ -217,6 +224,7 @@ internal expect inline fun <E> buildListInternal(capacity: Int, builderAction: M
  * Returns an [IntRange] of the valid indices for this collection.
  * @sample samples.collections.Collections.Collections.indicesOfCollection
  */
+@CompileTimeCalculation
 public val Collection<*>.indices: IntRange
     get() = 0..size - 1
 
@@ -225,6 +233,7 @@ public val Collection<*>.indices: IntRange
  *
  * @sample samples.collections.Collections.Lists.lastIndexOfList
  */
+@CompileTimeCalculation
 public val <T> List<T>.lastIndex: Int
     get() = this.size - 1
 
@@ -232,6 +241,7 @@ public val <T> List<T>.lastIndex: Int
  * Returns `true` if the collection is not empty.
  * @sample samples.collections.Collections.Collections.collectionIsNotEmpty
  */
+@CompileTimeCalculation
 @kotlin.internal.InlineOnly
 public inline fun <T> Collection<T>.isNotEmpty(): Boolean = !isEmpty()
 
@@ -239,6 +249,7 @@ public inline fun <T> Collection<T>.isNotEmpty(): Boolean = !isEmpty()
  * Returns `true` if this nullable collection is either null or empty.
  * @sample samples.collections.Collections.Collections.collectionIsNullOrEmpty
  */
+@CompileTimeCalculation
 @SinceKotlin("1.3")
 @kotlin.internal.InlineOnly
 public inline fun <T> Collection<T>?.isNullOrEmpty(): Boolean {
@@ -253,6 +264,7 @@ public inline fun <T> Collection<T>?.isNullOrEmpty(): Boolean {
  * Returns this Collection if it's not `null` and the empty list otherwise.
  * @sample samples.collections.Collections.Collections.collectionOrEmpty
  */
+@CompileTimeCalculation
 @kotlin.internal.InlineOnly
 public inline fun <T> Collection<T>?.orEmpty(): Collection<T> = this ?: emptyList()
 
@@ -260,6 +272,7 @@ public inline fun <T> Collection<T>?.orEmpty(): Collection<T> = this ?: emptyLis
  * Returns this List if it's not `null` and the empty list otherwise.
  * @sample samples.collections.Collections.Lists.listOrEmpty
  */
+@CompileTimeCalculation
 @kotlin.internal.InlineOnly
 public inline fun <T> List<T>?.orEmpty(): List<T> = this ?: emptyList()
 
@@ -269,6 +282,7 @@ public inline fun <T> List<T>?.orEmpty(): List<T> = this ?: emptyList()
  *
  * @sample samples.collections.Collections.Collections.collectionIfEmpty
  */
+@CompileTimeCalculation
 @SinceKotlin("1.3")
 @kotlin.internal.InlineOnly
 public inline fun <C, R> C.ifEmpty(defaultValue: () -> R): R where C : Collection<*>, C : R =
@@ -281,6 +295,7 @@ public inline fun <C, R> C.ifEmpty(defaultValue: () -> R): R where C : Collectio
  * Allows to overcome type-safety restriction of `containsAll` that requires to pass a collection of type `Collection<E>`.
  * @sample samples.collections.Collections.Collections.collectionContainsAll
  */
+@CompileTimeCalculation
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER") // false warning, extension takes precedence in some cases
 @kotlin.internal.InlineOnly
 public inline fun <@kotlin.internal.OnlyInputTypes T> Collection<T>.containsAll(elements: Collection<T>): Boolean = this.containsAll(elements)
@@ -294,6 +309,7 @@ public inline fun <@kotlin.internal.OnlyInputTypes T> Collection<T>.containsAll(
 public fun <T> Iterable<T>.shuffled(random: Random): List<T> = toMutableList().apply { shuffle(random) }
 
 
+@CompileTimeCalculation
 internal fun <T> List<T>.optimizeReadOnlyList() = when (size) {
     0 -> emptyList()
     1 -> listOf(this[0])
