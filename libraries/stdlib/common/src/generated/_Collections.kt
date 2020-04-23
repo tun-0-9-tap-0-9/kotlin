@@ -22,6 +22,7 @@ import kotlin.ranges.reversed
  * 
  * Throws an [IndexOutOfBoundsException] if the size of this list is less than 1.
  */
+@CompileTimeCalculation
 @kotlin.internal.InlineOnly
 public inline operator fun <T> List<T>.component1(): T {
     return get(0)
@@ -32,6 +33,7 @@ public inline operator fun <T> List<T>.component1(): T {
  * 
  * Throws an [IndexOutOfBoundsException] if the size of this list is less than 2.
  */
+@CompileTimeCalculation
 @kotlin.internal.InlineOnly
 public inline operator fun <T> List<T>.component2(): T {
     return get(1)
@@ -42,6 +44,7 @@ public inline operator fun <T> List<T>.component2(): T {
  * 
  * Throws an [IndexOutOfBoundsException] if the size of this list is less than 3.
  */
+@CompileTimeCalculation
 @kotlin.internal.InlineOnly
 public inline operator fun <T> List<T>.component3(): T {
     return get(2)
@@ -52,6 +55,7 @@ public inline operator fun <T> List<T>.component3(): T {
  * 
  * Throws an [IndexOutOfBoundsException] if the size of this list is less than 4.
  */
+@CompileTimeCalculation
 @kotlin.internal.InlineOnly
 public inline operator fun <T> List<T>.component4(): T {
     return get(3)
@@ -62,6 +66,7 @@ public inline operator fun <T> List<T>.component4(): T {
  * 
  * Throws an [IndexOutOfBoundsException] if the size of this list is less than 5.
  */
+@CompileTimeCalculation
 @kotlin.internal.InlineOnly
 public inline operator fun <T> List<T>.component5(): T {
     return get(4)
@@ -70,6 +75,7 @@ public inline operator fun <T> List<T>.component5(): T {
 /**
  * Returns `true` if [element] is found in the collection.
  */
+@CompileTimeCalculation
 public operator fun <@kotlin.internal.OnlyInputTypes T> Iterable<T>.contains(element: T): Boolean {
     if (this is Collection)
         return contains(element)
@@ -102,6 +108,7 @@ public inline fun <T> List<T>.elementAt(index: Int): T {
  * 
  * @sample samples.collections.Collections.Elements.elementAtOrElse
  */
+@CompileTimeCalculation
 public fun <T> Iterable<T>.elementAtOrElse(index: Int, defaultValue: (Int) -> T): T {
     if (this is List)
         return this.getOrElse(index, defaultValue)
@@ -122,6 +129,7 @@ public fun <T> Iterable<T>.elementAtOrElse(index: Int, defaultValue: (Int) -> T)
  * 
  * @sample samples.collections.Collections.Elements.elementAtOrElse
  */
+@CompileTimeCalculation
 @kotlin.internal.InlineOnly
 public inline fun <T> List<T>.elementAtOrElse(index: Int, defaultValue: (Int) -> T): T {
     return if (index >= 0 && index <= lastIndex) get(index) else defaultValue(index)
@@ -132,6 +140,7 @@ public inline fun <T> List<T>.elementAtOrElse(index: Int, defaultValue: (Int) ->
  * 
  * @sample samples.collections.Collections.Elements.elementAtOrNull
  */
+@CompileTimeCalculation
 public fun <T> Iterable<T>.elementAtOrNull(index: Int): T? {
     if (this is List)
         return this.getOrNull(index)
@@ -152,6 +161,7 @@ public fun <T> Iterable<T>.elementAtOrNull(index: Int): T? {
  * 
  * @sample samples.collections.Collections.Elements.elementAtOrNull
  */
+@CompileTimeCalculation
 @kotlin.internal.InlineOnly
 public inline fun <T> List<T>.elementAtOrNull(index: Int): T? {
     return this.getOrNull(index)
@@ -191,6 +201,7 @@ public inline fun <T> List<T>.findLast(predicate: (T) -> Boolean): T? {
  * Returns first element.
  * @throws [NoSuchElementException] if the collection is empty.
  */
+@CompileTimeCalculation
 public fun <T> Iterable<T>.first(): T {
     when (this) {
         is List -> return this.first()
@@ -207,6 +218,7 @@ public fun <T> Iterable<T>.first(): T {
  * Returns first element.
  * @throws [NoSuchElementException] if the list is empty.
  */
+@CompileTimeCalculation
 public fun <T> List<T>.first(): T {
     if (isEmpty())
         throw NoSuchElementException("List is empty.")
@@ -255,6 +267,7 @@ public inline fun <T, R : Any> Iterable<T>.firstNotNullOfOrNull(transform: (T) -
 /**
  * Returns the first element, or `null` if the collection is empty.
  */
+@CompileTimeCalculation
 public fun <T> Iterable<T>.firstOrNull(): T? {
     when (this) {
         is List -> {
@@ -275,6 +288,7 @@ public fun <T> Iterable<T>.firstOrNull(): T? {
 /**
  * Returns the first element, or `null` if the list is empty.
  */
+@CompileTimeCalculation
 public fun <T> List<T>.firstOrNull(): T? {
     return if (isEmpty()) null else this[0]
 }
@@ -290,6 +304,7 @@ public inline fun <T> Iterable<T>.firstOrNull(predicate: (T) -> Boolean): T? {
 /**
  * Returns an element at the given [index] or the result of calling the [defaultValue] function if the [index] is out of bounds of this list.
  */
+@CompileTimeCalculation
 @kotlin.internal.InlineOnly
 public inline fun <T> List<T>.getOrElse(index: Int, defaultValue: (Int) -> T): T {
     return if (index >= 0 && index <= lastIndex) get(index) else defaultValue(index)
@@ -300,6 +315,7 @@ public inline fun <T> List<T>.getOrElse(index: Int, defaultValue: (Int) -> T): T
  * 
  * @sample samples.collections.Collections.Elements.getOrNull
  */
+@CompileTimeCalculation
 public fun <T> List<T>.getOrNull(index: Int): T? {
     return if (index >= 0 && index <= lastIndex) get(index) else null
 }
@@ -307,6 +323,7 @@ public fun <T> List<T>.getOrNull(index: Int): T? {
 /**
  * Returns first index of [element], or -1 if the collection does not contain element.
  */
+@CompileTimeCalculation
 public fun <@kotlin.internal.OnlyInputTypes T> Iterable<T>.indexOf(element: T): Int {
     if (this is List) return this.indexOf(element)
     var index = 0
@@ -323,6 +340,7 @@ public fun <@kotlin.internal.OnlyInputTypes T> Iterable<T>.indexOf(element: T): 
  * Returns first index of [element], or -1 if the list does not contain element.
  */
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER") // false warning, extension takes precedence in some cases
+@CompileTimeCalculation
 public fun <@kotlin.internal.OnlyInputTypes T> List<T>.indexOf(element: T): Int {
     return indexOf(element)
 }
@@ -330,6 +348,7 @@ public fun <@kotlin.internal.OnlyInputTypes T> List<T>.indexOf(element: T): Int 
 /**
  * Returns index of the first element matching the given [predicate], or -1 if the collection does not contain such element.
  */
+@CompileTimeCalculation
 public inline fun <T> Iterable<T>.indexOfFirst(predicate: (T) -> Boolean): Int {
     var index = 0
     for (item in this) {
@@ -344,6 +363,7 @@ public inline fun <T> Iterable<T>.indexOfFirst(predicate: (T) -> Boolean): Int {
 /**
  * Returns index of the first element matching the given [predicate], or -1 if the list does not contain such element.
  */
+@CompileTimeCalculation
 public inline fun <T> List<T>.indexOfFirst(predicate: (T) -> Boolean): Int {
     var index = 0
     for (item in this) {
@@ -357,6 +377,7 @@ public inline fun <T> List<T>.indexOfFirst(predicate: (T) -> Boolean): Int {
 /**
  * Returns index of the last element matching the given [predicate], or -1 if the collection does not contain such element.
  */
+@CompileTimeCalculation
 public inline fun <T> Iterable<T>.indexOfLast(predicate: (T) -> Boolean): Int {
     var lastIndex = -1
     var index = 0
@@ -372,6 +393,7 @@ public inline fun <T> Iterable<T>.indexOfLast(predicate: (T) -> Boolean): Int {
 /**
  * Returns index of the last element matching the given [predicate], or -1 if the list does not contain such element.
  */
+@CompileTimeCalculation
 public inline fun <T> List<T>.indexOfLast(predicate: (T) -> Boolean): Int {
     val iterator = this.listIterator(size)
     while (iterator.hasPrevious()) {
@@ -389,6 +411,7 @@ public inline fun <T> List<T>.indexOfLast(predicate: (T) -> Boolean): Int {
  * 
  * @sample samples.collections.Collections.Elements.last
  */
+@CompileTimeCalculation
 public fun <T> Iterable<T>.last(): T {
     when (this) {
         is List -> return this.last()
@@ -411,6 +434,7 @@ public fun <T> Iterable<T>.last(): T {
  * 
  * @sample samples.collections.Collections.Elements.last
  */
+@CompileTimeCalculation
 public fun <T> List<T>.last(): T {
     if (isEmpty())
         throw NoSuchElementException("List is empty.")
@@ -457,6 +481,7 @@ public inline fun <T> List<T>.last(predicate: (T) -> Boolean): T {
 /**
  * Returns last index of [element], or -1 if the collection does not contain element.
  */
+@CompileTimeCalculation
 public fun <@kotlin.internal.OnlyInputTypes T> Iterable<T>.lastIndexOf(element: T): Int {
     if (this is List) return this.lastIndexOf(element)
     var lastIndex = -1
@@ -473,6 +498,7 @@ public fun <@kotlin.internal.OnlyInputTypes T> Iterable<T>.lastIndexOf(element: 
 /**
  * Returns last index of [element], or -1 if the list does not contain element.
  */
+@CompileTimeCalculation
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER") // false warning, extension takes precedence in some cases
 public fun <@kotlin.internal.OnlyInputTypes T> List<T>.lastIndexOf(element: T): Int {
     return lastIndexOf(element)
@@ -483,6 +509,7 @@ public fun <@kotlin.internal.OnlyInputTypes T> List<T>.lastIndexOf(element: T): 
  * 
  * @sample samples.collections.Collections.Elements.last
  */
+@CompileTimeCalculation
 public fun <T> Iterable<T>.lastOrNull(): T? {
     when (this) {
         is List -> return if (isEmpty()) null else this[size - 1]
@@ -503,6 +530,7 @@ public fun <T> Iterable<T>.lastOrNull(): T? {
  * 
  * @sample samples.collections.Collections.Elements.last
  */
+@CompileTimeCalculation
 public fun <T> List<T>.lastOrNull(): T? {
     return if (isEmpty()) null else this[size - 1]
 }
@@ -583,6 +611,7 @@ public fun <T> Collection<T>.randomOrNull(random: Random): T? {
 /**
  * Returns the single element, or throws an exception if the collection is empty or has more than one element.
  */
+@CompileTimeCalculation
 public fun <T> Iterable<T>.single(): T {
     when (this) {
         is List -> return this.single()
@@ -601,6 +630,7 @@ public fun <T> Iterable<T>.single(): T {
 /**
  * Returns the single element, or throws an exception if the list is empty or has more than one element.
  */
+@CompileTimeCalculation
 public fun <T> List<T>.single(): T {
     return when (size) {
         0 -> throw NoSuchElementException("List is empty.")
@@ -630,6 +660,7 @@ public inline fun <T> Iterable<T>.single(predicate: (T) -> Boolean): T {
 /**
  * Returns single element, or `null` if the collection is empty or has more than one element.
  */
+@CompileTimeCalculation
 public fun <T> Iterable<T>.singleOrNull(): T? {
     when (this) {
         is List -> return if (size == 1) this[0] else null
@@ -648,6 +679,7 @@ public fun <T> Iterable<T>.singleOrNull(): T? {
 /**
  * Returns single element, or `null` if the list is empty or has more than one element.
  */
+@CompileTimeCalculation
 public fun <T> List<T>.singleOrNull(): T? {
     return if (size == 1) this[0] else null
 }

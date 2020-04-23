@@ -23,6 +23,7 @@ import kotlin.ranges.reversed
  * If the size of this array is less than 1, throws an [IndexOutOfBoundsException] except in Kotlin/JS
  * where the behavior is unspecified.
  */
+@CompileTimeCalculation
 @kotlin.internal.InlineOnly
 public inline operator fun <T> Array<out T>.component1(): T {
     return get(0)
@@ -34,6 +35,7 @@ public inline operator fun <T> Array<out T>.component1(): T {
  * If the size of this array is less than 1, throws an [IndexOutOfBoundsException] except in Kotlin/JS
  * where the behavior is unspecified.
  */
+@CompileTimeCalculation
 @kotlin.internal.InlineOnly
 public inline operator fun ByteArray.component1(): Byte {
     return get(0)
@@ -45,6 +47,7 @@ public inline operator fun ByteArray.component1(): Byte {
  * If the size of this array is less than 1, throws an [IndexOutOfBoundsException] except in Kotlin/JS
  * where the behavior is unspecified.
  */
+@CompileTimeCalculation
 @kotlin.internal.InlineOnly
 public inline operator fun ShortArray.component1(): Short {
     return get(0)
@@ -56,6 +59,7 @@ public inline operator fun ShortArray.component1(): Short {
  * If the size of this array is less than 1, throws an [IndexOutOfBoundsException] except in Kotlin/JS
  * where the behavior is unspecified.
  */
+@CompileTimeCalculation
 @kotlin.internal.InlineOnly
 public inline operator fun IntArray.component1(): Int {
     return get(0)
@@ -67,6 +71,7 @@ public inline operator fun IntArray.component1(): Int {
  * If the size of this array is less than 1, throws an [IndexOutOfBoundsException] except in Kotlin/JS
  * where the behavior is unspecified.
  */
+@CompileTimeCalculation
 @kotlin.internal.InlineOnly
 public inline operator fun LongArray.component1(): Long {
     return get(0)
@@ -78,6 +83,7 @@ public inline operator fun LongArray.component1(): Long {
  * If the size of this array is less than 1, throws an [IndexOutOfBoundsException] except in Kotlin/JS
  * where the behavior is unspecified.
  */
+@CompileTimeCalculation
 @kotlin.internal.InlineOnly
 public inline operator fun FloatArray.component1(): Float {
     return get(0)
@@ -89,6 +95,7 @@ public inline operator fun FloatArray.component1(): Float {
  * If the size of this array is less than 1, throws an [IndexOutOfBoundsException] except in Kotlin/JS
  * where the behavior is unspecified.
  */
+@CompileTimeCalculation
 @kotlin.internal.InlineOnly
 public inline operator fun DoubleArray.component1(): Double {
     return get(0)
@@ -100,6 +107,7 @@ public inline operator fun DoubleArray.component1(): Double {
  * If the size of this array is less than 1, throws an [IndexOutOfBoundsException] except in Kotlin/JS
  * where the behavior is unspecified.
  */
+@CompileTimeCalculation
 @kotlin.internal.InlineOnly
 public inline operator fun BooleanArray.component1(): Boolean {
     return get(0)
@@ -111,6 +119,7 @@ public inline operator fun BooleanArray.component1(): Boolean {
  * If the size of this array is less than 1, throws an [IndexOutOfBoundsException] except in Kotlin/JS
  * where the behavior is unspecified.
  */
+@CompileTimeCalculation
 @kotlin.internal.InlineOnly
 public inline operator fun CharArray.component1(): Char {
     return get(0)
@@ -122,6 +131,7 @@ public inline operator fun CharArray.component1(): Char {
  * If the size of this array is less than 2, throws an [IndexOutOfBoundsException] except in Kotlin/JS
  * where the behavior is unspecified.
  */
+@CompileTimeCalculation
 @kotlin.internal.InlineOnly
 public inline operator fun <T> Array<out T>.component2(): T {
     return get(1)
@@ -133,6 +143,7 @@ public inline operator fun <T> Array<out T>.component2(): T {
  * If the size of this array is less than 2, throws an [IndexOutOfBoundsException] except in Kotlin/JS
  * where the behavior is unspecified.
  */
+@CompileTimeCalculation
 @kotlin.internal.InlineOnly
 public inline operator fun ByteArray.component2(): Byte {
     return get(1)
@@ -144,6 +155,7 @@ public inline operator fun ByteArray.component2(): Byte {
  * If the size of this array is less than 2, throws an [IndexOutOfBoundsException] except in Kotlin/JS
  * where the behavior is unspecified.
  */
+@CompileTimeCalculation
 @kotlin.internal.InlineOnly
 public inline operator fun ShortArray.component2(): Short {
     return get(1)
@@ -155,6 +167,7 @@ public inline operator fun ShortArray.component2(): Short {
  * If the size of this array is less than 2, throws an [IndexOutOfBoundsException] except in Kotlin/JS
  * where the behavior is unspecified.
  */
+@CompileTimeCalculation
 @kotlin.internal.InlineOnly
 public inline operator fun IntArray.component2(): Int {
     return get(1)
@@ -166,6 +179,7 @@ public inline operator fun IntArray.component2(): Int {
  * If the size of this array is less than 2, throws an [IndexOutOfBoundsException] except in Kotlin/JS
  * where the behavior is unspecified.
  */
+@CompileTimeCalculation
 @kotlin.internal.InlineOnly
 public inline operator fun LongArray.component2(): Long {
     return get(1)
@@ -177,6 +191,7 @@ public inline operator fun LongArray.component2(): Long {
  * If the size of this array is less than 2, throws an [IndexOutOfBoundsException] except in Kotlin/JS
  * where the behavior is unspecified.
  */
+@CompileTimeCalculation
 @kotlin.internal.InlineOnly
 public inline operator fun FloatArray.component2(): Float {
     return get(1)
@@ -188,6 +203,7 @@ public inline operator fun FloatArray.component2(): Float {
  * If the size of this array is less than 2, throws an [IndexOutOfBoundsException] except in Kotlin/JS
  * where the behavior is unspecified.
  */
+@CompileTimeCalculation
 @kotlin.internal.InlineOnly
 public inline operator fun DoubleArray.component2(): Double {
     return get(1)
@@ -199,6 +215,7 @@ public inline operator fun DoubleArray.component2(): Double {
  * If the size of this array is less than 2, throws an [IndexOutOfBoundsException] except in Kotlin/JS
  * where the behavior is unspecified.
  */
+@CompileTimeCalculation
 @kotlin.internal.InlineOnly
 public inline operator fun BooleanArray.component2(): Boolean {
     return get(1)
@@ -210,6 +227,7 @@ public inline operator fun BooleanArray.component2(): Boolean {
  * If the size of this array is less than 2, throws an [IndexOutOfBoundsException] except in Kotlin/JS
  * where the behavior is unspecified.
  */
+@CompileTimeCalculation
 @kotlin.internal.InlineOnly
 public inline operator fun CharArray.component2(): Char {
     return get(1)
@@ -221,6 +239,7 @@ public inline operator fun CharArray.component2(): Char {
  * If the size of this array is less than 3, throws an [IndexOutOfBoundsException] except in Kotlin/JS
  * where the behavior is unspecified.
  */
+@CompileTimeCalculation
 @kotlin.internal.InlineOnly
 public inline operator fun <T> Array<out T>.component3(): T {
     return get(2)
@@ -232,6 +251,7 @@ public inline operator fun <T> Array<out T>.component3(): T {
  * If the size of this array is less than 3, throws an [IndexOutOfBoundsException] except in Kotlin/JS
  * where the behavior is unspecified.
  */
+@CompileTimeCalculation
 @kotlin.internal.InlineOnly
 public inline operator fun ByteArray.component3(): Byte {
     return get(2)
@@ -243,6 +263,7 @@ public inline operator fun ByteArray.component3(): Byte {
  * If the size of this array is less than 3, throws an [IndexOutOfBoundsException] except in Kotlin/JS
  * where the behavior is unspecified.
  */
+@CompileTimeCalculation
 @kotlin.internal.InlineOnly
 public inline operator fun ShortArray.component3(): Short {
     return get(2)
@@ -254,6 +275,7 @@ public inline operator fun ShortArray.component3(): Short {
  * If the size of this array is less than 3, throws an [IndexOutOfBoundsException] except in Kotlin/JS
  * where the behavior is unspecified.
  */
+@CompileTimeCalculation
 @kotlin.internal.InlineOnly
 public inline operator fun IntArray.component3(): Int {
     return get(2)
@@ -265,6 +287,7 @@ public inline operator fun IntArray.component3(): Int {
  * If the size of this array is less than 3, throws an [IndexOutOfBoundsException] except in Kotlin/JS
  * where the behavior is unspecified.
  */
+@CompileTimeCalculation
 @kotlin.internal.InlineOnly
 public inline operator fun LongArray.component3(): Long {
     return get(2)
@@ -276,6 +299,7 @@ public inline operator fun LongArray.component3(): Long {
  * If the size of this array is less than 3, throws an [IndexOutOfBoundsException] except in Kotlin/JS
  * where the behavior is unspecified.
  */
+@CompileTimeCalculation
 @kotlin.internal.InlineOnly
 public inline operator fun FloatArray.component3(): Float {
     return get(2)
@@ -287,6 +311,7 @@ public inline operator fun FloatArray.component3(): Float {
  * If the size of this array is less than 3, throws an [IndexOutOfBoundsException] except in Kotlin/JS
  * where the behavior is unspecified.
  */
+@CompileTimeCalculation
 @kotlin.internal.InlineOnly
 public inline operator fun DoubleArray.component3(): Double {
     return get(2)
@@ -298,6 +323,7 @@ public inline operator fun DoubleArray.component3(): Double {
  * If the size of this array is less than 3, throws an [IndexOutOfBoundsException] except in Kotlin/JS
  * where the behavior is unspecified.
  */
+@CompileTimeCalculation
 @kotlin.internal.InlineOnly
 public inline operator fun BooleanArray.component3(): Boolean {
     return get(2)
@@ -309,6 +335,7 @@ public inline operator fun BooleanArray.component3(): Boolean {
  * If the size of this array is less than 3, throws an [IndexOutOfBoundsException] except in Kotlin/JS
  * where the behavior is unspecified.
  */
+@CompileTimeCalculation
 @kotlin.internal.InlineOnly
 public inline operator fun CharArray.component3(): Char {
     return get(2)
@@ -320,6 +347,7 @@ public inline operator fun CharArray.component3(): Char {
  * If the size of this array is less than 4, throws an [IndexOutOfBoundsException] except in Kotlin/JS
  * where the behavior is unspecified.
  */
+@CompileTimeCalculation
 @kotlin.internal.InlineOnly
 public inline operator fun <T> Array<out T>.component4(): T {
     return get(3)
@@ -331,6 +359,7 @@ public inline operator fun <T> Array<out T>.component4(): T {
  * If the size of this array is less than 4, throws an [IndexOutOfBoundsException] except in Kotlin/JS
  * where the behavior is unspecified.
  */
+@CompileTimeCalculation
 @kotlin.internal.InlineOnly
 public inline operator fun ByteArray.component4(): Byte {
     return get(3)
@@ -342,6 +371,7 @@ public inline operator fun ByteArray.component4(): Byte {
  * If the size of this array is less than 4, throws an [IndexOutOfBoundsException] except in Kotlin/JS
  * where the behavior is unspecified.
  */
+@CompileTimeCalculation
 @kotlin.internal.InlineOnly
 public inline operator fun ShortArray.component4(): Short {
     return get(3)
@@ -353,6 +383,7 @@ public inline operator fun ShortArray.component4(): Short {
  * If the size of this array is less than 4, throws an [IndexOutOfBoundsException] except in Kotlin/JS
  * where the behavior is unspecified.
  */
+@CompileTimeCalculation
 @kotlin.internal.InlineOnly
 public inline operator fun IntArray.component4(): Int {
     return get(3)
@@ -364,6 +395,7 @@ public inline operator fun IntArray.component4(): Int {
  * If the size of this array is less than 4, throws an [IndexOutOfBoundsException] except in Kotlin/JS
  * where the behavior is unspecified.
  */
+@CompileTimeCalculation
 @kotlin.internal.InlineOnly
 public inline operator fun LongArray.component4(): Long {
     return get(3)
@@ -375,6 +407,7 @@ public inline operator fun LongArray.component4(): Long {
  * If the size of this array is less than 4, throws an [IndexOutOfBoundsException] except in Kotlin/JS
  * where the behavior is unspecified.
  */
+@CompileTimeCalculation
 @kotlin.internal.InlineOnly
 public inline operator fun FloatArray.component4(): Float {
     return get(3)
@@ -386,6 +419,7 @@ public inline operator fun FloatArray.component4(): Float {
  * If the size of this array is less than 4, throws an [IndexOutOfBoundsException] except in Kotlin/JS
  * where the behavior is unspecified.
  */
+@CompileTimeCalculation
 @kotlin.internal.InlineOnly
 public inline operator fun DoubleArray.component4(): Double {
     return get(3)
@@ -397,6 +431,7 @@ public inline operator fun DoubleArray.component4(): Double {
  * If the size of this array is less than 4, throws an [IndexOutOfBoundsException] except in Kotlin/JS
  * where the behavior is unspecified.
  */
+@CompileTimeCalculation
 @kotlin.internal.InlineOnly
 public inline operator fun BooleanArray.component4(): Boolean {
     return get(3)
@@ -408,6 +443,7 @@ public inline operator fun BooleanArray.component4(): Boolean {
  * If the size of this array is less than 4, throws an [IndexOutOfBoundsException] except in Kotlin/JS
  * where the behavior is unspecified.
  */
+@CompileTimeCalculation
 @kotlin.internal.InlineOnly
 public inline operator fun CharArray.component4(): Char {
     return get(3)
@@ -419,6 +455,7 @@ public inline operator fun CharArray.component4(): Char {
  * If the size of this array is less than 5, throws an [IndexOutOfBoundsException] except in Kotlin/JS
  * where the behavior is unspecified.
  */
+@CompileTimeCalculation
 @kotlin.internal.InlineOnly
 public inline operator fun <T> Array<out T>.component5(): T {
     return get(4)
@@ -430,6 +467,7 @@ public inline operator fun <T> Array<out T>.component5(): T {
  * If the size of this array is less than 5, throws an [IndexOutOfBoundsException] except in Kotlin/JS
  * where the behavior is unspecified.
  */
+@CompileTimeCalculation
 @kotlin.internal.InlineOnly
 public inline operator fun ByteArray.component5(): Byte {
     return get(4)
@@ -441,6 +479,7 @@ public inline operator fun ByteArray.component5(): Byte {
  * If the size of this array is less than 5, throws an [IndexOutOfBoundsException] except in Kotlin/JS
  * where the behavior is unspecified.
  */
+@CompileTimeCalculation
 @kotlin.internal.InlineOnly
 public inline operator fun ShortArray.component5(): Short {
     return get(4)
@@ -452,6 +491,7 @@ public inline operator fun ShortArray.component5(): Short {
  * If the size of this array is less than 5, throws an [IndexOutOfBoundsException] except in Kotlin/JS
  * where the behavior is unspecified.
  */
+@CompileTimeCalculation
 @kotlin.internal.InlineOnly
 public inline operator fun IntArray.component5(): Int {
     return get(4)
@@ -463,6 +503,7 @@ public inline operator fun IntArray.component5(): Int {
  * If the size of this array is less than 5, throws an [IndexOutOfBoundsException] except in Kotlin/JS
  * where the behavior is unspecified.
  */
+@CompileTimeCalculation
 @kotlin.internal.InlineOnly
 public inline operator fun LongArray.component5(): Long {
     return get(4)
@@ -474,6 +515,7 @@ public inline operator fun LongArray.component5(): Long {
  * If the size of this array is less than 5, throws an [IndexOutOfBoundsException] except in Kotlin/JS
  * where the behavior is unspecified.
  */
+@CompileTimeCalculation
 @kotlin.internal.InlineOnly
 public inline operator fun FloatArray.component5(): Float {
     return get(4)
@@ -485,6 +527,7 @@ public inline operator fun FloatArray.component5(): Float {
  * If the size of this array is less than 5, throws an [IndexOutOfBoundsException] except in Kotlin/JS
  * where the behavior is unspecified.
  */
+@CompileTimeCalculation
 @kotlin.internal.InlineOnly
 public inline operator fun DoubleArray.component5(): Double {
     return get(4)
@@ -496,6 +539,7 @@ public inline operator fun DoubleArray.component5(): Double {
  * If the size of this array is less than 5, throws an [IndexOutOfBoundsException] except in Kotlin/JS
  * where the behavior is unspecified.
  */
+@CompileTimeCalculation
 @kotlin.internal.InlineOnly
 public inline operator fun BooleanArray.component5(): Boolean {
     return get(4)
@@ -507,6 +551,7 @@ public inline operator fun BooleanArray.component5(): Boolean {
  * If the size of this array is less than 5, throws an [IndexOutOfBoundsException] except in Kotlin/JS
  * where the behavior is unspecified.
  */
+@CompileTimeCalculation
 @kotlin.internal.InlineOnly
 public inline operator fun CharArray.component5(): Char {
     return get(4)
@@ -555,10 +600,10 @@ public operator fun LongArray.contains(element: Long): Boolean {
 /**
  * Returns `true` if [element] is found in the array.
  */
-@CompileTimeCalculation
 @Deprecated("The function has unclear behavior when searching for NaN or zero values and will be removed soon. Use 'any { it == element }' instead to continue using this behavior, or '.asList().contains(element: T)' to get the same search behavior as in a list.", ReplaceWith("any { it == element }"))
 @DeprecatedSinceKotlin(warningSince = "1.4")
 @Suppress("DEPRECATION")
+@CompileTimeCalculation
 public operator fun FloatArray.contains(element: Float): Boolean {
     return indexOf(element) >= 0
 }
@@ -566,10 +611,10 @@ public operator fun FloatArray.contains(element: Float): Boolean {
 /**
  * Returns `true` if [element] is found in the array.
  */
-@CompileTimeCalculation
 @Deprecated("The function has unclear behavior when searching for NaN or zero values and will be removed soon. Use 'any { it == element }' instead to continue using this behavior, or '.asList().contains(element: T)' to get the same search behavior as in a list.", ReplaceWith("any { it == element }"))
 @DeprecatedSinceKotlin(warningSince = "1.4")
 @Suppress("DEPRECATION")
+@CompileTimeCalculation
 public operator fun DoubleArray.contains(element: Double): Boolean {
     return indexOf(element) >= 0
 }
@@ -595,6 +640,7 @@ public operator fun CharArray.contains(element: Char): Boolean {
  * 
  * @sample samples.collections.Collections.Elements.elementAt
  */
+@CompileTimeCalculation
 public expect fun <T> Array<out T>.elementAt(index: Int): T
 
 /**
@@ -602,6 +648,7 @@ public expect fun <T> Array<out T>.elementAt(index: Int): T
  * 
  * @sample samples.collections.Collections.Elements.elementAt
  */
+@CompileTimeCalculation
 public expect fun ByteArray.elementAt(index: Int): Byte
 
 /**
@@ -609,6 +656,7 @@ public expect fun ByteArray.elementAt(index: Int): Byte
  * 
  * @sample samples.collections.Collections.Elements.elementAt
  */
+@CompileTimeCalculation
 public expect fun ShortArray.elementAt(index: Int): Short
 
 /**
@@ -616,6 +664,7 @@ public expect fun ShortArray.elementAt(index: Int): Short
  * 
  * @sample samples.collections.Collections.Elements.elementAt
  */
+@CompileTimeCalculation
 public expect fun IntArray.elementAt(index: Int): Int
 
 /**
@@ -623,6 +672,7 @@ public expect fun IntArray.elementAt(index: Int): Int
  * 
  * @sample samples.collections.Collections.Elements.elementAt
  */
+@CompileTimeCalculation
 public expect fun LongArray.elementAt(index: Int): Long
 
 /**
@@ -630,6 +680,7 @@ public expect fun LongArray.elementAt(index: Int): Long
  * 
  * @sample samples.collections.Collections.Elements.elementAt
  */
+@CompileTimeCalculation
 public expect fun FloatArray.elementAt(index: Int): Float
 
 /**
@@ -637,6 +688,7 @@ public expect fun FloatArray.elementAt(index: Int): Float
  * 
  * @sample samples.collections.Collections.Elements.elementAt
  */
+@CompileTimeCalculation
 public expect fun DoubleArray.elementAt(index: Int): Double
 
 /**
@@ -644,6 +696,7 @@ public expect fun DoubleArray.elementAt(index: Int): Double
  * 
  * @sample samples.collections.Collections.Elements.elementAt
  */
+@CompileTimeCalculation
 public expect fun BooleanArray.elementAt(index: Int): Boolean
 
 /**
@@ -651,6 +704,7 @@ public expect fun BooleanArray.elementAt(index: Int): Boolean
  * 
  * @sample samples.collections.Collections.Elements.elementAt
  */
+@CompileTimeCalculation
 public expect fun CharArray.elementAt(index: Int): Char
 
 /**
@@ -658,6 +712,7 @@ public expect fun CharArray.elementAt(index: Int): Char
  * 
  * @sample samples.collections.Collections.Elements.elementAtOrElse
  */
+@CompileTimeCalculation
 @kotlin.internal.InlineOnly
 public inline fun <T> Array<out T>.elementAtOrElse(index: Int, defaultValue: (Int) -> T): T {
     return if (index >= 0 && index <= lastIndex) get(index) else defaultValue(index)
@@ -668,6 +723,7 @@ public inline fun <T> Array<out T>.elementAtOrElse(index: Int, defaultValue: (In
  * 
  * @sample samples.collections.Collections.Elements.elementAtOrElse
  */
+@CompileTimeCalculation
 @kotlin.internal.InlineOnly
 public inline fun ByteArray.elementAtOrElse(index: Int, defaultValue: (Int) -> Byte): Byte {
     return if (index >= 0 && index <= lastIndex) get(index) else defaultValue(index)
@@ -678,6 +734,7 @@ public inline fun ByteArray.elementAtOrElse(index: Int, defaultValue: (Int) -> B
  * 
  * @sample samples.collections.Collections.Elements.elementAtOrElse
  */
+@CompileTimeCalculation
 @kotlin.internal.InlineOnly
 public inline fun ShortArray.elementAtOrElse(index: Int, defaultValue: (Int) -> Short): Short {
     return if (index >= 0 && index <= lastIndex) get(index) else defaultValue(index)
@@ -688,6 +745,7 @@ public inline fun ShortArray.elementAtOrElse(index: Int, defaultValue: (Int) -> 
  * 
  * @sample samples.collections.Collections.Elements.elementAtOrElse
  */
+@CompileTimeCalculation
 @kotlin.internal.InlineOnly
 public inline fun IntArray.elementAtOrElse(index: Int, defaultValue: (Int) -> Int): Int {
     return if (index >= 0 && index <= lastIndex) get(index) else defaultValue(index)
@@ -698,6 +756,7 @@ public inline fun IntArray.elementAtOrElse(index: Int, defaultValue: (Int) -> In
  * 
  * @sample samples.collections.Collections.Elements.elementAtOrElse
  */
+@CompileTimeCalculation
 @kotlin.internal.InlineOnly
 public inline fun LongArray.elementAtOrElse(index: Int, defaultValue: (Int) -> Long): Long {
     return if (index >= 0 && index <= lastIndex) get(index) else defaultValue(index)
@@ -708,6 +767,7 @@ public inline fun LongArray.elementAtOrElse(index: Int, defaultValue: (Int) -> L
  * 
  * @sample samples.collections.Collections.Elements.elementAtOrElse
  */
+@CompileTimeCalculation
 @kotlin.internal.InlineOnly
 public inline fun FloatArray.elementAtOrElse(index: Int, defaultValue: (Int) -> Float): Float {
     return if (index >= 0 && index <= lastIndex) get(index) else defaultValue(index)
@@ -718,6 +778,7 @@ public inline fun FloatArray.elementAtOrElse(index: Int, defaultValue: (Int) -> 
  * 
  * @sample samples.collections.Collections.Elements.elementAtOrElse
  */
+@CompileTimeCalculation
 @kotlin.internal.InlineOnly
 public inline fun DoubleArray.elementAtOrElse(index: Int, defaultValue: (Int) -> Double): Double {
     return if (index >= 0 && index <= lastIndex) get(index) else defaultValue(index)
@@ -728,6 +789,7 @@ public inline fun DoubleArray.elementAtOrElse(index: Int, defaultValue: (Int) ->
  * 
  * @sample samples.collections.Collections.Elements.elementAtOrElse
  */
+@CompileTimeCalculation
 @kotlin.internal.InlineOnly
 public inline fun BooleanArray.elementAtOrElse(index: Int, defaultValue: (Int) -> Boolean): Boolean {
     return if (index >= 0 && index <= lastIndex) get(index) else defaultValue(index)
@@ -738,6 +800,7 @@ public inline fun BooleanArray.elementAtOrElse(index: Int, defaultValue: (Int) -
  * 
  * @sample samples.collections.Collections.Elements.elementAtOrElse
  */
+@CompileTimeCalculation
 @kotlin.internal.InlineOnly
 public inline fun CharArray.elementAtOrElse(index: Int, defaultValue: (Int) -> Char): Char {
     return if (index >= 0 && index <= lastIndex) get(index) else defaultValue(index)
@@ -748,6 +811,7 @@ public inline fun CharArray.elementAtOrElse(index: Int, defaultValue: (Int) -> C
  * 
  * @sample samples.collections.Collections.Elements.elementAtOrNull
  */
+@CompileTimeCalculation
 @kotlin.internal.InlineOnly
 public inline fun <T> Array<out T>.elementAtOrNull(index: Int): T? {
     return this.getOrNull(index)
@@ -758,6 +822,7 @@ public inline fun <T> Array<out T>.elementAtOrNull(index: Int): T? {
  * 
  * @sample samples.collections.Collections.Elements.elementAtOrNull
  */
+@CompileTimeCalculation
 @kotlin.internal.InlineOnly
 public inline fun ByteArray.elementAtOrNull(index: Int): Byte? {
     return this.getOrNull(index)
@@ -768,6 +833,7 @@ public inline fun ByteArray.elementAtOrNull(index: Int): Byte? {
  * 
  * @sample samples.collections.Collections.Elements.elementAtOrNull
  */
+@CompileTimeCalculation
 @kotlin.internal.InlineOnly
 public inline fun ShortArray.elementAtOrNull(index: Int): Short? {
     return this.getOrNull(index)
@@ -778,6 +844,7 @@ public inline fun ShortArray.elementAtOrNull(index: Int): Short? {
  * 
  * @sample samples.collections.Collections.Elements.elementAtOrNull
  */
+@CompileTimeCalculation
 @kotlin.internal.InlineOnly
 public inline fun IntArray.elementAtOrNull(index: Int): Int? {
     return this.getOrNull(index)
@@ -788,6 +855,7 @@ public inline fun IntArray.elementAtOrNull(index: Int): Int? {
  * 
  * @sample samples.collections.Collections.Elements.elementAtOrNull
  */
+@CompileTimeCalculation
 @kotlin.internal.InlineOnly
 public inline fun LongArray.elementAtOrNull(index: Int): Long? {
     return this.getOrNull(index)
@@ -798,6 +866,7 @@ public inline fun LongArray.elementAtOrNull(index: Int): Long? {
  * 
  * @sample samples.collections.Collections.Elements.elementAtOrNull
  */
+@CompileTimeCalculation
 @kotlin.internal.InlineOnly
 public inline fun FloatArray.elementAtOrNull(index: Int): Float? {
     return this.getOrNull(index)
@@ -808,6 +877,7 @@ public inline fun FloatArray.elementAtOrNull(index: Int): Float? {
  * 
  * @sample samples.collections.Collections.Elements.elementAtOrNull
  */
+@CompileTimeCalculation
 @kotlin.internal.InlineOnly
 public inline fun DoubleArray.elementAtOrNull(index: Int): Double? {
     return this.getOrNull(index)
@@ -818,6 +888,7 @@ public inline fun DoubleArray.elementAtOrNull(index: Int): Double? {
  * 
  * @sample samples.collections.Collections.Elements.elementAtOrNull
  */
+@CompileTimeCalculation
 @kotlin.internal.InlineOnly
 public inline fun BooleanArray.elementAtOrNull(index: Int): Boolean? {
     return this.getOrNull(index)
@@ -828,6 +899,7 @@ public inline fun BooleanArray.elementAtOrNull(index: Int): Boolean? {
  * 
  * @sample samples.collections.Collections.Elements.elementAtOrNull
  */
+@CompileTimeCalculation
 @kotlin.internal.InlineOnly
 public inline fun CharArray.elementAtOrNull(index: Int): Char? {
     return this.getOrNull(index)
@@ -1017,6 +1089,7 @@ public inline fun CharArray.findLast(predicate: (Char) -> Boolean): Char? {
  * Returns first element.
  * @throws [NoSuchElementException] if the array is empty.
  */
+@CompileTimeCalculation
 public fun <T> Array<out T>.first(): T {
     if (isEmpty())
         throw NoSuchElementException("Array is empty.")
@@ -1027,6 +1100,7 @@ public fun <T> Array<out T>.first(): T {
  * Returns first element.
  * @throws [NoSuchElementException] if the array is empty.
  */
+@CompileTimeCalculation
 public fun ByteArray.first(): Byte {
     if (isEmpty())
         throw NoSuchElementException("Array is empty.")
@@ -1037,6 +1111,7 @@ public fun ByteArray.first(): Byte {
  * Returns first element.
  * @throws [NoSuchElementException] if the array is empty.
  */
+@CompileTimeCalculation
 public fun ShortArray.first(): Short {
     if (isEmpty())
         throw NoSuchElementException("Array is empty.")
@@ -1047,6 +1122,7 @@ public fun ShortArray.first(): Short {
  * Returns first element.
  * @throws [NoSuchElementException] if the array is empty.
  */
+@CompileTimeCalculation
 public fun IntArray.first(): Int {
     if (isEmpty())
         throw NoSuchElementException("Array is empty.")
@@ -1057,6 +1133,7 @@ public fun IntArray.first(): Int {
  * Returns first element.
  * @throws [NoSuchElementException] if the array is empty.
  */
+@CompileTimeCalculation
 public fun LongArray.first(): Long {
     if (isEmpty())
         throw NoSuchElementException("Array is empty.")
@@ -1067,6 +1144,7 @@ public fun LongArray.first(): Long {
  * Returns first element.
  * @throws [NoSuchElementException] if the array is empty.
  */
+@CompileTimeCalculation
 public fun FloatArray.first(): Float {
     if (isEmpty())
         throw NoSuchElementException("Array is empty.")
@@ -1077,6 +1155,7 @@ public fun FloatArray.first(): Float {
  * Returns first element.
  * @throws [NoSuchElementException] if the array is empty.
  */
+@CompileTimeCalculation
 public fun DoubleArray.first(): Double {
     if (isEmpty())
         throw NoSuchElementException("Array is empty.")
@@ -1087,6 +1166,7 @@ public fun DoubleArray.first(): Double {
  * Returns first element.
  * @throws [NoSuchElementException] if the array is empty.
  */
+@CompileTimeCalculation
 public fun BooleanArray.first(): Boolean {
     if (isEmpty())
         throw NoSuchElementException("Array is empty.")
@@ -1097,6 +1177,7 @@ public fun BooleanArray.first(): Boolean {
  * Returns first element.
  * @throws [NoSuchElementException] if the array is empty.
  */
+@CompileTimeCalculation
 public fun CharArray.first(): Char {
     if (isEmpty())
         throw NoSuchElementException("Array is empty.")
@@ -1217,6 +1298,7 @@ public inline fun <T, R : Any> Array<out T>.firstNotNullOfOrNull(transform: (T) 
 /**
  * Returns the first element, or `null` if the array is empty.
  */
+@CompileTimeCalculation
 public fun <T> Array<out T>.firstOrNull(): T? {
     return if (isEmpty()) null else this[0]
 }
@@ -1224,6 +1306,7 @@ public fun <T> Array<out T>.firstOrNull(): T? {
 /**
  * Returns the first element, or `null` if the array is empty.
  */
+@CompileTimeCalculation
 public fun ByteArray.firstOrNull(): Byte? {
     return if (isEmpty()) null else this[0]
 }
@@ -1231,6 +1314,7 @@ public fun ByteArray.firstOrNull(): Byte? {
 /**
  * Returns the first element, or `null` if the array is empty.
  */
+@CompileTimeCalculation
 public fun ShortArray.firstOrNull(): Short? {
     return if (isEmpty()) null else this[0]
 }
@@ -1238,6 +1322,7 @@ public fun ShortArray.firstOrNull(): Short? {
 /**
  * Returns the first element, or `null` if the array is empty.
  */
+@CompileTimeCalculation
 public fun IntArray.firstOrNull(): Int? {
     return if (isEmpty()) null else this[0]
 }
@@ -1245,6 +1330,7 @@ public fun IntArray.firstOrNull(): Int? {
 /**
  * Returns the first element, or `null` if the array is empty.
  */
+@CompileTimeCalculation
 public fun LongArray.firstOrNull(): Long? {
     return if (isEmpty()) null else this[0]
 }
@@ -1252,6 +1338,7 @@ public fun LongArray.firstOrNull(): Long? {
 /**
  * Returns the first element, or `null` if the array is empty.
  */
+@CompileTimeCalculation
 public fun FloatArray.firstOrNull(): Float? {
     return if (isEmpty()) null else this[0]
 }
@@ -1259,6 +1346,7 @@ public fun FloatArray.firstOrNull(): Float? {
 /**
  * Returns the first element, or `null` if the array is empty.
  */
+@CompileTimeCalculation
 public fun DoubleArray.firstOrNull(): Double? {
     return if (isEmpty()) null else this[0]
 }
@@ -1266,6 +1354,7 @@ public fun DoubleArray.firstOrNull(): Double? {
 /**
  * Returns the first element, or `null` if the array is empty.
  */
+@CompileTimeCalculation
 public fun BooleanArray.firstOrNull(): Boolean? {
     return if (isEmpty()) null else this[0]
 }
@@ -1273,6 +1362,7 @@ public fun BooleanArray.firstOrNull(): Boolean? {
 /**
  * Returns the first element, or `null` if the array is empty.
  */
+@CompileTimeCalculation
 public fun CharArray.firstOrNull(): Char? {
     return if (isEmpty()) null else this[0]
 }
@@ -1352,6 +1442,7 @@ public inline fun CharArray.firstOrNull(predicate: (Char) -> Boolean): Char? {
 /**
  * Returns an element at the given [index] or the result of calling the [defaultValue] function if the [index] is out of bounds of this array.
  */
+@CompileTimeCalculation
 @kotlin.internal.InlineOnly
 public inline fun <T> Array<out T>.getOrElse(index: Int, defaultValue: (Int) -> T): T {
     return if (index >= 0 && index <= lastIndex) get(index) else defaultValue(index)
@@ -1360,6 +1451,7 @@ public inline fun <T> Array<out T>.getOrElse(index: Int, defaultValue: (Int) -> 
 /**
  * Returns an element at the given [index] or the result of calling the [defaultValue] function if the [index] is out of bounds of this array.
  */
+@CompileTimeCalculation
 @kotlin.internal.InlineOnly
 public inline fun ByteArray.getOrElse(index: Int, defaultValue: (Int) -> Byte): Byte {
     return if (index >= 0 && index <= lastIndex) get(index) else defaultValue(index)
@@ -1368,6 +1460,7 @@ public inline fun ByteArray.getOrElse(index: Int, defaultValue: (Int) -> Byte): 
 /**
  * Returns an element at the given [index] or the result of calling the [defaultValue] function if the [index] is out of bounds of this array.
  */
+@CompileTimeCalculation
 @kotlin.internal.InlineOnly
 public inline fun ShortArray.getOrElse(index: Int, defaultValue: (Int) -> Short): Short {
     return if (index >= 0 && index <= lastIndex) get(index) else defaultValue(index)
@@ -1376,6 +1469,7 @@ public inline fun ShortArray.getOrElse(index: Int, defaultValue: (Int) -> Short)
 /**
  * Returns an element at the given [index] or the result of calling the [defaultValue] function if the [index] is out of bounds of this array.
  */
+@CompileTimeCalculation
 @kotlin.internal.InlineOnly
 public inline fun IntArray.getOrElse(index: Int, defaultValue: (Int) -> Int): Int {
     return if (index >= 0 && index <= lastIndex) get(index) else defaultValue(index)
@@ -1384,6 +1478,7 @@ public inline fun IntArray.getOrElse(index: Int, defaultValue: (Int) -> Int): In
 /**
  * Returns an element at the given [index] or the result of calling the [defaultValue] function if the [index] is out of bounds of this array.
  */
+@CompileTimeCalculation
 @kotlin.internal.InlineOnly
 public inline fun LongArray.getOrElse(index: Int, defaultValue: (Int) -> Long): Long {
     return if (index >= 0 && index <= lastIndex) get(index) else defaultValue(index)
@@ -1392,6 +1487,7 @@ public inline fun LongArray.getOrElse(index: Int, defaultValue: (Int) -> Long): 
 /**
  * Returns an element at the given [index] or the result of calling the [defaultValue] function if the [index] is out of bounds of this array.
  */
+@CompileTimeCalculation
 @kotlin.internal.InlineOnly
 public inline fun FloatArray.getOrElse(index: Int, defaultValue: (Int) -> Float): Float {
     return if (index >= 0 && index <= lastIndex) get(index) else defaultValue(index)
@@ -1400,6 +1496,7 @@ public inline fun FloatArray.getOrElse(index: Int, defaultValue: (Int) -> Float)
 /**
  * Returns an element at the given [index] or the result of calling the [defaultValue] function if the [index] is out of bounds of this array.
  */
+@CompileTimeCalculation
 @kotlin.internal.InlineOnly
 public inline fun DoubleArray.getOrElse(index: Int, defaultValue: (Int) -> Double): Double {
     return if (index >= 0 && index <= lastIndex) get(index) else defaultValue(index)
@@ -1408,6 +1505,7 @@ public inline fun DoubleArray.getOrElse(index: Int, defaultValue: (Int) -> Doubl
 /**
  * Returns an element at the given [index] or the result of calling the [defaultValue] function if the [index] is out of bounds of this array.
  */
+@CompileTimeCalculation
 @kotlin.internal.InlineOnly
 public inline fun BooleanArray.getOrElse(index: Int, defaultValue: (Int) -> Boolean): Boolean {
     return if (index >= 0 && index <= lastIndex) get(index) else defaultValue(index)
@@ -1416,6 +1514,7 @@ public inline fun BooleanArray.getOrElse(index: Int, defaultValue: (Int) -> Bool
 /**
  * Returns an element at the given [index] or the result of calling the [defaultValue] function if the [index] is out of bounds of this array.
  */
+@CompileTimeCalculation
 @kotlin.internal.InlineOnly
 public inline fun CharArray.getOrElse(index: Int, defaultValue: (Int) -> Char): Char {
     return if (index >= 0 && index <= lastIndex) get(index) else defaultValue(index)
@@ -1426,6 +1525,7 @@ public inline fun CharArray.getOrElse(index: Int, defaultValue: (Int) -> Char): 
  * 
  * @sample samples.collections.Collections.Elements.getOrNull
  */
+@CompileTimeCalculation
 public fun <T> Array<out T>.getOrNull(index: Int): T? {
     return if (index >= 0 && index <= lastIndex) get(index) else null
 }
@@ -1435,6 +1535,7 @@ public fun <T> Array<out T>.getOrNull(index: Int): T? {
  * 
  * @sample samples.collections.Collections.Elements.getOrNull
  */
+@CompileTimeCalculation
 public fun ByteArray.getOrNull(index: Int): Byte? {
     return if (index >= 0 && index <= lastIndex) get(index) else null
 }
@@ -1444,6 +1545,7 @@ public fun ByteArray.getOrNull(index: Int): Byte? {
  * 
  * @sample samples.collections.Collections.Elements.getOrNull
  */
+@CompileTimeCalculation
 public fun ShortArray.getOrNull(index: Int): Short? {
     return if (index >= 0 && index <= lastIndex) get(index) else null
 }
@@ -1453,6 +1555,7 @@ public fun ShortArray.getOrNull(index: Int): Short? {
  * 
  * @sample samples.collections.Collections.Elements.getOrNull
  */
+@CompileTimeCalculation
 public fun IntArray.getOrNull(index: Int): Int? {
     return if (index >= 0 && index <= lastIndex) get(index) else null
 }
@@ -1462,6 +1565,7 @@ public fun IntArray.getOrNull(index: Int): Int? {
  * 
  * @sample samples.collections.Collections.Elements.getOrNull
  */
+@CompileTimeCalculation
 public fun LongArray.getOrNull(index: Int): Long? {
     return if (index >= 0 && index <= lastIndex) get(index) else null
 }
@@ -1471,6 +1575,7 @@ public fun LongArray.getOrNull(index: Int): Long? {
  * 
  * @sample samples.collections.Collections.Elements.getOrNull
  */
+@CompileTimeCalculation
 public fun FloatArray.getOrNull(index: Int): Float? {
     return if (index >= 0 && index <= lastIndex) get(index) else null
 }
@@ -1480,6 +1585,7 @@ public fun FloatArray.getOrNull(index: Int): Float? {
  * 
  * @sample samples.collections.Collections.Elements.getOrNull
  */
+@CompileTimeCalculation
 public fun DoubleArray.getOrNull(index: Int): Double? {
     return if (index >= 0 && index <= lastIndex) get(index) else null
 }
@@ -1489,6 +1595,7 @@ public fun DoubleArray.getOrNull(index: Int): Double? {
  * 
  * @sample samples.collections.Collections.Elements.getOrNull
  */
+@CompileTimeCalculation
 public fun BooleanArray.getOrNull(index: Int): Boolean? {
     return if (index >= 0 && index <= lastIndex) get(index) else null
 }
@@ -1498,6 +1605,7 @@ public fun BooleanArray.getOrNull(index: Int): Boolean? {
  * 
  * @sample samples.collections.Collections.Elements.getOrNull
  */
+@CompileTimeCalculation
 public fun CharArray.getOrNull(index: Int): Char? {
     return if (index >= 0 && index <= lastIndex) get(index) else null
 }
@@ -1634,6 +1742,7 @@ public fun CharArray.indexOf(element: Char): Int {
 /**
  * Returns index of the first element matching the given [predicate], or -1 if the array does not contain such element.
  */
+@CompileTimeCalculation
 public inline fun <T> Array<out T>.indexOfFirst(predicate: (T) -> Boolean): Int {
     for (index in indices) {
         if (predicate(this[index])) {
@@ -1646,6 +1755,7 @@ public inline fun <T> Array<out T>.indexOfFirst(predicate: (T) -> Boolean): Int 
 /**
  * Returns index of the first element matching the given [predicate], or -1 if the array does not contain such element.
  */
+@CompileTimeCalculation
 public inline fun ByteArray.indexOfFirst(predicate: (Byte) -> Boolean): Int {
     for (index in indices) {
         if (predicate(this[index])) {
@@ -1658,6 +1768,7 @@ public inline fun ByteArray.indexOfFirst(predicate: (Byte) -> Boolean): Int {
 /**
  * Returns index of the first element matching the given [predicate], or -1 if the array does not contain such element.
  */
+@CompileTimeCalculation
 public inline fun ShortArray.indexOfFirst(predicate: (Short) -> Boolean): Int {
     for (index in indices) {
         if (predicate(this[index])) {
@@ -1670,6 +1781,7 @@ public inline fun ShortArray.indexOfFirst(predicate: (Short) -> Boolean): Int {
 /**
  * Returns index of the first element matching the given [predicate], or -1 if the array does not contain such element.
  */
+@CompileTimeCalculation
 public inline fun IntArray.indexOfFirst(predicate: (Int) -> Boolean): Int {
     for (index in indices) {
         if (predicate(this[index])) {
@@ -1682,6 +1794,7 @@ public inline fun IntArray.indexOfFirst(predicate: (Int) -> Boolean): Int {
 /**
  * Returns index of the first element matching the given [predicate], or -1 if the array does not contain such element.
  */
+@CompileTimeCalculation
 public inline fun LongArray.indexOfFirst(predicate: (Long) -> Boolean): Int {
     for (index in indices) {
         if (predicate(this[index])) {
@@ -1694,6 +1807,7 @@ public inline fun LongArray.indexOfFirst(predicate: (Long) -> Boolean): Int {
 /**
  * Returns index of the first element matching the given [predicate], or -1 if the array does not contain such element.
  */
+@CompileTimeCalculation
 public inline fun FloatArray.indexOfFirst(predicate: (Float) -> Boolean): Int {
     for (index in indices) {
         if (predicate(this[index])) {
@@ -1706,6 +1820,7 @@ public inline fun FloatArray.indexOfFirst(predicate: (Float) -> Boolean): Int {
 /**
  * Returns index of the first element matching the given [predicate], or -1 if the array does not contain such element.
  */
+@CompileTimeCalculation
 public inline fun DoubleArray.indexOfFirst(predicate: (Double) -> Boolean): Int {
     for (index in indices) {
         if (predicate(this[index])) {
@@ -1718,6 +1833,7 @@ public inline fun DoubleArray.indexOfFirst(predicate: (Double) -> Boolean): Int 
 /**
  * Returns index of the first element matching the given [predicate], or -1 if the array does not contain such element.
  */
+@CompileTimeCalculation
 public inline fun BooleanArray.indexOfFirst(predicate: (Boolean) -> Boolean): Int {
     for (index in indices) {
         if (predicate(this[index])) {
@@ -1730,6 +1846,7 @@ public inline fun BooleanArray.indexOfFirst(predicate: (Boolean) -> Boolean): In
 /**
  * Returns index of the first element matching the given [predicate], or -1 if the array does not contain such element.
  */
+@CompileTimeCalculation
 public inline fun CharArray.indexOfFirst(predicate: (Char) -> Boolean): Int {
     for (index in indices) {
         if (predicate(this[index])) {
@@ -1742,6 +1859,7 @@ public inline fun CharArray.indexOfFirst(predicate: (Char) -> Boolean): Int {
 /**
  * Returns index of the last element matching the given [predicate], or -1 if the array does not contain such element.
  */
+@CompileTimeCalculation
 public inline fun <T> Array<out T>.indexOfLast(predicate: (T) -> Boolean): Int {
     for (index in indices.reversed()) {
         if (predicate(this[index])) {
@@ -1754,6 +1872,7 @@ public inline fun <T> Array<out T>.indexOfLast(predicate: (T) -> Boolean): Int {
 /**
  * Returns index of the last element matching the given [predicate], or -1 if the array does not contain such element.
  */
+@CompileTimeCalculation
 public inline fun ByteArray.indexOfLast(predicate: (Byte) -> Boolean): Int {
     for (index in indices.reversed()) {
         if (predicate(this[index])) {
@@ -1766,6 +1885,7 @@ public inline fun ByteArray.indexOfLast(predicate: (Byte) -> Boolean): Int {
 /**
  * Returns index of the last element matching the given [predicate], or -1 if the array does not contain such element.
  */
+@CompileTimeCalculation
 public inline fun ShortArray.indexOfLast(predicate: (Short) -> Boolean): Int {
     for (index in indices.reversed()) {
         if (predicate(this[index])) {
@@ -1778,6 +1898,7 @@ public inline fun ShortArray.indexOfLast(predicate: (Short) -> Boolean): Int {
 /**
  * Returns index of the last element matching the given [predicate], or -1 if the array does not contain such element.
  */
+@CompileTimeCalculation
 public inline fun IntArray.indexOfLast(predicate: (Int) -> Boolean): Int {
     for (index in indices.reversed()) {
         if (predicate(this[index])) {
@@ -1790,6 +1911,7 @@ public inline fun IntArray.indexOfLast(predicate: (Int) -> Boolean): Int {
 /**
  * Returns index of the last element matching the given [predicate], or -1 if the array does not contain such element.
  */
+@CompileTimeCalculation
 public inline fun LongArray.indexOfLast(predicate: (Long) -> Boolean): Int {
     for (index in indices.reversed()) {
         if (predicate(this[index])) {
@@ -1802,6 +1924,7 @@ public inline fun LongArray.indexOfLast(predicate: (Long) -> Boolean): Int {
 /**
  * Returns index of the last element matching the given [predicate], or -1 if the array does not contain such element.
  */
+@CompileTimeCalculation
 public inline fun FloatArray.indexOfLast(predicate: (Float) -> Boolean): Int {
     for (index in indices.reversed()) {
         if (predicate(this[index])) {
@@ -1814,6 +1937,7 @@ public inline fun FloatArray.indexOfLast(predicate: (Float) -> Boolean): Int {
 /**
  * Returns index of the last element matching the given [predicate], or -1 if the array does not contain such element.
  */
+@CompileTimeCalculation
 public inline fun DoubleArray.indexOfLast(predicate: (Double) -> Boolean): Int {
     for (index in indices.reversed()) {
         if (predicate(this[index])) {
@@ -1826,6 +1950,7 @@ public inline fun DoubleArray.indexOfLast(predicate: (Double) -> Boolean): Int {
 /**
  * Returns index of the last element matching the given [predicate], or -1 if the array does not contain such element.
  */
+@CompileTimeCalculation
 public inline fun BooleanArray.indexOfLast(predicate: (Boolean) -> Boolean): Int {
     for (index in indices.reversed()) {
         if (predicate(this[index])) {
@@ -1838,6 +1963,7 @@ public inline fun BooleanArray.indexOfLast(predicate: (Boolean) -> Boolean): Int
 /**
  * Returns index of the last element matching the given [predicate], or -1 if the array does not contain such element.
  */
+@CompileTimeCalculation
 public inline fun CharArray.indexOfLast(predicate: (Char) -> Boolean): Int {
     for (index in indices.reversed()) {
         if (predicate(this[index])) {
@@ -1854,6 +1980,7 @@ public inline fun CharArray.indexOfLast(predicate: (Char) -> Boolean): Int {
  * 
  * @sample samples.collections.Collections.Elements.last
  */
+@CompileTimeCalculation
 public fun <T> Array<out T>.last(): T {
     if (isEmpty())
         throw NoSuchElementException("Array is empty.")
@@ -1867,6 +1994,7 @@ public fun <T> Array<out T>.last(): T {
  * 
  * @sample samples.collections.Collections.Elements.last
  */
+@CompileTimeCalculation
 public fun ByteArray.last(): Byte {
     if (isEmpty())
         throw NoSuchElementException("Array is empty.")
@@ -1880,6 +2008,7 @@ public fun ByteArray.last(): Byte {
  * 
  * @sample samples.collections.Collections.Elements.last
  */
+@CompileTimeCalculation
 public fun ShortArray.last(): Short {
     if (isEmpty())
         throw NoSuchElementException("Array is empty.")
@@ -1893,6 +2022,7 @@ public fun ShortArray.last(): Short {
  * 
  * @sample samples.collections.Collections.Elements.last
  */
+@CompileTimeCalculation
 public fun IntArray.last(): Int {
     if (isEmpty())
         throw NoSuchElementException("Array is empty.")
@@ -1906,6 +2036,7 @@ public fun IntArray.last(): Int {
  * 
  * @sample samples.collections.Collections.Elements.last
  */
+@CompileTimeCalculation
 public fun LongArray.last(): Long {
     if (isEmpty())
         throw NoSuchElementException("Array is empty.")
@@ -1919,6 +2050,7 @@ public fun LongArray.last(): Long {
  * 
  * @sample samples.collections.Collections.Elements.last
  */
+@CompileTimeCalculation
 public fun FloatArray.last(): Float {
     if (isEmpty())
         throw NoSuchElementException("Array is empty.")
@@ -1932,6 +2064,7 @@ public fun FloatArray.last(): Float {
  * 
  * @sample samples.collections.Collections.Elements.last
  */
+@CompileTimeCalculation
 public fun DoubleArray.last(): Double {
     if (isEmpty())
         throw NoSuchElementException("Array is empty.")
@@ -1945,6 +2078,7 @@ public fun DoubleArray.last(): Double {
  * 
  * @sample samples.collections.Collections.Elements.last
  */
+@CompileTimeCalculation
 public fun BooleanArray.last(): Boolean {
     if (isEmpty())
         throw NoSuchElementException("Array is empty.")
@@ -1958,6 +2092,7 @@ public fun BooleanArray.last(): Boolean {
  * 
  * @sample samples.collections.Collections.Elements.last
  */
+@CompileTimeCalculation
 public fun CharArray.last(): Char {
     if (isEmpty())
         throw NoSuchElementException("Array is empty.")
@@ -2102,6 +2237,7 @@ public inline fun CharArray.last(predicate: (Char) -> Boolean): Char {
 /**
  * Returns last index of [element], or -1 if the array does not contain element.
  */
+@CompileTimeCalculation
 public fun <@kotlin.internal.OnlyInputTypes T> Array<out T>.lastIndexOf(element: T): Int {
     if (element == null) {
         for (index in indices.reversed()) {
@@ -2122,6 +2258,7 @@ public fun <@kotlin.internal.OnlyInputTypes T> Array<out T>.lastIndexOf(element:
 /**
  * Returns last index of [element], or -1 if the array does not contain element.
  */
+@CompileTimeCalculation
 public fun ByteArray.lastIndexOf(element: Byte): Int {
     for (index in indices.reversed()) {
         if (element == this[index]) {
@@ -2134,6 +2271,7 @@ public fun ByteArray.lastIndexOf(element: Byte): Int {
 /**
  * Returns last index of [element], or -1 if the array does not contain element.
  */
+@CompileTimeCalculation
 public fun ShortArray.lastIndexOf(element: Short): Int {
     for (index in indices.reversed()) {
         if (element == this[index]) {
@@ -2146,6 +2284,7 @@ public fun ShortArray.lastIndexOf(element: Short): Int {
 /**
  * Returns last index of [element], or -1 if the array does not contain element.
  */
+@CompileTimeCalculation
 public fun IntArray.lastIndexOf(element: Int): Int {
     for (index in indices.reversed()) {
         if (element == this[index]) {
@@ -2158,6 +2297,7 @@ public fun IntArray.lastIndexOf(element: Int): Int {
 /**
  * Returns last index of [element], or -1 if the array does not contain element.
  */
+@CompileTimeCalculation
 public fun LongArray.lastIndexOf(element: Long): Int {
     for (index in indices.reversed()) {
         if (element == this[index]) {
@@ -2172,6 +2312,7 @@ public fun LongArray.lastIndexOf(element: Long): Int {
  */
 @Deprecated("The function has unclear behavior when searching for NaN or zero values and will be removed soon. Use 'indexOfLast { it == element }' instead to continue using this behavior, or '.asList().lastIndexOf(element: T)' to get the same search behavior as in a list.", ReplaceWith("indexOfLast { it == element }"))
 @DeprecatedSinceKotlin(warningSince = "1.4")
+@CompileTimeCalculation
 public fun FloatArray.lastIndexOf(element: Float): Int {
     for (index in indices.reversed()) {
         if (element == this[index]) {
@@ -2186,6 +2327,7 @@ public fun FloatArray.lastIndexOf(element: Float): Int {
  */
 @Deprecated("The function has unclear behavior when searching for NaN or zero values and will be removed soon. Use 'indexOfLast { it == element }' instead to continue using this behavior, or '.asList().lastIndexOf(element: T)' to get the same search behavior as in a list.", ReplaceWith("indexOfLast { it == element }"))
 @DeprecatedSinceKotlin(warningSince = "1.4")
+@CompileTimeCalculation
 public fun DoubleArray.lastIndexOf(element: Double): Int {
     for (index in indices.reversed()) {
         if (element == this[index]) {
@@ -2198,6 +2340,7 @@ public fun DoubleArray.lastIndexOf(element: Double): Int {
 /**
  * Returns last index of [element], or -1 if the array does not contain element.
  */
+@CompileTimeCalculation
 public fun BooleanArray.lastIndexOf(element: Boolean): Int {
     for (index in indices.reversed()) {
         if (element == this[index]) {
@@ -2210,6 +2353,7 @@ public fun BooleanArray.lastIndexOf(element: Boolean): Int {
 /**
  * Returns last index of [element], or -1 if the array does not contain element.
  */
+@CompileTimeCalculation
 public fun CharArray.lastIndexOf(element: Char): Int {
     for (index in indices.reversed()) {
         if (element == this[index]) {
@@ -2224,6 +2368,7 @@ public fun CharArray.lastIndexOf(element: Char): Int {
  * 
  * @sample samples.collections.Collections.Elements.last
  */
+@CompileTimeCalculation
 public fun <T> Array<out T>.lastOrNull(): T? {
     return if (isEmpty()) null else this[size - 1]
 }
@@ -2233,6 +2378,7 @@ public fun <T> Array<out T>.lastOrNull(): T? {
  * 
  * @sample samples.collections.Collections.Elements.last
  */
+@CompileTimeCalculation
 public fun ByteArray.lastOrNull(): Byte? {
     return if (isEmpty()) null else this[size - 1]
 }
@@ -2242,6 +2388,7 @@ public fun ByteArray.lastOrNull(): Byte? {
  * 
  * @sample samples.collections.Collections.Elements.last
  */
+@CompileTimeCalculation
 public fun ShortArray.lastOrNull(): Short? {
     return if (isEmpty()) null else this[size - 1]
 }
@@ -2251,6 +2398,7 @@ public fun ShortArray.lastOrNull(): Short? {
  * 
  * @sample samples.collections.Collections.Elements.last
  */
+@CompileTimeCalculation
 public fun IntArray.lastOrNull(): Int? {
     return if (isEmpty()) null else this[size - 1]
 }
@@ -2260,6 +2408,7 @@ public fun IntArray.lastOrNull(): Int? {
  * 
  * @sample samples.collections.Collections.Elements.last
  */
+@CompileTimeCalculation
 public fun LongArray.lastOrNull(): Long? {
     return if (isEmpty()) null else this[size - 1]
 }
@@ -2269,6 +2418,7 @@ public fun LongArray.lastOrNull(): Long? {
  * 
  * @sample samples.collections.Collections.Elements.last
  */
+@CompileTimeCalculation
 public fun FloatArray.lastOrNull(): Float? {
     return if (isEmpty()) null else this[size - 1]
 }
@@ -2278,6 +2428,7 @@ public fun FloatArray.lastOrNull(): Float? {
  * 
  * @sample samples.collections.Collections.Elements.last
  */
+@CompileTimeCalculation
 public fun DoubleArray.lastOrNull(): Double? {
     return if (isEmpty()) null else this[size - 1]
 }
@@ -2287,6 +2438,7 @@ public fun DoubleArray.lastOrNull(): Double? {
  * 
  * @sample samples.collections.Collections.Elements.last
  */
+@CompileTimeCalculation
 public fun BooleanArray.lastOrNull(): Boolean? {
     return if (isEmpty()) null else this[size - 1]
 }
@@ -2296,6 +2448,7 @@ public fun BooleanArray.lastOrNull(): Boolean? {
  * 
  * @sample samples.collections.Collections.Elements.last
  */
+@CompileTimeCalculation
 public fun CharArray.lastOrNull(): Char? {
     return if (isEmpty()) null else this[size - 1]
 }
@@ -2816,6 +2969,7 @@ public fun CharArray.randomOrNull(random: Random): Char? {
 /**
  * Returns the single element, or throws an exception if the array is empty or has more than one element.
  */
+@CompileTimeCalculation
 public fun <T> Array<out T>.single(): T {
     return when (size) {
         0 -> throw NoSuchElementException("Array is empty.")
@@ -2827,6 +2981,7 @@ public fun <T> Array<out T>.single(): T {
 /**
  * Returns the single element, or throws an exception if the array is empty or has more than one element.
  */
+@CompileTimeCalculation
 public fun ByteArray.single(): Byte {
     return when (size) {
         0 -> throw NoSuchElementException("Array is empty.")
@@ -2838,6 +2993,7 @@ public fun ByteArray.single(): Byte {
 /**
  * Returns the single element, or throws an exception if the array is empty or has more than one element.
  */
+@CompileTimeCalculation
 public fun ShortArray.single(): Short {
     return when (size) {
         0 -> throw NoSuchElementException("Array is empty.")
@@ -2849,6 +3005,7 @@ public fun ShortArray.single(): Short {
 /**
  * Returns the single element, or throws an exception if the array is empty or has more than one element.
  */
+@CompileTimeCalculation
 public fun IntArray.single(): Int {
     return when (size) {
         0 -> throw NoSuchElementException("Array is empty.")
@@ -2860,6 +3017,7 @@ public fun IntArray.single(): Int {
 /**
  * Returns the single element, or throws an exception if the array is empty or has more than one element.
  */
+@CompileTimeCalculation
 public fun LongArray.single(): Long {
     return when (size) {
         0 -> throw NoSuchElementException("Array is empty.")
@@ -2871,6 +3029,7 @@ public fun LongArray.single(): Long {
 /**
  * Returns the single element, or throws an exception if the array is empty or has more than one element.
  */
+@CompileTimeCalculation
 public fun FloatArray.single(): Float {
     return when (size) {
         0 -> throw NoSuchElementException("Array is empty.")
@@ -2882,6 +3041,7 @@ public fun FloatArray.single(): Float {
 /**
  * Returns the single element, or throws an exception if the array is empty or has more than one element.
  */
+@CompileTimeCalculation
 public fun DoubleArray.single(): Double {
     return when (size) {
         0 -> throw NoSuchElementException("Array is empty.")
@@ -2893,6 +3053,7 @@ public fun DoubleArray.single(): Double {
 /**
  * Returns the single element, or throws an exception if the array is empty or has more than one element.
  */
+@CompileTimeCalculation
 public fun BooleanArray.single(): Boolean {
     return when (size) {
         0 -> throw NoSuchElementException("Array is empty.")
@@ -2904,6 +3065,7 @@ public fun BooleanArray.single(): Boolean {
 /**
  * Returns the single element, or throws an exception if the array is empty or has more than one element.
  */
+@CompileTimeCalculation
 public fun CharArray.single(): Char {
     return when (size) {
         0 -> throw NoSuchElementException("Array is empty.")
@@ -3077,6 +3239,7 @@ public inline fun CharArray.single(predicate: (Char) -> Boolean): Char {
 /**
  * Returns single element, or `null` if the array is empty or has more than one element.
  */
+@CompileTimeCalculation
 public fun <T> Array<out T>.singleOrNull(): T? {
     return if (size == 1) this[0] else null
 }
@@ -3084,6 +3247,7 @@ public fun <T> Array<out T>.singleOrNull(): T? {
 /**
  * Returns single element, or `null` if the array is empty or has more than one element.
  */
+@CompileTimeCalculation
 public fun ByteArray.singleOrNull(): Byte? {
     return if (size == 1) this[0] else null
 }
@@ -3091,6 +3255,7 @@ public fun ByteArray.singleOrNull(): Byte? {
 /**
  * Returns single element, or `null` if the array is empty or has more than one element.
  */
+@CompileTimeCalculation
 public fun ShortArray.singleOrNull(): Short? {
     return if (size == 1) this[0] else null
 }
@@ -3098,6 +3263,7 @@ public fun ShortArray.singleOrNull(): Short? {
 /**
  * Returns single element, or `null` if the array is empty or has more than one element.
  */
+@CompileTimeCalculation
 public fun IntArray.singleOrNull(): Int? {
     return if (size == 1) this[0] else null
 }
@@ -3105,6 +3271,7 @@ public fun IntArray.singleOrNull(): Int? {
 /**
  * Returns single element, or `null` if the array is empty or has more than one element.
  */
+@CompileTimeCalculation
 public fun LongArray.singleOrNull(): Long? {
     return if (size == 1) this[0] else null
 }
@@ -3112,6 +3279,7 @@ public fun LongArray.singleOrNull(): Long? {
 /**
  * Returns single element, or `null` if the array is empty or has more than one element.
  */
+@CompileTimeCalculation
 public fun FloatArray.singleOrNull(): Float? {
     return if (size == 1) this[0] else null
 }
@@ -3119,6 +3287,7 @@ public fun FloatArray.singleOrNull(): Float? {
 /**
  * Returns single element, or `null` if the array is empty or has more than one element.
  */
+@CompileTimeCalculation
 public fun DoubleArray.singleOrNull(): Double? {
     return if (size == 1) this[0] else null
 }
@@ -3126,6 +3295,7 @@ public fun DoubleArray.singleOrNull(): Double? {
 /**
  * Returns single element, or `null` if the array is empty or has more than one element.
  */
+@CompileTimeCalculation
 public fun BooleanArray.singleOrNull(): Boolean? {
     return if (size == 1) this[0] else null
 }
@@ -3133,6 +3303,7 @@ public fun BooleanArray.singleOrNull(): Boolean? {
 /**
  * Returns single element, or `null` if the array is empty or has more than one element.
  */
+@CompileTimeCalculation
 public fun CharArray.singleOrNull(): Char? {
     return if (size == 1) this[0] else null
 }

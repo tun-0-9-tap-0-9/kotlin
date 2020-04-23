@@ -20,6 +20,7 @@ import kotlin.ranges.reversed
  * @sample samples.collections.Collections.Elements.elementAt
  */
 @SinceKotlin("1.3")
+@CompileTimeCalculation
 @ExperimentalUnsignedTypes
 public actual fun UIntArray.elementAt(index: Int): UInt {
     return elementAtOrElse(index) { throw IndexOutOfBoundsException("index: $index, size: $size}") }
@@ -31,6 +32,7 @@ public actual fun UIntArray.elementAt(index: Int): UInt {
  * @sample samples.collections.Collections.Elements.elementAt
  */
 @SinceKotlin("1.3")
+@CompileTimeCalculation
 @ExperimentalUnsignedTypes
 public actual fun ULongArray.elementAt(index: Int): ULong {
     return elementAtOrElse(index) { throw IndexOutOfBoundsException("index: $index, size: $size}") }
@@ -42,6 +44,7 @@ public actual fun ULongArray.elementAt(index: Int): ULong {
  * @sample samples.collections.Collections.Elements.elementAt
  */
 @SinceKotlin("1.3")
+@CompileTimeCalculation
 @ExperimentalUnsignedTypes
 public actual fun UByteArray.elementAt(index: Int): UByte {
     return elementAtOrElse(index) { throw IndexOutOfBoundsException("index: $index, size: $size}") }
@@ -53,6 +56,7 @@ public actual fun UByteArray.elementAt(index: Int): UByte {
  * @sample samples.collections.Collections.Elements.elementAt
  */
 @SinceKotlin("1.3")
+@CompileTimeCalculation
 @ExperimentalUnsignedTypes
 public actual fun UShortArray.elementAt(index: Int): UShort {
     return elementAtOrElse(index) { throw IndexOutOfBoundsException("index: $index, size: $size}") }

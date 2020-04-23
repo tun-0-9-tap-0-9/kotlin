@@ -17,6 +17,7 @@ import kotlin.js.*
  * 
  * @sample samples.collections.Collections.Elements.elementAt
  */
+@CompileTimeCalculation
 public actual fun CharSequence.elementAt(index: Int): Char {
     return elementAtOrElse(index) { throw IndexOutOfBoundsException("index: $index, length: $length}") }
 }
