@@ -68,6 +68,7 @@ public open class CharProgression
          *
          * [step] must be greater than `Int.MIN_VALUE` and not equal to zero.
          */
+        @CompileTimeCalculation
         public fun fromClosedRange(rangeStart: Char, rangeEnd: Char, step: Int): CharProgression = CharProgression(rangeStart, rangeEnd, step)
     }
 }
@@ -131,6 +132,7 @@ public open class IntProgression
          *
          * [step] must be greater than `Int.MIN_VALUE` and not equal to zero.
          */
+        @CompileTimeCalculation
         public fun fromClosedRange(rangeStart: Int, rangeEnd: Int, step: Int): IntProgression = IntProgression(rangeStart, rangeEnd, step)
     }
 }
@@ -194,6 +196,7 @@ public open class LongProgression
          *
          * [step] must be greater than `Long.MIN_VALUE` and not equal to zero.
          */
+        @CompileTimeCalculation
         public fun fromClosedRange(rangeStart: Long, rangeEnd: Long, step: Long): LongProgression = LongProgression(rangeStart, rangeEnd, step)
     }
 }

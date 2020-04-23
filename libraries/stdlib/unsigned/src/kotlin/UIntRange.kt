@@ -105,6 +105,7 @@ internal constructor(
          *
          * [step] must be greater than `Int.MIN_VALUE` and not equal to zero.
          */
+        @CompileTimeCalculation
         public fun fromClosedRange(rangeStart: UInt, rangeEnd: UInt, step: Int): UIntProgression = UIntProgression(rangeStart, rangeEnd, step)
     }
 }
