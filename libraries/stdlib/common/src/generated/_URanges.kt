@@ -351,6 +351,7 @@ public infix fun UShort.until(to: UShort): UIntRange {
  * @sample samples.comparisons.ComparableOps.coerceAtLeastUnsigned
  */
 @SinceKotlin("1.5")
+@CompileTimeCalculation
 @WasExperimental(ExperimentalUnsignedTypes::class)
 public fun UInt.coerceAtLeast(minimumValue: UInt): UInt {
     return if (this < minimumValue) minimumValue else this
@@ -364,6 +365,7 @@ public fun UInt.coerceAtLeast(minimumValue: UInt): UInt {
  * @sample samples.comparisons.ComparableOps.coerceAtLeastUnsigned
  */
 @SinceKotlin("1.5")
+@CompileTimeCalculation
 @WasExperimental(ExperimentalUnsignedTypes::class)
 public fun ULong.coerceAtLeast(minimumValue: ULong): ULong {
     return if (this < minimumValue) minimumValue else this
@@ -377,6 +379,7 @@ public fun ULong.coerceAtLeast(minimumValue: ULong): ULong {
  * @sample samples.comparisons.ComparableOps.coerceAtLeastUnsigned
  */
 @SinceKotlin("1.5")
+@CompileTimeCalculation
 @WasExperimental(ExperimentalUnsignedTypes::class)
 public fun UByte.coerceAtLeast(minimumValue: UByte): UByte {
     return if (this < minimumValue) minimumValue else this
@@ -390,6 +393,7 @@ public fun UByte.coerceAtLeast(minimumValue: UByte): UByte {
  * @sample samples.comparisons.ComparableOps.coerceAtLeastUnsigned
  */
 @SinceKotlin("1.5")
+@CompileTimeCalculation
 @WasExperimental(ExperimentalUnsignedTypes::class)
 public fun UShort.coerceAtLeast(minimumValue: UShort): UShort {
     return if (this < minimumValue) minimumValue else this
@@ -403,6 +407,7 @@ public fun UShort.coerceAtLeast(minimumValue: UShort): UShort {
  * @sample samples.comparisons.ComparableOps.coerceAtMostUnsigned
  */
 @SinceKotlin("1.5")
+@CompileTimeCalculation
 @WasExperimental(ExperimentalUnsignedTypes::class)
 public fun UInt.coerceAtMost(maximumValue: UInt): UInt {
     return if (this > maximumValue) maximumValue else this
@@ -416,6 +421,7 @@ public fun UInt.coerceAtMost(maximumValue: UInt): UInt {
  * @sample samples.comparisons.ComparableOps.coerceAtMostUnsigned
  */
 @SinceKotlin("1.5")
+@CompileTimeCalculation
 @WasExperimental(ExperimentalUnsignedTypes::class)
 public fun ULong.coerceAtMost(maximumValue: ULong): ULong {
     return if (this > maximumValue) maximumValue else this
@@ -429,6 +435,7 @@ public fun ULong.coerceAtMost(maximumValue: ULong): ULong {
  * @sample samples.comparisons.ComparableOps.coerceAtMostUnsigned
  */
 @SinceKotlin("1.5")
+@CompileTimeCalculation
 @WasExperimental(ExperimentalUnsignedTypes::class)
 public fun UByte.coerceAtMost(maximumValue: UByte): UByte {
     return if (this > maximumValue) maximumValue else this
@@ -442,6 +449,7 @@ public fun UByte.coerceAtMost(maximumValue: UByte): UByte {
  * @sample samples.comparisons.ComparableOps.coerceAtMostUnsigned
  */
 @SinceKotlin("1.5")
+@CompileTimeCalculation
 @WasExperimental(ExperimentalUnsignedTypes::class)
 public fun UShort.coerceAtMost(maximumValue: UShort): UShort {
     return if (this > maximumValue) maximumValue else this
@@ -455,6 +463,7 @@ public fun UShort.coerceAtMost(maximumValue: UShort): UShort {
  * @sample samples.comparisons.ComparableOps.coerceInUnsigned
  */
 @SinceKotlin("1.5")
+@CompileTimeCalculation
 @WasExperimental(ExperimentalUnsignedTypes::class)
 public fun UInt.coerceIn(minimumValue: UInt, maximumValue: UInt): UInt {
     if (minimumValue > maximumValue) throw IllegalArgumentException("Cannot coerce value to an empty range: maximum $maximumValue is less than minimum $minimumValue.")
@@ -471,6 +480,7 @@ public fun UInt.coerceIn(minimumValue: UInt, maximumValue: UInt): UInt {
  * @sample samples.comparisons.ComparableOps.coerceInUnsigned
  */
 @SinceKotlin("1.5")
+@CompileTimeCalculation
 @WasExperimental(ExperimentalUnsignedTypes::class)
 public fun ULong.coerceIn(minimumValue: ULong, maximumValue: ULong): ULong {
     if (minimumValue > maximumValue) throw IllegalArgumentException("Cannot coerce value to an empty range: maximum $maximumValue is less than minimum $minimumValue.")
@@ -487,6 +497,7 @@ public fun ULong.coerceIn(minimumValue: ULong, maximumValue: ULong): ULong {
  * @sample samples.comparisons.ComparableOps.coerceInUnsigned
  */
 @SinceKotlin("1.5")
+@CompileTimeCalculation
 @WasExperimental(ExperimentalUnsignedTypes::class)
 public fun UByte.coerceIn(minimumValue: UByte, maximumValue: UByte): UByte {
     if (minimumValue > maximumValue) throw IllegalArgumentException("Cannot coerce value to an empty range: maximum $maximumValue is less than minimum $minimumValue.")
@@ -503,6 +514,7 @@ public fun UByte.coerceIn(minimumValue: UByte, maximumValue: UByte): UByte {
  * @sample samples.comparisons.ComparableOps.coerceInUnsigned
  */
 @SinceKotlin("1.5")
+@CompileTimeCalculation
 @WasExperimental(ExperimentalUnsignedTypes::class)
 public fun UShort.coerceIn(minimumValue: UShort, maximumValue: UShort): UShort {
     if (minimumValue > maximumValue) throw IllegalArgumentException("Cannot coerce value to an empty range: maximum $maximumValue is less than minimum $minimumValue.")
@@ -519,6 +531,7 @@ public fun UShort.coerceIn(minimumValue: UShort, maximumValue: UShort): UShort {
  * @sample samples.comparisons.ComparableOps.coerceInUnsigned
  */
 @SinceKotlin("1.5")
+@CompileTimeCalculation
 @WasExperimental(ExperimentalUnsignedTypes::class)
 public fun UInt.coerceIn(range: ClosedRange<UInt>): UInt {
     if (range is ClosedFloatingPointRange) {
@@ -540,6 +553,7 @@ public fun UInt.coerceIn(range: ClosedRange<UInt>): UInt {
  * @sample samples.comparisons.ComparableOps.coerceInUnsigned
  */
 @SinceKotlin("1.5")
+@CompileTimeCalculation
 @WasExperimental(ExperimentalUnsignedTypes::class)
 public fun ULong.coerceIn(range: ClosedRange<ULong>): ULong {
     if (range is ClosedFloatingPointRange) {

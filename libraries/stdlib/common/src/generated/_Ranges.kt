@@ -984,6 +984,7 @@ public infix fun Short.until(to: Short): IntRange {
  * 
  * @sample samples.comparisons.ComparableOps.coerceAtLeastComparable
  */
+@CompileTimeCalculation
 public fun <T : Comparable<T>> T.coerceAtLeast(minimumValue: T): T {
     return if (this < minimumValue) minimumValue else this
 }
@@ -995,6 +996,7 @@ public fun <T : Comparable<T>> T.coerceAtLeast(minimumValue: T): T {
  * 
  * @sample samples.comparisons.ComparableOps.coerceAtLeast
  */
+@CompileTimeCalculation
 public fun Byte.coerceAtLeast(minimumValue: Byte): Byte {
     return if (this < minimumValue) minimumValue else this
 }
@@ -1006,6 +1008,7 @@ public fun Byte.coerceAtLeast(minimumValue: Byte): Byte {
  * 
  * @sample samples.comparisons.ComparableOps.coerceAtLeast
  */
+@CompileTimeCalculation
 public fun Short.coerceAtLeast(minimumValue: Short): Short {
     return if (this < minimumValue) minimumValue else this
 }
@@ -1017,6 +1020,7 @@ public fun Short.coerceAtLeast(minimumValue: Short): Short {
  * 
  * @sample samples.comparisons.ComparableOps.coerceAtLeast
  */
+@CompileTimeCalculation
 public fun Int.coerceAtLeast(minimumValue: Int): Int {
     return if (this < minimumValue) minimumValue else this
 }
@@ -1028,6 +1032,7 @@ public fun Int.coerceAtLeast(minimumValue: Int): Int {
  * 
  * @sample samples.comparisons.ComparableOps.coerceAtLeast
  */
+@CompileTimeCalculation
 public fun Long.coerceAtLeast(minimumValue: Long): Long {
     return if (this < minimumValue) minimumValue else this
 }
@@ -1039,6 +1044,7 @@ public fun Long.coerceAtLeast(minimumValue: Long): Long {
  * 
  * @sample samples.comparisons.ComparableOps.coerceAtLeast
  */
+@CompileTimeCalculation
 public fun Float.coerceAtLeast(minimumValue: Float): Float {
     return if (this < minimumValue) minimumValue else this
 }
@@ -1050,6 +1056,7 @@ public fun Float.coerceAtLeast(minimumValue: Float): Float {
  * 
  * @sample samples.comparisons.ComparableOps.coerceAtLeast
  */
+@CompileTimeCalculation
 public fun Double.coerceAtLeast(minimumValue: Double): Double {
     return if (this < minimumValue) minimumValue else this
 }
@@ -1061,6 +1068,7 @@ public fun Double.coerceAtLeast(minimumValue: Double): Double {
  * 
  * @sample samples.comparisons.ComparableOps.coerceAtMostComparable
  */
+@CompileTimeCalculation
 public fun <T : Comparable<T>> T.coerceAtMost(maximumValue: T): T {
     return if (this > maximumValue) maximumValue else this
 }
@@ -1072,6 +1080,7 @@ public fun <T : Comparable<T>> T.coerceAtMost(maximumValue: T): T {
  * 
  * @sample samples.comparisons.ComparableOps.coerceAtMost
  */
+@CompileTimeCalculation
 public fun Byte.coerceAtMost(maximumValue: Byte): Byte {
     return if (this > maximumValue) maximumValue else this
 }
@@ -1083,6 +1092,7 @@ public fun Byte.coerceAtMost(maximumValue: Byte): Byte {
  * 
  * @sample samples.comparisons.ComparableOps.coerceAtMost
  */
+@CompileTimeCalculation
 public fun Short.coerceAtMost(maximumValue: Short): Short {
     return if (this > maximumValue) maximumValue else this
 }
@@ -1094,6 +1104,7 @@ public fun Short.coerceAtMost(maximumValue: Short): Short {
  * 
  * @sample samples.comparisons.ComparableOps.coerceAtMost
  */
+@CompileTimeCalculation
 public fun Int.coerceAtMost(maximumValue: Int): Int {
     return if (this > maximumValue) maximumValue else this
 }
@@ -1105,6 +1116,7 @@ public fun Int.coerceAtMost(maximumValue: Int): Int {
  * 
  * @sample samples.comparisons.ComparableOps.coerceAtMost
  */
+@CompileTimeCalculation
 public fun Long.coerceAtMost(maximumValue: Long): Long {
     return if (this > maximumValue) maximumValue else this
 }
@@ -1116,6 +1128,7 @@ public fun Long.coerceAtMost(maximumValue: Long): Long {
  * 
  * @sample samples.comparisons.ComparableOps.coerceAtMost
  */
+@CompileTimeCalculation
 public fun Float.coerceAtMost(maximumValue: Float): Float {
     return if (this > maximumValue) maximumValue else this
 }
@@ -1127,6 +1140,7 @@ public fun Float.coerceAtMost(maximumValue: Float): Float {
  * 
  * @sample samples.comparisons.ComparableOps.coerceAtMost
  */
+@CompileTimeCalculation
 public fun Double.coerceAtMost(maximumValue: Double): Double {
     return if (this > maximumValue) maximumValue else this
 }
@@ -1138,6 +1152,7 @@ public fun Double.coerceAtMost(maximumValue: Double): Double {
  * 
  * @sample samples.comparisons.ComparableOps.coerceInComparable
  */
+@CompileTimeCalculation
 public fun <T : Comparable<T>> T.coerceIn(minimumValue: T?, maximumValue: T?): T {
     if (minimumValue !== null && maximumValue !== null) {
         if (minimumValue > maximumValue) throw IllegalArgumentException("Cannot coerce value to an empty range: maximum $maximumValue is less than minimum $minimumValue.")
@@ -1158,6 +1173,7 @@ public fun <T : Comparable<T>> T.coerceIn(minimumValue: T?, maximumValue: T?): T
  * 
  * @sample samples.comparisons.ComparableOps.coerceIn
  */
+@CompileTimeCalculation
 public fun Byte.coerceIn(minimumValue: Byte, maximumValue: Byte): Byte {
     if (minimumValue > maximumValue) throw IllegalArgumentException("Cannot coerce value to an empty range: maximum $maximumValue is less than minimum $minimumValue.")
     if (this < minimumValue) return minimumValue
@@ -1172,6 +1188,7 @@ public fun Byte.coerceIn(minimumValue: Byte, maximumValue: Byte): Byte {
  * 
  * @sample samples.comparisons.ComparableOps.coerceIn
  */
+@CompileTimeCalculation
 public fun Short.coerceIn(minimumValue: Short, maximumValue: Short): Short {
     if (minimumValue > maximumValue) throw IllegalArgumentException("Cannot coerce value to an empty range: maximum $maximumValue is less than minimum $minimumValue.")
     if (this < minimumValue) return minimumValue
@@ -1186,6 +1203,7 @@ public fun Short.coerceIn(minimumValue: Short, maximumValue: Short): Short {
  * 
  * @sample samples.comparisons.ComparableOps.coerceIn
  */
+@CompileTimeCalculation
 public fun Int.coerceIn(minimumValue: Int, maximumValue: Int): Int {
     if (minimumValue > maximumValue) throw IllegalArgumentException("Cannot coerce value to an empty range: maximum $maximumValue is less than minimum $minimumValue.")
     if (this < minimumValue) return minimumValue
@@ -1200,6 +1218,7 @@ public fun Int.coerceIn(minimumValue: Int, maximumValue: Int): Int {
  * 
  * @sample samples.comparisons.ComparableOps.coerceIn
  */
+@CompileTimeCalculation
 public fun Long.coerceIn(minimumValue: Long, maximumValue: Long): Long {
     if (minimumValue > maximumValue) throw IllegalArgumentException("Cannot coerce value to an empty range: maximum $maximumValue is less than minimum $minimumValue.")
     if (this < minimumValue) return minimumValue
@@ -1214,6 +1233,7 @@ public fun Long.coerceIn(minimumValue: Long, maximumValue: Long): Long {
  * 
  * @sample samples.comparisons.ComparableOps.coerceIn
  */
+@CompileTimeCalculation
 public fun Float.coerceIn(minimumValue: Float, maximumValue: Float): Float {
     if (minimumValue > maximumValue) throw IllegalArgumentException("Cannot coerce value to an empty range: maximum $maximumValue is less than minimum $minimumValue.")
     if (this < minimumValue) return minimumValue
@@ -1228,6 +1248,7 @@ public fun Float.coerceIn(minimumValue: Float, maximumValue: Float): Float {
  * 
  * @sample samples.comparisons.ComparableOps.coerceIn
  */
+@CompileTimeCalculation
 public fun Double.coerceIn(minimumValue: Double, maximumValue: Double): Double {
     if (minimumValue > maximumValue) throw IllegalArgumentException("Cannot coerce value to an empty range: maximum $maximumValue is less than minimum $minimumValue.")
     if (this < minimumValue) return minimumValue
@@ -1243,6 +1264,7 @@ public fun Double.coerceIn(minimumValue: Double, maximumValue: Double): Double {
  * @sample samples.comparisons.ComparableOps.coerceInFloatingPointRange
  */
 @SinceKotlin("1.1")
+@CompileTimeCalculation
 public fun <T : Comparable<T>> T.coerceIn(range: ClosedFloatingPointRange<T>): T {
     if (range.isEmpty()) throw IllegalArgumentException("Cannot coerce value to an empty range: $range.")
     return when {
@@ -1261,6 +1283,7 @@ public fun <T : Comparable<T>> T.coerceIn(range: ClosedFloatingPointRange<T>): T
  * 
  * @sample samples.comparisons.ComparableOps.coerceInComparable
  */
+@CompileTimeCalculation
 public fun <T : Comparable<T>> T.coerceIn(range: ClosedRange<T>): T {
     if (range is ClosedFloatingPointRange) {
         return this.coerceIn<T>(range)
@@ -1280,6 +1303,7 @@ public fun <T : Comparable<T>> T.coerceIn(range: ClosedRange<T>): T {
  * 
  * @sample samples.comparisons.ComparableOps.coerceIn
  */
+@CompileTimeCalculation
 public fun Int.coerceIn(range: ClosedRange<Int>): Int {
     if (range is ClosedFloatingPointRange) {
         return this.coerceIn<Int>(range)
@@ -1299,6 +1323,7 @@ public fun Int.coerceIn(range: ClosedRange<Int>): Int {
  * 
  * @sample samples.comparisons.ComparableOps.coerceIn
  */
+@CompileTimeCalculation
 public fun Long.coerceIn(range: ClosedRange<Long>): Long {
     if (range is ClosedFloatingPointRange) {
         return this.coerceIn<Long>(range)
