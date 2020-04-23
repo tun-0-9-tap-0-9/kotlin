@@ -21,6 +21,7 @@ object StringJoinOps : TemplateGroupBase() {
             elements will be appended, followed by the [truncated] string (which defaults to "...").
             """
         }
+        annotation("""@CompileTimeCalculation""")
         sample("samples.collections.Collections.Transformations.joinTo")
         sequenceClassification(terminal)
         typeParam("A : Appendable")
@@ -71,6 +72,7 @@ object StringJoinOps : TemplateGroupBase() {
             elements will be appended, followed by the [truncated] string (which defaults to "...").
             """
         }
+        annotation("""@CompileTimeCalculation""")
         sample("samples.collections.Collections.Transformations.joinToString")
         sequenceClassification(terminal)
 
