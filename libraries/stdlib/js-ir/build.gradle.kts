@@ -62,7 +62,10 @@ val jsMainSources by task<Sync> {
         "libraries/stdlib/js/src/generated/**",
 
         // JS-specific optimized version of emptyArray() already defined
-        "core/builtins/src/kotlin/ArrayIntrinsics.kt"
+        "core/builtins/src/kotlin/ArrayIntrinsics.kt",
+
+        "libraries/stdlib/common/src/kotlin/CompileTimeAnnotationsStdlib.kt", // TODO delete later
+        "core/builtins/src/kotlin/CompileTimeAnnotations.kt"
     )
 
     sources.forEach { path ->
