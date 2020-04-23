@@ -55,6 +55,7 @@ object RangeOps : TemplateGroupBase() {
         include(ProgressionsOfPrimitives, rangePrimitives)
     } builder {
         doc { "Returns a progression that goes over the same range in the opposite direction with the same step." }
+        annotation("""@CompileTimeCalculation""")
         returns("TProgression")
         body {
             "return TProgression.fromClosedRange(last, first, -step)"
@@ -66,6 +67,7 @@ object RangeOps : TemplateGroupBase() {
     } builder {
         infix(true)
         doc { "Returns a progression that goes over the same range with the given step." }
+        annotation("""@CompileTimeCalculation""")
         signature("step(step: ${primitive!!.stepType})", notForSorting = true)
         returns("TProgression")
         body {
@@ -94,6 +96,7 @@ object RangeOps : TemplateGroupBase() {
             If the [to] value is greater than `this` value the returned progression is empty.
             """
         }
+        annotation("""@CompileTimeCalculation""")
 
 
         val fromExpr = if (elementType == fromType) "this" else "this.to$elementType()"
@@ -128,6 +131,7 @@ object RangeOps : TemplateGroupBase() {
             If the [to] value is less than or equal to `this` value, then the returned range is empty.
             """
         }
+        annotation("""@CompileTimeCalculation""")
 
         val minValue = when {
             elementType == PrimitiveType.Char -> "'\\u0000'"
@@ -166,6 +170,7 @@ object RangeOps : TemplateGroupBase() {
         platformName("${rangeType.name.decapitalize()}RangeContains")
         returns("Boolean")
         doc { "Checks if the specified [value] belongs to this range." }
+        annotation("""@CompileTimeCalculation""")
         body {
             if (shouldCheckForConversionOverflow(fromType = itemType, toType = rangeType))
                 "return value.to${rangeType}ExactOrNull().let { if (it != null) contains(it) else false }"
@@ -188,6 +193,7 @@ object RangeOps : TemplateGroupBase() {
             Always returns `false` if the [element] is `null`.
             """
         }
+        annotation("""@CompileTimeCalculation""")
 
         returns("Boolean")
         body { "return element != null && contains(element)" }
@@ -203,6 +209,7 @@ object RangeOps : TemplateGroupBase() {
 
         since("1.3")
         doc { "Checks if the specified [value] belongs to this range." }
+        annotation("""@CompileTimeCalculation""")
 
         body {
             if (shouldCheckForConversionOverflow(fromType = itemType, toType = rangeType))
@@ -218,6 +225,8 @@ object RangeOps : TemplateGroupBase() {
     } builderWith { (fromType, toType) ->
         check(toType.isIntegral())
         visibility("internal")
+
+        annotation("""@CompileTimeCalculation""")
 
         signature("to${toType}ExactOrNull()")
         returns("$toType?")

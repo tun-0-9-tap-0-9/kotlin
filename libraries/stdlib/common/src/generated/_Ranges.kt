@@ -159,6 +159,7 @@ public fun CharRange.randomOrNull(random: Random): Char? {
  * Always returns `false` if the [element] is `null`.
  */
 @SinceKotlin("1.3")
+@CompileTimeCalculation
 @kotlin.internal.InlineOnly
 public inline operator fun IntRange.contains(element: Int?): Boolean {
     return element != null && contains(element)
@@ -170,6 +171,7 @@ public inline operator fun IntRange.contains(element: Int?): Boolean {
  * Always returns `false` if the [element] is `null`.
  */
 @SinceKotlin("1.3")
+@CompileTimeCalculation
 @kotlin.internal.InlineOnly
 public inline operator fun LongRange.contains(element: Long?): Boolean {
     return element != null && contains(element)
@@ -181,6 +183,7 @@ public inline operator fun LongRange.contains(element: Long?): Boolean {
  * Always returns `false` if the [element] is `null`.
  */
 @SinceKotlin("1.3")
+@CompileTimeCalculation
 @kotlin.internal.InlineOnly
 public inline operator fun CharRange.contains(element: Char?): Boolean {
     return element != null && contains(element)
@@ -190,6 +193,7 @@ public inline operator fun CharRange.contains(element: Char?): Boolean {
  * Checks if the specified [value] belongs to this range.
  */
 @kotlin.jvm.JvmName("intRangeContains")
+@CompileTimeCalculation
 public operator fun ClosedRange<Int>.contains(value: Byte): Boolean {
     return contains(value.toInt())
 }
@@ -198,6 +202,7 @@ public operator fun ClosedRange<Int>.contains(value: Byte): Boolean {
  * Checks if the specified [value] belongs to this range.
  */
 @kotlin.jvm.JvmName("longRangeContains")
+@CompileTimeCalculation
 public operator fun ClosedRange<Long>.contains(value: Byte): Boolean {
     return contains(value.toLong())
 }
@@ -206,6 +211,7 @@ public operator fun ClosedRange<Long>.contains(value: Byte): Boolean {
  * Checks if the specified [value] belongs to this range.
  */
 @kotlin.jvm.JvmName("shortRangeContains")
+@CompileTimeCalculation
 public operator fun ClosedRange<Short>.contains(value: Byte): Boolean {
     return contains(value.toShort())
 }
@@ -216,6 +222,7 @@ public operator fun ClosedRange<Short>.contains(value: Byte): Boolean {
 @Deprecated("This `contains` operation mixing integer and floating point arguments has ambiguous semantics and is going to be removed.")
 @DeprecatedSinceKotlin(warningSince = "1.3", errorSince = "1.4", hiddenSince = "1.5")
 @kotlin.jvm.JvmName("doubleRangeContains")
+@CompileTimeCalculation
 public operator fun ClosedRange<Double>.contains(value: Byte): Boolean {
     return contains(value.toDouble())
 }
@@ -226,6 +233,7 @@ public operator fun ClosedRange<Double>.contains(value: Byte): Boolean {
 @Deprecated("This `contains` operation mixing integer and floating point arguments has ambiguous semantics and is going to be removed.")
 @DeprecatedSinceKotlin(warningSince = "1.3", errorSince = "1.4", hiddenSince = "1.5")
 @kotlin.jvm.JvmName("floatRangeContains")
+@CompileTimeCalculation
 public operator fun ClosedRange<Float>.contains(value: Byte): Boolean {
     return contains(value.toFloat())
 }
@@ -236,6 +244,7 @@ public operator fun ClosedRange<Float>.contains(value: Byte): Boolean {
 @Deprecated("This `contains` operation mixing integer and floating point arguments has ambiguous semantics and is going to be removed.")
 @DeprecatedSinceKotlin(warningSince = "1.3", errorSince = "1.4", hiddenSince = "1.5")
 @kotlin.jvm.JvmName("intRangeContains")
+@CompileTimeCalculation
 public operator fun ClosedRange<Int>.contains(value: Double): Boolean {
     return value.toIntExactOrNull().let { if (it != null) contains(it) else false }
 }
@@ -246,6 +255,7 @@ public operator fun ClosedRange<Int>.contains(value: Double): Boolean {
 @Deprecated("This `contains` operation mixing integer and floating point arguments has ambiguous semantics and is going to be removed.")
 @DeprecatedSinceKotlin(warningSince = "1.3", errorSince = "1.4", hiddenSince = "1.5")
 @kotlin.jvm.JvmName("longRangeContains")
+@CompileTimeCalculation
 public operator fun ClosedRange<Long>.contains(value: Double): Boolean {
     return value.toLongExactOrNull().let { if (it != null) contains(it) else false }
 }
@@ -256,6 +266,7 @@ public operator fun ClosedRange<Long>.contains(value: Double): Boolean {
 @Deprecated("This `contains` operation mixing integer and floating point arguments has ambiguous semantics and is going to be removed.")
 @DeprecatedSinceKotlin(warningSince = "1.3", errorSince = "1.4", hiddenSince = "1.5")
 @kotlin.jvm.JvmName("byteRangeContains")
+@CompileTimeCalculation
 public operator fun ClosedRange<Byte>.contains(value: Double): Boolean {
     return value.toByteExactOrNull().let { if (it != null) contains(it) else false }
 }
@@ -266,6 +277,7 @@ public operator fun ClosedRange<Byte>.contains(value: Double): Boolean {
 @Deprecated("This `contains` operation mixing integer and floating point arguments has ambiguous semantics and is going to be removed.")
 @DeprecatedSinceKotlin(warningSince = "1.3", errorSince = "1.4", hiddenSince = "1.5")
 @kotlin.jvm.JvmName("shortRangeContains")
+@CompileTimeCalculation
 public operator fun ClosedRange<Short>.contains(value: Double): Boolean {
     return value.toShortExactOrNull().let { if (it != null) contains(it) else false }
 }
@@ -274,6 +286,7 @@ public operator fun ClosedRange<Short>.contains(value: Double): Boolean {
  * Checks if the specified [value] belongs to this range.
  */
 @kotlin.jvm.JvmName("floatRangeContains")
+@CompileTimeCalculation
 public operator fun ClosedRange<Float>.contains(value: Double): Boolean {
     return contains(value.toFloat())
 }
@@ -284,6 +297,7 @@ public operator fun ClosedRange<Float>.contains(value: Double): Boolean {
 @Deprecated("This `contains` operation mixing integer and floating point arguments has ambiguous semantics and is going to be removed.")
 @DeprecatedSinceKotlin(warningSince = "1.3", errorSince = "1.4", hiddenSince = "1.5")
 @kotlin.jvm.JvmName("intRangeContains")
+@CompileTimeCalculation
 public operator fun ClosedRange<Int>.contains(value: Float): Boolean {
     return value.toIntExactOrNull().let { if (it != null) contains(it) else false }
 }
@@ -294,6 +308,7 @@ public operator fun ClosedRange<Int>.contains(value: Float): Boolean {
 @Deprecated("This `contains` operation mixing integer and floating point arguments has ambiguous semantics and is going to be removed.")
 @DeprecatedSinceKotlin(warningSince = "1.3", errorSince = "1.4", hiddenSince = "1.5")
 @kotlin.jvm.JvmName("longRangeContains")
+@CompileTimeCalculation
 public operator fun ClosedRange<Long>.contains(value: Float): Boolean {
     return value.toLongExactOrNull().let { if (it != null) contains(it) else false }
 }
@@ -304,6 +319,7 @@ public operator fun ClosedRange<Long>.contains(value: Float): Boolean {
 @Deprecated("This `contains` operation mixing integer and floating point arguments has ambiguous semantics and is going to be removed.")
 @DeprecatedSinceKotlin(warningSince = "1.3", errorSince = "1.4", hiddenSince = "1.5")
 @kotlin.jvm.JvmName("byteRangeContains")
+@CompileTimeCalculation
 public operator fun ClosedRange<Byte>.contains(value: Float): Boolean {
     return value.toByteExactOrNull().let { if (it != null) contains(it) else false }
 }
@@ -314,6 +330,7 @@ public operator fun ClosedRange<Byte>.contains(value: Float): Boolean {
 @Deprecated("This `contains` operation mixing integer and floating point arguments has ambiguous semantics and is going to be removed.")
 @DeprecatedSinceKotlin(warningSince = "1.3", errorSince = "1.4", hiddenSince = "1.5")
 @kotlin.jvm.JvmName("shortRangeContains")
+@CompileTimeCalculation
 public operator fun ClosedRange<Short>.contains(value: Float): Boolean {
     return value.toShortExactOrNull().let { if (it != null) contains(it) else false }
 }
@@ -322,6 +339,7 @@ public operator fun ClosedRange<Short>.contains(value: Float): Boolean {
  * Checks if the specified [value] belongs to this range.
  */
 @kotlin.jvm.JvmName("doubleRangeContains")
+@CompileTimeCalculation
 public operator fun ClosedRange<Double>.contains(value: Float): Boolean {
     return contains(value.toDouble())
 }
@@ -330,6 +348,7 @@ public operator fun ClosedRange<Double>.contains(value: Float): Boolean {
  * Checks if the specified [value] belongs to this range.
  */
 @kotlin.jvm.JvmName("longRangeContains")
+@CompileTimeCalculation
 public operator fun ClosedRange<Long>.contains(value: Int): Boolean {
     return contains(value.toLong())
 }
@@ -338,6 +357,7 @@ public operator fun ClosedRange<Long>.contains(value: Int): Boolean {
  * Checks if the specified [value] belongs to this range.
  */
 @kotlin.jvm.JvmName("byteRangeContains")
+@CompileTimeCalculation
 public operator fun ClosedRange<Byte>.contains(value: Int): Boolean {
     return value.toByteExactOrNull().let { if (it != null) contains(it) else false }
 }
@@ -346,6 +366,7 @@ public operator fun ClosedRange<Byte>.contains(value: Int): Boolean {
  * Checks if the specified [value] belongs to this range.
  */
 @kotlin.jvm.JvmName("shortRangeContains")
+@CompileTimeCalculation
 public operator fun ClosedRange<Short>.contains(value: Int): Boolean {
     return value.toShortExactOrNull().let { if (it != null) contains(it) else false }
 }
@@ -356,6 +377,7 @@ public operator fun ClosedRange<Short>.contains(value: Int): Boolean {
 @Deprecated("This `contains` operation mixing integer and floating point arguments has ambiguous semantics and is going to be removed.")
 @DeprecatedSinceKotlin(warningSince = "1.3", errorSince = "1.4", hiddenSince = "1.5")
 @kotlin.jvm.JvmName("doubleRangeContains")
+@CompileTimeCalculation
 public operator fun ClosedRange<Double>.contains(value: Int): Boolean {
     return contains(value.toDouble())
 }
@@ -366,6 +388,7 @@ public operator fun ClosedRange<Double>.contains(value: Int): Boolean {
 @Deprecated("This `contains` operation mixing integer and floating point arguments has ambiguous semantics and is going to be removed.")
 @DeprecatedSinceKotlin(warningSince = "1.3", errorSince = "1.4", hiddenSince = "1.5")
 @kotlin.jvm.JvmName("floatRangeContains")
+@CompileTimeCalculation
 public operator fun ClosedRange<Float>.contains(value: Int): Boolean {
     return contains(value.toFloat())
 }
@@ -374,6 +397,7 @@ public operator fun ClosedRange<Float>.contains(value: Int): Boolean {
  * Checks if the specified [value] belongs to this range.
  */
 @kotlin.jvm.JvmName("intRangeContains")
+@CompileTimeCalculation
 public operator fun ClosedRange<Int>.contains(value: Long): Boolean {
     return value.toIntExactOrNull().let { if (it != null) contains(it) else false }
 }
@@ -382,6 +406,7 @@ public operator fun ClosedRange<Int>.contains(value: Long): Boolean {
  * Checks if the specified [value] belongs to this range.
  */
 @kotlin.jvm.JvmName("byteRangeContains")
+@CompileTimeCalculation
 public operator fun ClosedRange<Byte>.contains(value: Long): Boolean {
     return value.toByteExactOrNull().let { if (it != null) contains(it) else false }
 }
@@ -390,6 +415,7 @@ public operator fun ClosedRange<Byte>.contains(value: Long): Boolean {
  * Checks if the specified [value] belongs to this range.
  */
 @kotlin.jvm.JvmName("shortRangeContains")
+@CompileTimeCalculation
 public operator fun ClosedRange<Short>.contains(value: Long): Boolean {
     return value.toShortExactOrNull().let { if (it != null) contains(it) else false }
 }
@@ -400,6 +426,7 @@ public operator fun ClosedRange<Short>.contains(value: Long): Boolean {
 @Deprecated("This `contains` operation mixing integer and floating point arguments has ambiguous semantics and is going to be removed.")
 @DeprecatedSinceKotlin(warningSince = "1.3", errorSince = "1.4", hiddenSince = "1.5")
 @kotlin.jvm.JvmName("doubleRangeContains")
+@CompileTimeCalculation
 public operator fun ClosedRange<Double>.contains(value: Long): Boolean {
     return contains(value.toDouble())
 }
@@ -410,6 +437,7 @@ public operator fun ClosedRange<Double>.contains(value: Long): Boolean {
 @Deprecated("This `contains` operation mixing integer and floating point arguments has ambiguous semantics and is going to be removed.")
 @DeprecatedSinceKotlin(warningSince = "1.3", errorSince = "1.4", hiddenSince = "1.5")
 @kotlin.jvm.JvmName("floatRangeContains")
+@CompileTimeCalculation
 public operator fun ClosedRange<Float>.contains(value: Long): Boolean {
     return contains(value.toFloat())
 }
@@ -418,6 +446,7 @@ public operator fun ClosedRange<Float>.contains(value: Long): Boolean {
  * Checks if the specified [value] belongs to this range.
  */
 @kotlin.jvm.JvmName("intRangeContains")
+@CompileTimeCalculation
 public operator fun ClosedRange<Int>.contains(value: Short): Boolean {
     return contains(value.toInt())
 }
@@ -426,6 +455,7 @@ public operator fun ClosedRange<Int>.contains(value: Short): Boolean {
  * Checks if the specified [value] belongs to this range.
  */
 @kotlin.jvm.JvmName("longRangeContains")
+@CompileTimeCalculation
 public operator fun ClosedRange<Long>.contains(value: Short): Boolean {
     return contains(value.toLong())
 }
@@ -434,6 +464,7 @@ public operator fun ClosedRange<Long>.contains(value: Short): Boolean {
  * Checks if the specified [value] belongs to this range.
  */
 @kotlin.jvm.JvmName("byteRangeContains")
+@CompileTimeCalculation
 public operator fun ClosedRange<Byte>.contains(value: Short): Boolean {
     return value.toByteExactOrNull().let { if (it != null) contains(it) else false }
 }
@@ -444,6 +475,7 @@ public operator fun ClosedRange<Byte>.contains(value: Short): Boolean {
 @Deprecated("This `contains` operation mixing integer and floating point arguments has ambiguous semantics and is going to be removed.")
 @DeprecatedSinceKotlin(warningSince = "1.3", errorSince = "1.4", hiddenSince = "1.5")
 @kotlin.jvm.JvmName("doubleRangeContains")
+@CompileTimeCalculation
 public operator fun ClosedRange<Double>.contains(value: Short): Boolean {
     return contains(value.toDouble())
 }
@@ -454,6 +486,7 @@ public operator fun ClosedRange<Double>.contains(value: Short): Boolean {
 @Deprecated("This `contains` operation mixing integer and floating point arguments has ambiguous semantics and is going to be removed.")
 @DeprecatedSinceKotlin(warningSince = "1.3", errorSince = "1.4", hiddenSince = "1.5")
 @kotlin.jvm.JvmName("floatRangeContains")
+@CompileTimeCalculation
 public operator fun ClosedRange<Float>.contains(value: Short): Boolean {
     return contains(value.toFloat())
 }
@@ -464,6 +497,7 @@ public operator fun ClosedRange<Float>.contains(value: Short): Boolean {
  * The [to] value should be less than or equal to `this` value.
  * If the [to] value is greater than `this` value the returned progression is empty.
  */
+@CompileTimeCalculation
 public infix fun Int.downTo(to: Byte): IntProgression {
     return IntProgression.fromClosedRange(this, to.toInt(), -1)
 }
@@ -474,6 +508,7 @@ public infix fun Int.downTo(to: Byte): IntProgression {
  * The [to] value should be less than or equal to `this` value.
  * If the [to] value is greater than `this` value the returned progression is empty.
  */
+@CompileTimeCalculation
 public infix fun Long.downTo(to: Byte): LongProgression {
     return LongProgression.fromClosedRange(this, to.toLong(), -1L)
 }
@@ -484,6 +519,7 @@ public infix fun Long.downTo(to: Byte): LongProgression {
  * The [to] value should be less than or equal to `this` value.
  * If the [to] value is greater than `this` value the returned progression is empty.
  */
+@CompileTimeCalculation
 public infix fun Byte.downTo(to: Byte): IntProgression {
     return IntProgression.fromClosedRange(this.toInt(), to.toInt(), -1)
 }
@@ -494,6 +530,7 @@ public infix fun Byte.downTo(to: Byte): IntProgression {
  * The [to] value should be less than or equal to `this` value.
  * If the [to] value is greater than `this` value the returned progression is empty.
  */
+@CompileTimeCalculation
 public infix fun Short.downTo(to: Byte): IntProgression {
     return IntProgression.fromClosedRange(this.toInt(), to.toInt(), -1)
 }
@@ -504,6 +541,7 @@ public infix fun Short.downTo(to: Byte): IntProgression {
  * The [to] value should be less than or equal to `this` value.
  * If the [to] value is greater than `this` value the returned progression is empty.
  */
+@CompileTimeCalculation
 public infix fun Char.downTo(to: Char): CharProgression {
     return CharProgression.fromClosedRange(this, to, -1)
 }
@@ -514,6 +552,7 @@ public infix fun Char.downTo(to: Char): CharProgression {
  * The [to] value should be less than or equal to `this` value.
  * If the [to] value is greater than `this` value the returned progression is empty.
  */
+@CompileTimeCalculation
 public infix fun Int.downTo(to: Int): IntProgression {
     return IntProgression.fromClosedRange(this, to, -1)
 }
@@ -524,6 +563,7 @@ public infix fun Int.downTo(to: Int): IntProgression {
  * The [to] value should be less than or equal to `this` value.
  * If the [to] value is greater than `this` value the returned progression is empty.
  */
+@CompileTimeCalculation
 public infix fun Long.downTo(to: Int): LongProgression {
     return LongProgression.fromClosedRange(this, to.toLong(), -1L)
 }
@@ -534,6 +574,7 @@ public infix fun Long.downTo(to: Int): LongProgression {
  * The [to] value should be less than or equal to `this` value.
  * If the [to] value is greater than `this` value the returned progression is empty.
  */
+@CompileTimeCalculation
 public infix fun Byte.downTo(to: Int): IntProgression {
     return IntProgression.fromClosedRange(this.toInt(), to, -1)
 }
@@ -544,6 +585,7 @@ public infix fun Byte.downTo(to: Int): IntProgression {
  * The [to] value should be less than or equal to `this` value.
  * If the [to] value is greater than `this` value the returned progression is empty.
  */
+@CompileTimeCalculation
 public infix fun Short.downTo(to: Int): IntProgression {
     return IntProgression.fromClosedRange(this.toInt(), to, -1)
 }
@@ -554,6 +596,7 @@ public infix fun Short.downTo(to: Int): IntProgression {
  * The [to] value should be less than or equal to `this` value.
  * If the [to] value is greater than `this` value the returned progression is empty.
  */
+@CompileTimeCalculation
 public infix fun Int.downTo(to: Long): LongProgression {
     return LongProgression.fromClosedRange(this.toLong(), to, -1L)
 }
@@ -564,6 +607,7 @@ public infix fun Int.downTo(to: Long): LongProgression {
  * The [to] value should be less than or equal to `this` value.
  * If the [to] value is greater than `this` value the returned progression is empty.
  */
+@CompileTimeCalculation
 public infix fun Long.downTo(to: Long): LongProgression {
     return LongProgression.fromClosedRange(this, to, -1L)
 }
@@ -574,6 +618,7 @@ public infix fun Long.downTo(to: Long): LongProgression {
  * The [to] value should be less than or equal to `this` value.
  * If the [to] value is greater than `this` value the returned progression is empty.
  */
+@CompileTimeCalculation
 public infix fun Byte.downTo(to: Long): LongProgression {
     return LongProgression.fromClosedRange(this.toLong(), to, -1L)
 }
@@ -584,6 +629,7 @@ public infix fun Byte.downTo(to: Long): LongProgression {
  * The [to] value should be less than or equal to `this` value.
  * If the [to] value is greater than `this` value the returned progression is empty.
  */
+@CompileTimeCalculation
 public infix fun Short.downTo(to: Long): LongProgression {
     return LongProgression.fromClosedRange(this.toLong(), to, -1L)
 }
@@ -594,6 +640,7 @@ public infix fun Short.downTo(to: Long): LongProgression {
  * The [to] value should be less than or equal to `this` value.
  * If the [to] value is greater than `this` value the returned progression is empty.
  */
+@CompileTimeCalculation
 public infix fun Int.downTo(to: Short): IntProgression {
     return IntProgression.fromClosedRange(this, to.toInt(), -1)
 }
@@ -604,6 +651,7 @@ public infix fun Int.downTo(to: Short): IntProgression {
  * The [to] value should be less than or equal to `this` value.
  * If the [to] value is greater than `this` value the returned progression is empty.
  */
+@CompileTimeCalculation
 public infix fun Long.downTo(to: Short): LongProgression {
     return LongProgression.fromClosedRange(this, to.toLong(), -1L)
 }
@@ -614,6 +662,7 @@ public infix fun Long.downTo(to: Short): LongProgression {
  * The [to] value should be less than or equal to `this` value.
  * If the [to] value is greater than `this` value the returned progression is empty.
  */
+@CompileTimeCalculation
 public infix fun Byte.downTo(to: Short): IntProgression {
     return IntProgression.fromClosedRange(this.toInt(), to.toInt(), -1)
 }
@@ -624,6 +673,7 @@ public infix fun Byte.downTo(to: Short): IntProgression {
  * The [to] value should be less than or equal to `this` value.
  * If the [to] value is greater than `this` value the returned progression is empty.
  */
+@CompileTimeCalculation
 public infix fun Short.downTo(to: Short): IntProgression {
     return IntProgression.fromClosedRange(this.toInt(), to.toInt(), -1)
 }
@@ -631,6 +681,7 @@ public infix fun Short.downTo(to: Short): IntProgression {
 /**
  * Returns a progression that goes over the same range in the opposite direction with the same step.
  */
+@CompileTimeCalculation
 public fun IntProgression.reversed(): IntProgression {
     return IntProgression.fromClosedRange(last, first, -step)
 }
@@ -638,6 +689,7 @@ public fun IntProgression.reversed(): IntProgression {
 /**
  * Returns a progression that goes over the same range in the opposite direction with the same step.
  */
+@CompileTimeCalculation
 public fun LongProgression.reversed(): LongProgression {
     return LongProgression.fromClosedRange(last, first, -step)
 }
@@ -645,6 +697,7 @@ public fun LongProgression.reversed(): LongProgression {
 /**
  * Returns a progression that goes over the same range in the opposite direction with the same step.
  */
+@CompileTimeCalculation
 public fun CharProgression.reversed(): CharProgression {
     return CharProgression.fromClosedRange(last, first, -step)
 }
@@ -652,6 +705,7 @@ public fun CharProgression.reversed(): CharProgression {
 /**
  * Returns a progression that goes over the same range with the given step.
  */
+@CompileTimeCalculation
 public infix fun IntProgression.step(step: Int): IntProgression {
     checkStepIsPositive(step > 0, step)
     return IntProgression.fromClosedRange(first, last, if (this.step > 0) step else -step)
@@ -660,6 +714,7 @@ public infix fun IntProgression.step(step: Int): IntProgression {
 /**
  * Returns a progression that goes over the same range with the given step.
  */
+@CompileTimeCalculation
 public infix fun LongProgression.step(step: Long): LongProgression {
     checkStepIsPositive(step > 0, step)
     return LongProgression.fromClosedRange(first, last, if (this.step > 0) step else -step)
@@ -668,63 +723,78 @@ public infix fun LongProgression.step(step: Long): LongProgression {
 /**
  * Returns a progression that goes over the same range with the given step.
  */
+@CompileTimeCalculation
 public infix fun CharProgression.step(step: Int): CharProgression {
     checkStepIsPositive(step > 0, step)
     return CharProgression.fromClosedRange(first, last, if (this.step > 0) step else -step)
 }
 
+@CompileTimeCalculation
 internal fun Int.toByteExactOrNull(): Byte? {
     return if (this in Byte.MIN_VALUE.toInt()..Byte.MAX_VALUE.toInt()) this.toByte() else null
 }
 
+@CompileTimeCalculation
 internal fun Long.toByteExactOrNull(): Byte? {
     return if (this in Byte.MIN_VALUE.toLong()..Byte.MAX_VALUE.toLong()) this.toByte() else null
 }
 
+@CompileTimeCalculation
 internal fun Short.toByteExactOrNull(): Byte? {
     return if (this in Byte.MIN_VALUE.toShort()..Byte.MAX_VALUE.toShort()) this.toByte() else null
 }
 
+@CompileTimeCalculation
 internal fun Double.toByteExactOrNull(): Byte? {
     return if (this in Byte.MIN_VALUE.toDouble()..Byte.MAX_VALUE.toDouble()) this.toInt().toByte() else null
 }
 
+@CompileTimeCalculation
 internal fun Float.toByteExactOrNull(): Byte? {
     return if (this in Byte.MIN_VALUE.toFloat()..Byte.MAX_VALUE.toFloat()) this.toInt().toByte() else null
 }
 
+@CompileTimeCalculation
 internal fun Long.toIntExactOrNull(): Int? {
     return if (this in Int.MIN_VALUE.toLong()..Int.MAX_VALUE.toLong()) this.toInt() else null
 }
 
+@CompileTimeCalculation
 internal fun Double.toIntExactOrNull(): Int? {
     return if (this in Int.MIN_VALUE.toDouble()..Int.MAX_VALUE.toDouble()) this.toInt() else null
 }
 
+@CompileTimeCalculation
 internal fun Float.toIntExactOrNull(): Int? {
     return if (this in Int.MIN_VALUE.toFloat()..Int.MAX_VALUE.toFloat()) this.toInt() else null
 }
 
+@CompileTimeCalculation
 internal fun Double.toLongExactOrNull(): Long? {
     return if (this in Long.MIN_VALUE.toDouble()..Long.MAX_VALUE.toDouble()) this.toLong() else null
 }
 
+@CompileTimeCalculation
 internal fun Float.toLongExactOrNull(): Long? {
     return if (this in Long.MIN_VALUE.toFloat()..Long.MAX_VALUE.toFloat()) this.toLong() else null
 }
 
+@CompileTimeCalculation
 internal fun Int.toShortExactOrNull(): Short? {
     return if (this in Short.MIN_VALUE.toInt()..Short.MAX_VALUE.toInt()) this.toShort() else null
 }
 
+@CompileTimeCalculation
 internal fun Long.toShortExactOrNull(): Short? {
     return if (this in Short.MIN_VALUE.toLong()..Short.MAX_VALUE.toLong()) this.toShort() else null
 }
 
+@CompileTimeCalculation
 internal fun Double.toShortExactOrNull(): Short? {
     return if (this in Short.MIN_VALUE.toDouble()..Short.MAX_VALUE.toDouble()) this.toInt().toShort() else null
 }
 
+@CompileTimeCalculation
 internal fun Float.toShortExactOrNull(): Short? {
     return if (this in Short.MIN_VALUE.toFloat()..Short.MAX_VALUE.toFloat()) this.toInt().toShort() else null
 }
@@ -734,6 +804,7 @@ internal fun Float.toShortExactOrNull(): Short? {
  * 
  * If the [to] value is less than or equal to `this` value, then the returned range is empty.
  */
+@CompileTimeCalculation
 public infix fun Int.until(to: Byte): IntRange {
     return this .. (to.toInt() - 1).toInt()
 }
@@ -743,6 +814,7 @@ public infix fun Int.until(to: Byte): IntRange {
  * 
  * If the [to] value is less than or equal to `this` value, then the returned range is empty.
  */
+@CompileTimeCalculation
 public infix fun Long.until(to: Byte): LongRange {
     return this .. (to.toLong() - 1).toLong()
 }
@@ -752,6 +824,7 @@ public infix fun Long.until(to: Byte): LongRange {
  * 
  * If the [to] value is less than or equal to `this` value, then the returned range is empty.
  */
+@CompileTimeCalculation
 public infix fun Byte.until(to: Byte): IntRange {
     return this.toInt() .. (to.toInt() - 1).toInt()
 }
@@ -761,6 +834,7 @@ public infix fun Byte.until(to: Byte): IntRange {
  * 
  * If the [to] value is less than or equal to `this` value, then the returned range is empty.
  */
+@CompileTimeCalculation
 public infix fun Short.until(to: Byte): IntRange {
     return this.toInt() .. (to.toInt() - 1).toInt()
 }
@@ -770,6 +844,7 @@ public infix fun Short.until(to: Byte): IntRange {
  * 
  * If the [to] value is less than or equal to `this` value, then the returned range is empty.
  */
+@CompileTimeCalculation
 public infix fun Char.until(to: Char): CharRange {
     if (to <= '\u0000') return CharRange.EMPTY
     return this .. (to - 1).toChar()
@@ -780,6 +855,7 @@ public infix fun Char.until(to: Char): CharRange {
  * 
  * If the [to] value is less than or equal to `this` value, then the returned range is empty.
  */
+@CompileTimeCalculation
 public infix fun Int.until(to: Int): IntRange {
     if (to <= Int.MIN_VALUE) return IntRange.EMPTY
     return this .. (to - 1).toInt()
@@ -790,6 +866,7 @@ public infix fun Int.until(to: Int): IntRange {
  * 
  * If the [to] value is less than or equal to `this` value, then the returned range is empty.
  */
+@CompileTimeCalculation
 public infix fun Long.until(to: Int): LongRange {
     return this .. (to.toLong() - 1).toLong()
 }
@@ -799,6 +876,7 @@ public infix fun Long.until(to: Int): LongRange {
  * 
  * If the [to] value is less than or equal to `this` value, then the returned range is empty.
  */
+@CompileTimeCalculation
 public infix fun Byte.until(to: Int): IntRange {
     if (to <= Int.MIN_VALUE) return IntRange.EMPTY
     return this.toInt() .. (to - 1).toInt()
@@ -809,6 +887,7 @@ public infix fun Byte.until(to: Int): IntRange {
  * 
  * If the [to] value is less than or equal to `this` value, then the returned range is empty.
  */
+@CompileTimeCalculation
 public infix fun Short.until(to: Int): IntRange {
     if (to <= Int.MIN_VALUE) return IntRange.EMPTY
     return this.toInt() .. (to - 1).toInt()
@@ -819,6 +898,7 @@ public infix fun Short.until(to: Int): IntRange {
  * 
  * If the [to] value is less than or equal to `this` value, then the returned range is empty.
  */
+@CompileTimeCalculation
 public infix fun Int.until(to: Long): LongRange {
     if (to <= Long.MIN_VALUE) return LongRange.EMPTY
     return this.toLong() .. (to - 1).toLong()
@@ -829,6 +909,7 @@ public infix fun Int.until(to: Long): LongRange {
  * 
  * If the [to] value is less than or equal to `this` value, then the returned range is empty.
  */
+@CompileTimeCalculation
 public infix fun Long.until(to: Long): LongRange {
     if (to <= Long.MIN_VALUE) return LongRange.EMPTY
     return this .. (to - 1).toLong()
@@ -839,6 +920,7 @@ public infix fun Long.until(to: Long): LongRange {
  * 
  * If the [to] value is less than or equal to `this` value, then the returned range is empty.
  */
+@CompileTimeCalculation
 public infix fun Byte.until(to: Long): LongRange {
     if (to <= Long.MIN_VALUE) return LongRange.EMPTY
     return this.toLong() .. (to - 1).toLong()
@@ -849,6 +931,7 @@ public infix fun Byte.until(to: Long): LongRange {
  * 
  * If the [to] value is less than or equal to `this` value, then the returned range is empty.
  */
+@CompileTimeCalculation
 public infix fun Short.until(to: Long): LongRange {
     if (to <= Long.MIN_VALUE) return LongRange.EMPTY
     return this.toLong() .. (to - 1).toLong()
@@ -859,6 +942,7 @@ public infix fun Short.until(to: Long): LongRange {
  * 
  * If the [to] value is less than or equal to `this` value, then the returned range is empty.
  */
+@CompileTimeCalculation
 public infix fun Int.until(to: Short): IntRange {
     return this .. (to.toInt() - 1).toInt()
 }
@@ -868,6 +952,7 @@ public infix fun Int.until(to: Short): IntRange {
  * 
  * If the [to] value is less than or equal to `this` value, then the returned range is empty.
  */
+@CompileTimeCalculation
 public infix fun Long.until(to: Short): LongRange {
     return this .. (to.toLong() - 1).toLong()
 }
@@ -877,6 +962,7 @@ public infix fun Long.until(to: Short): LongRange {
  * 
  * If the [to] value is less than or equal to `this` value, then the returned range is empty.
  */
+@CompileTimeCalculation
 public infix fun Byte.until(to: Short): IntRange {
     return this.toInt() .. (to.toInt() - 1).toInt()
 }
@@ -886,6 +972,7 @@ public infix fun Byte.until(to: Short): IntRange {
  * 
  * If the [to] value is less than or equal to `this` value, then the returned range is empty.
  */
+@CompileTimeCalculation
 public infix fun Short.until(to: Short): IntRange {
     return this.toInt() .. (to.toInt() - 1).toInt()
 }

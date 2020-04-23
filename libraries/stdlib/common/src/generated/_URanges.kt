@@ -117,6 +117,7 @@ public fun ULongRange.randomOrNull(random: Random): ULong? {
  * Always returns `false` if the [element] is `null`.
  */
 @SinceKotlin("1.5")
+@CompileTimeCalculation
 @WasExperimental(ExperimentalUnsignedTypes::class)
 @kotlin.internal.InlineOnly
 public inline operator fun UIntRange.contains(element: UInt?): Boolean {
@@ -129,6 +130,7 @@ public inline operator fun UIntRange.contains(element: UInt?): Boolean {
  * Always returns `false` if the [element] is `null`.
  */
 @SinceKotlin("1.5")
+@CompileTimeCalculation
 @WasExperimental(ExperimentalUnsignedTypes::class)
 @kotlin.internal.InlineOnly
 public inline operator fun ULongRange.contains(element: ULong?): Boolean {
@@ -139,6 +141,7 @@ public inline operator fun ULongRange.contains(element: ULong?): Boolean {
  * Checks if the specified [value] belongs to this range.
  */
 @SinceKotlin("1.5")
+@CompileTimeCalculation
 @WasExperimental(ExperimentalUnsignedTypes::class)
 public operator fun UIntRange.contains(value: UByte): Boolean {
     return contains(value.toUInt())
@@ -148,6 +151,7 @@ public operator fun UIntRange.contains(value: UByte): Boolean {
  * Checks if the specified [value] belongs to this range.
  */
 @SinceKotlin("1.5")
+@CompileTimeCalculation
 @WasExperimental(ExperimentalUnsignedTypes::class)
 public operator fun ULongRange.contains(value: UByte): Boolean {
     return contains(value.toULong())
@@ -157,6 +161,7 @@ public operator fun ULongRange.contains(value: UByte): Boolean {
  * Checks if the specified [value] belongs to this range.
  */
 @SinceKotlin("1.5")
+@CompileTimeCalculation
 @WasExperimental(ExperimentalUnsignedTypes::class)
 public operator fun ULongRange.contains(value: UInt): Boolean {
     return contains(value.toULong())
@@ -166,6 +171,7 @@ public operator fun ULongRange.contains(value: UInt): Boolean {
  * Checks if the specified [value] belongs to this range.
  */
 @SinceKotlin("1.5")
+@CompileTimeCalculation
 @WasExperimental(ExperimentalUnsignedTypes::class)
 public operator fun UIntRange.contains(value: ULong): Boolean {
     return (value shr UInt.SIZE_BITS) == 0uL && contains(value.toUInt())
@@ -175,6 +181,7 @@ public operator fun UIntRange.contains(value: ULong): Boolean {
  * Checks if the specified [value] belongs to this range.
  */
 @SinceKotlin("1.5")
+@CompileTimeCalculation
 @WasExperimental(ExperimentalUnsignedTypes::class)
 public operator fun UIntRange.contains(value: UShort): Boolean {
     return contains(value.toUInt())
@@ -184,6 +191,7 @@ public operator fun UIntRange.contains(value: UShort): Boolean {
  * Checks if the specified [value] belongs to this range.
  */
 @SinceKotlin("1.5")
+@CompileTimeCalculation
 @WasExperimental(ExperimentalUnsignedTypes::class)
 public operator fun ULongRange.contains(value: UShort): Boolean {
     return contains(value.toULong())
@@ -196,6 +204,7 @@ public operator fun ULongRange.contains(value: UShort): Boolean {
  * If the [to] value is greater than `this` value the returned progression is empty.
  */
 @SinceKotlin("1.5")
+@CompileTimeCalculation
 @WasExperimental(ExperimentalUnsignedTypes::class)
 public infix fun UByte.downTo(to: UByte): UIntProgression {
     return UIntProgression.fromClosedRange(this.toUInt(), to.toUInt(), -1)
@@ -208,6 +217,7 @@ public infix fun UByte.downTo(to: UByte): UIntProgression {
  * If the [to] value is greater than `this` value the returned progression is empty.
  */
 @SinceKotlin("1.5")
+@CompileTimeCalculation
 @WasExperimental(ExperimentalUnsignedTypes::class)
 public infix fun UInt.downTo(to: UInt): UIntProgression {
     return UIntProgression.fromClosedRange(this, to, -1)
@@ -220,6 +230,7 @@ public infix fun UInt.downTo(to: UInt): UIntProgression {
  * If the [to] value is greater than `this` value the returned progression is empty.
  */
 @SinceKotlin("1.5")
+@CompileTimeCalculation
 @WasExperimental(ExperimentalUnsignedTypes::class)
 public infix fun ULong.downTo(to: ULong): ULongProgression {
     return ULongProgression.fromClosedRange(this, to, -1L)
@@ -232,6 +243,7 @@ public infix fun ULong.downTo(to: ULong): ULongProgression {
  * If the [to] value is greater than `this` value the returned progression is empty.
  */
 @SinceKotlin("1.5")
+@CompileTimeCalculation
 @WasExperimental(ExperimentalUnsignedTypes::class)
 public infix fun UShort.downTo(to: UShort): UIntProgression {
     return UIntProgression.fromClosedRange(this.toUInt(), to.toUInt(), -1)
@@ -241,6 +253,7 @@ public infix fun UShort.downTo(to: UShort): UIntProgression {
  * Returns a progression that goes over the same range in the opposite direction with the same step.
  */
 @SinceKotlin("1.5")
+@CompileTimeCalculation
 @WasExperimental(ExperimentalUnsignedTypes::class)
 public fun UIntProgression.reversed(): UIntProgression {
     return UIntProgression.fromClosedRange(last, first, -step)
@@ -250,6 +263,7 @@ public fun UIntProgression.reversed(): UIntProgression {
  * Returns a progression that goes over the same range in the opposite direction with the same step.
  */
 @SinceKotlin("1.5")
+@CompileTimeCalculation
 @WasExperimental(ExperimentalUnsignedTypes::class)
 public fun ULongProgression.reversed(): ULongProgression {
     return ULongProgression.fromClosedRange(last, first, -step)
@@ -259,6 +273,7 @@ public fun ULongProgression.reversed(): ULongProgression {
  * Returns a progression that goes over the same range with the given step.
  */
 @SinceKotlin("1.5")
+@CompileTimeCalculation
 @WasExperimental(ExperimentalUnsignedTypes::class)
 public infix fun UIntProgression.step(step: Int): UIntProgression {
     checkStepIsPositive(step > 0, step)
@@ -269,6 +284,7 @@ public infix fun UIntProgression.step(step: Int): UIntProgression {
  * Returns a progression that goes over the same range with the given step.
  */
 @SinceKotlin("1.5")
+@CompileTimeCalculation
 @WasExperimental(ExperimentalUnsignedTypes::class)
 public infix fun ULongProgression.step(step: Long): ULongProgression {
     checkStepIsPositive(step > 0, step)
@@ -281,6 +297,7 @@ public infix fun ULongProgression.step(step: Long): ULongProgression {
  * If the [to] value is less than or equal to `this` value, then the returned range is empty.
  */
 @SinceKotlin("1.5")
+@CompileTimeCalculation
 @WasExperimental(ExperimentalUnsignedTypes::class)
 public infix fun UByte.until(to: UByte): UIntRange {
     if (to <= UByte.MIN_VALUE) return UIntRange.EMPTY
@@ -293,6 +310,7 @@ public infix fun UByte.until(to: UByte): UIntRange {
  * If the [to] value is less than or equal to `this` value, then the returned range is empty.
  */
 @SinceKotlin("1.5")
+@CompileTimeCalculation
 @WasExperimental(ExperimentalUnsignedTypes::class)
 public infix fun UInt.until(to: UInt): UIntRange {
     if (to <= UInt.MIN_VALUE) return UIntRange.EMPTY
@@ -305,6 +323,7 @@ public infix fun UInt.until(to: UInt): UIntRange {
  * If the [to] value is less than or equal to `this` value, then the returned range is empty.
  */
 @SinceKotlin("1.5")
+@CompileTimeCalculation
 @WasExperimental(ExperimentalUnsignedTypes::class)
 public infix fun ULong.until(to: ULong): ULongRange {
     if (to <= ULong.MIN_VALUE) return ULongRange.EMPTY
@@ -317,6 +336,7 @@ public infix fun ULong.until(to: ULong): ULongRange {
  * If the [to] value is less than or equal to `this` value, then the returned range is empty.
  */
 @SinceKotlin("1.5")
+@CompileTimeCalculation
 @WasExperimental(ExperimentalUnsignedTypes::class)
 public infix fun UShort.until(to: UShort): UIntRange {
     if (to <= UShort.MIN_VALUE) return UIntRange.EMPTY

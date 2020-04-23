@@ -41,6 +41,7 @@ public class UIntRange(start: UInt, endInclusive: UInt) : UIntProgression(start,
 
     companion object {
         /** An empty range of values of type UInt. */
+        @CompileTimeCalculation
         public val EMPTY: UIntRange = UIntRange(UInt.MAX_VALUE, UInt.MIN_VALUE)
     }
 }

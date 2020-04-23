@@ -41,6 +41,7 @@ public class ULongRange(start: ULong, endInclusive: ULong) : ULongProgression(st
 
     companion object {
         /** An empty range of values of type ULong. */
+        @CompileTimeCalculation
         public val EMPTY: ULongRange = ULongRange(ULong.MAX_VALUE, ULong.MIN_VALUE)
     }
 }

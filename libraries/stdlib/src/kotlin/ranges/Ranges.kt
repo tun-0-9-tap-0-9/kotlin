@@ -11,6 +11,7 @@ package kotlin.ranges
 /**
  * Represents a range of [Comparable] values.
  */
+@CompileTimeCalculation
 private open class ComparableRange<T : Comparable<T>>(
     override val start: T,
     override val endInclusive: T
@@ -34,6 +35,7 @@ private open class ComparableRange<T : Comparable<T>>(
  * This value needs to be smaller than or equal to [that] value, otherwise the returned range will be empty.
  * @sample samples.ranges.Ranges.rangeFromComparable
  */
+@CompileTimeCalculation
 public operator fun <T : Comparable<T>> T.rangeTo(that: T): ClosedRange<T> = ComparableRange(this, that)
 
 
@@ -44,6 +46,7 @@ public operator fun <T : Comparable<T>> T.rangeTo(that: T): ClosedRange<T> = Com
  * This interface is implemented by floating point ranges returned by [Float.rangeTo] and [Double.rangeTo] operators to
  * achieve IEEE-754 comparison order instead of total order of floating point numbers.
  */
+@CompileTimeCalculation
 @SinceKotlin("1.1")
 public interface ClosedFloatingPointRange<T : Comparable<T>> : ClosedRange<T> {
     override fun contains(value: T): Boolean = lessThanOrEquals(start, value) && lessThanOrEquals(value, endInclusive)
@@ -61,6 +64,7 @@ public interface ClosedFloatingPointRange<T : Comparable<T>> : ClosedRange<T> {
  *
  * Numbers are compared with the ends of this range according to IEEE-754.
  */
+@CompileTimeCalculation
 private class ClosedDoubleRange(
     start: Double,
     endInclusive: Double
@@ -93,6 +97,7 @@ private class ClosedDoubleRange(
  * Numbers are compared with the ends of this range according to IEEE-754.
  * @sample samples.ranges.Ranges.rangeFromDouble
  */
+@CompileTimeCalculation
 @SinceKotlin("1.1")
 public operator fun Double.rangeTo(that: Double): ClosedFloatingPointRange<Double> = ClosedDoubleRange(this, that)
 
@@ -102,6 +107,7 @@ public operator fun Double.rangeTo(that: Double): ClosedFloatingPointRange<Doubl
  *
  * Numbers are compared with the ends of this range according to IEEE-754.
  */
+@CompileTimeCalculation
 private class ClosedFloatRange(
     start: Float,
     endInclusive: Float
@@ -134,6 +140,7 @@ private class ClosedFloatRange(
  * Numbers are compared with the ends of this range according to IEEE-754.
  * @sample samples.ranges.Ranges.rangeFromFloat
  */
+@CompileTimeCalculation
 @SinceKotlin("1.1")
 public operator fun Float.rangeTo(that: Float): ClosedFloatingPointRange<Float> = ClosedFloatRange(this, that)
 
@@ -143,12 +150,14 @@ public operator fun Float.rangeTo(that: Float): ClosedFloatingPointRange<Float> 
  *
  * Always returns `false` if the [element] is `null`.
  */
+@CompileTimeCalculation
 @SinceKotlin("1.3")
 @kotlin.internal.InlineOnly
 public inline operator fun <T, R> R.contains(element: T?): Boolean where T : Any, R : Iterable<T>, R : ClosedRange<T> =
     element != null && contains(element)
 
 
+@CompileTimeCalculation
 internal fun checkStepIsPositive(isPositive: Boolean, step: Number) {
     if (!isPositive) throw IllegalArgumentException("Step must be positive, was: $step.")
 }
