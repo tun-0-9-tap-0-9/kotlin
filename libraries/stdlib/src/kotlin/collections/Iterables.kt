@@ -29,12 +29,14 @@ internal class IndexingIterable<out T>(private val iteratorFactory: () -> Iterat
 /**
  * Returns the size of this iterable if it is known, or `null` otherwise.
  */
+@CompileTimeCalculation
 @PublishedApi
 internal fun <T> Iterable<T>.collectionSizeOrNull(): Int? = if (this is Collection<*>) this.size else null
 
 /**
  * Returns the size of this iterable if it is known, or the specified [default] value otherwise.
  */
+@CompileTimeCalculation
 @PublishedApi
 internal fun <T> Iterable<T>.collectionSizeOrDefault(default: Int): Int = if (this is Collection<*>) this.size else default
 

@@ -1765,6 +1765,7 @@ public infix fun <T> Iterable<T>.union(other: Iterable<T>): Set<T> {
  * 
  * @sample samples.collections.Collections.Aggregates.all
  */
+@CompileTimeCalculation
 public inline fun <T> Iterable<T>.all(predicate: (T) -> Boolean): Boolean {
     if (this is Collection && isEmpty()) return true
     for (element in this) if (!predicate(element)) return false
@@ -1776,6 +1777,7 @@ public inline fun <T> Iterable<T>.all(predicate: (T) -> Boolean): Boolean {
  * 
  * @sample samples.collections.Collections.Aggregates.any
  */
+@CompileTimeCalculation
 public fun <T> Iterable<T>.any(): Boolean {
     if (this is Collection) return !isEmpty()
     return iterator().hasNext()
@@ -1795,6 +1797,7 @@ public inline fun <T> Iterable<T>.any(predicate: (T) -> Boolean): Boolean {
 /**
  * Returns the number of elements in this collection.
  */
+@CompileTimeCalculation
 public fun <T> Iterable<T>.count(): Int {
     if (this is Collection) return size
     var count = 0
@@ -1805,6 +1808,7 @@ public fun <T> Iterable<T>.count(): Int {
 /**
  * Returns the number of elements in this collection.
  */
+@CompileTimeCalculation
 @kotlin.internal.InlineOnly
 public inline fun <T> Collection<T>.count(): Int {
     return size
@@ -1828,6 +1832,7 @@ public inline fun <T> Iterable<T>.count(predicate: (T) -> Boolean): Int {
  * 
  * @param [operation] function that takes current accumulator value and an element, and calculates the next accumulator value.
  */
+@CompileTimeCalculation
 public inline fun <T, R> Iterable<T>.fold(initial: R, operation: (acc: R, T) -> R): R {
     var accumulator = initial
     for (element in this) accumulator = operation(accumulator, element)
@@ -1893,6 +1898,7 @@ public inline fun <T, R> List<T>.foldRightIndexed(initial: R, operation: (index:
 /**
  * Performs the given [action] on each element.
  */
+@CompileTimeCalculation
 @kotlin.internal.HidesMembers
 public inline fun <T> Iterable<T>.forEach(action: (T) -> Unit): Unit {
     for (element in this) action(element)
@@ -1903,6 +1909,7 @@ public inline fun <T> Iterable<T>.forEach(action: (T) -> Unit): Unit {
  * @param [action] function that takes the index of an element and the element itself
  * and performs the action on the element.
  */
+@CompileTimeCalculation
 public inline fun <T> Iterable<T>.forEachIndexed(action: (index: Int, T) -> Unit): Unit {
     var index = 0
     for (item in this) action(checkIndexOverflow(index++), item)
@@ -2503,6 +2510,7 @@ public fun <T> Iterable<T>.minWithOrNull(comparator: Comparator<in T>): T? {
  * 
  * @sample samples.collections.Collections.Aggregates.none
  */
+@CompileTimeCalculation
 public fun <T> Iterable<T>.none(): Boolean {
     if (this is Collection) return isEmpty()
     return !iterator().hasNext()
@@ -2523,6 +2531,7 @@ public inline fun <T> Iterable<T>.none(predicate: (T) -> Boolean): Boolean {
  * Performs the given [action] on each element and returns the collection itself afterwards.
  */
 @SinceKotlin("1.1")
+@CompileTimeCalculation
 public inline fun <T, C : Iterable<T>> C.onEach(action: (T) -> Unit): C {
     return apply { for (element in this) action(element) }
 }

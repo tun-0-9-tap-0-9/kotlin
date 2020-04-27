@@ -38,6 +38,7 @@ object Aggregates : TemplateGroupBase() {
             Returns `true` if all ${f.element.pluralize()} match the given [predicate].
             """
         }
+        annotation("""@CompileTimeCalculation""")
         sample("samples.collections.Collections.Aggregates.all")
         returns("Boolean")
         body {
@@ -91,6 +92,7 @@ object Aggregates : TemplateGroupBase() {
             Returns `true` if the ${f.collection} has no ${f.element.pluralize()}.
             """
         }
+        annotation("""@CompileTimeCalculation""")
         sample("samples.collections.Collections.Aggregates.none")
         returns("Boolean")
         body {
@@ -146,6 +148,7 @@ object Aggregates : TemplateGroupBase() {
             Returns `true` if ${f.collection} has at least one ${f.element}.
             """
         }
+        annotation("""@CompileTimeCalculation""")
         sample("samples.collections.Collections.Aggregates.any")
         returns("Boolean")
         body {
@@ -195,6 +198,7 @@ object Aggregates : TemplateGroupBase() {
         include(Collections, Maps, CharSequences)
     } builder {
         doc { "Returns the number of ${f.element.pluralize()} in this ${f.collection}." }
+        annotation("""@CompileTimeCalculation""")
         returns("Int")
         body {
             fun checkOverflow(value: String) = if (f == Sequences || f == Iterables) "checkCountOverflow($value)" else value
@@ -740,6 +744,7 @@ object Aggregates : TemplateGroupBase() {
             @param [operation] function that takes current accumulator value and ${f.element.prefixWithArticle()}, and calculates the next accumulator value.
             """
         }
+        annotation("""@CompileTimeCalculation""")
         typeParam("R")
         returns("R")
         body {
@@ -1092,6 +1097,7 @@ object Aggregates : TemplateGroupBase() {
         specialFor(ArraysOfUnsigned) { inlineOnly() }
 
         doc { reduceDoc("reduce") }
+        annotation("""@CompileTimeCalculation""")
         sample("samples.collections.Collections.Aggregates.reduce")
         returns("T")
         body {
@@ -1771,6 +1777,7 @@ object Aggregates : TemplateGroupBase() {
 
         specialFor(Iterables, Maps, CharSequences) {
             inline()
+            annotation("""@CompileTimeCalculation""")
             val collectionType = when (f) {
                 Maps -> "M"
                 CharSequences -> "S"
@@ -1861,6 +1868,7 @@ object Aggregates : TemplateGroupBase() {
         specialFor(ArraysOfUnsigned) { inlineOnly() }
 
         doc { "Performs the given [action] on each ${f.element}." }
+        annotation("""@CompileTimeCalculation""")
         specialFor(Iterables, Maps) { annotation("@kotlin.internal.HidesMembers") }
         returns("Unit")
         body {
@@ -1883,6 +1891,7 @@ object Aggregates : TemplateGroupBase() {
             @param [action] function that takes the index of ${f.element.prefixWithArticle()} and the ${f.element} itself
             and performs the action on the ${f.element}.
             """ }
+        annotation("""@CompileTimeCalculation""")
         returns("Unit")
         body {
             fun checkOverflow(value: String) = if (f == Sequences || f == Iterables) "checkIndexOverflow($value)" else value
