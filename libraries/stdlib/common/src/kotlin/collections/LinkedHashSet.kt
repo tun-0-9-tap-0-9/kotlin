@@ -5,6 +5,7 @@
 
 package kotlin.collections
 
+@CompileTimeCalculation
 expect class LinkedHashSet<E> : MutableSet<E> {
     constructor()
     constructor(initialCapacity: Int)

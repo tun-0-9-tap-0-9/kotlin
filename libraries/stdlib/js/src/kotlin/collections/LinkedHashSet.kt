@@ -14,6 +14,8 @@ package kotlin.collections
  *
  * This implementation preserves the insertion order of elements during the iteration.
  */
+@CompileTimeCalculation
+@EvaluateIntrinsic("java.util.LinkedHashSet")
 public actual open class LinkedHashSet<E> : HashSet<E>, MutableSet<E> {
 
     internal constructor(map: LinkedHashMap<E, Any>) : super(map)

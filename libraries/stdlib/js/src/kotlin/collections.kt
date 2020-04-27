@@ -87,6 +87,7 @@ internal actual inline fun <E> buildListInternal(capacity: Int, builderAction: M
 /**
  * Returns an immutable set containing only the specified object [element].
  */
+@CompileTimeCalculation
 public fun <T> setOf(element: T): Set<T> = hashSetOf(element)
 
 @PublishedApi

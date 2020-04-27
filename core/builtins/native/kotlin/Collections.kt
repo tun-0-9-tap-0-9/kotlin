@@ -249,6 +249,7 @@ public interface MutableList<E> : List<E>, MutableCollection<E> {
  * read/write access is supported through the [MutableSet] interface.
  * @param E the type of elements contained in the set. The set is covariant in its element type.
  */
+@CompileTimeCalculation
 public interface Set<out E> : Collection<E> {
     // Query Operations
 
@@ -266,6 +267,7 @@ public interface Set<out E> : Collection<E> {
  * adding and removing elements.
  * @param E the type of elements contained in the set. The mutable set is invariant in its element type.
  */
+@CompileTimeCalculation
 public interface MutableSet<E> : Set<E>, MutableCollection<E> {
     // Query Operations
     override fun iterator(): MutableIterator<E>

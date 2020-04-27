@@ -11,6 +11,7 @@ package kotlin.collections
 
 import kotlin.contracts.*
 
+@CompileTimeCalculation
 internal object EmptySet : Set<Nothing>, Serializable {
     private const val serialVersionUID: Long = 3406603774387020532
 
@@ -33,6 +34,7 @@ internal object EmptySet : Set<Nothing>, Serializable {
  * Returns an empty read-only set.  The returned set is serializable (JVM).
  * @sample samples.collections.Collections.Sets.emptyReadOnlySet
  */
+@CompileTimeCalculation
 public fun <T> emptySet(): Set<T> = EmptySet
 
 /**
@@ -41,12 +43,14 @@ public fun <T> emptySet(): Set<T> = EmptySet
  * The returned set is serializable (JVM).
  * @sample samples.collections.Collections.Sets.readOnlySet
  */
+@CompileTimeCalculation
 public fun <T> setOf(vararg elements: T): Set<T> = if (elements.size > 0) elements.toSet() else emptySet()
 
 /**
  * Returns an empty read-only set.  The returned set is serializable (JVM).
  * @sample samples.collections.Collections.Sets.emptyReadOnlySet
  */
+@CompileTimeCalculation
 @kotlin.internal.InlineOnly
 public inline fun <T> setOf(): Set<T> = emptySet()
 
@@ -56,6 +60,7 @@ public inline fun <T> setOf(): Set<T> = emptySet()
  * The returned set preserves the element iteration order.
  * @sample samples.collections.Collections.Sets.emptyMutableSet
  */
+@CompileTimeCalculation
 @SinceKotlin("1.1")
 @kotlin.internal.InlineOnly
 public inline fun <T> mutableSetOf(): MutableSet<T> = LinkedHashSet()
@@ -65,14 +70,19 @@ public inline fun <T> mutableSetOf(): MutableSet<T> = LinkedHashSet()
  * Elements of the set are iterated in the order they were specified.
  * @sample samples.collections.Collections.Sets.mutableSet
  */
+@CompileTimeCalculation
 public fun <T> mutableSetOf(vararg elements: T): MutableSet<T> = elements.toCollection(LinkedHashSet(mapCapacity(elements.size)))
 
 /** Returns an empty new [HashSet]. */
+@CompileTimeCalculation
+@EvaluateIntrinsic("kotlin.collections.SetsKt")
 @SinceKotlin("1.1")
 @kotlin.internal.InlineOnly
 public inline fun <T> hashSetOf(): HashSet<T> = HashSet()
 
 /** Returns a new [HashSet] with the given elements. */
+@CompileTimeCalculation
+@EvaluateIntrinsic("kotlin.collections.SetsKt")
 public fun <T> hashSetOf(vararg elements: T): HashSet<T> = elements.toCollection(HashSet(mapCapacity(elements.size)))
 
 /**
