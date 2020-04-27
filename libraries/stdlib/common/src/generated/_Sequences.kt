@@ -808,6 +808,7 @@ public inline fun <K, V, M : MutableMap<in K, in V>> Sequence<K>.associateWithTo
  *
  * The operation is _terminal_.
  */
+@CompileTimeCalculation
 public fun <T, C : MutableCollection<in T>> Sequence<T>.toCollection(destination: C): C {
     for (item in this) {
         destination.add(item)
@@ -829,6 +830,7 @@ public fun <T> Sequence<T>.toHashSet(): HashSet<T> {
  *
  * The operation is _terminal_.
  */
+@CompileTimeCalculation
 public fun <T> Sequence<T>.toList(): List<T> {
     return this.toMutableList().optimizeReadOnlyList()
 }
@@ -838,6 +840,7 @@ public fun <T> Sequence<T>.toList(): List<T> {
  *
  * The operation is _terminal_.
  */
+@CompileTimeCalculation
 public fun <T> Sequence<T>.toMutableList(): MutableList<T> {
     return toCollection(ArrayList<T>())
 }
@@ -849,6 +852,7 @@ public fun <T> Sequence<T>.toMutableList(): MutableList<T> {
  *
  * The operation is _terminal_.
  */
+@CompileTimeCalculation
 public fun <T> Sequence<T>.toSet(): Set<T> {
     return toCollection(LinkedHashSet<T>()).optimizeReadOnlySet()
 }

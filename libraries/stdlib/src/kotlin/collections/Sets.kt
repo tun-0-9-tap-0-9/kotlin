@@ -168,6 +168,7 @@ internal expect inline fun <E> buildSetInternal(capacity: Int, builderAction: Mu
 @kotlin.internal.InlineOnly
 public inline fun <T> Set<T>?.orEmpty(): Set<T> = this ?: emptySet()
 
+@CompileTimeCalculation
 internal fun <T> Set<T>.optimizeReadOnlySet() = when (size) {
     0 -> emptySet()
     1 -> setOf(iterator().next())

@@ -256,6 +256,7 @@ internal actual fun checkCountOverflow(count: Int): Int {
 /**
  * JS map and set implementations do not make use of capacities or load factors.
  */
+@CompileTimeCalculation
 @PublishedApi
 internal actual fun mapCapacity(expectedSize: Int) = expectedSize
 
