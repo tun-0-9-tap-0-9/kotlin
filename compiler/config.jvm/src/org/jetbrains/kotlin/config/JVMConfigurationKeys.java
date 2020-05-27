@@ -123,6 +123,9 @@ public class JVMConfigurationKeys {
     public static final CompilerConfigurationKey<List<String>> KLIB_PATHS =
             CompilerConfigurationKey.create("Paths to .klib libraries");
 
+    public static final CompilerConfigurationKey<String> KLIB_PATH_FOR_COMPILE_TIME =
+            CompilerConfigurationKey.create("Path to .klib library used in compilt time calculatations");
+
     public static final CompilerConfigurationKey<JvmAbiStability> ABI_STABILITY =
             CompilerConfigurationKey.create("ABI stability of class files produced by JVM IR and/or FIR");
 

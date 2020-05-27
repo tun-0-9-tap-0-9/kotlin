@@ -22,6 +22,9 @@ import org.jetbrains.kotlin.metadata.deserialization.BinaryVersion
 
 object CommonConfigurationKeys {
     @JvmField
+    val IR_BODY_MAP = CompilerConfigurationKey.create<Map<*, *>>("stdlib files for interpreter")
+
+    @JvmField
     val LANGUAGE_VERSION_SETTINGS = CompilerConfigurationKey<LanguageVersionSettings>("language version settings")
 
     @JvmField
