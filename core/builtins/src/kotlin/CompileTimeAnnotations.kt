@@ -9,10 +9,10 @@ package kotlin
  * Specify that marked function is calculated in compile time and it result can be stored as "const val"
  * Must be used only on built ins methods and further will be replaced with "constexpr" modifier
  */
-@Target(AnnotationTarget.CLASS, AnnotationTarget.CONSTRUCTOR, AnnotationTarget.FUNCTION, AnnotationTarget.PROPERTY)
+@Target(AnnotationTarget.CLASS, AnnotationTarget.CONSTRUCTOR, AnnotationTarget.FUNCTION, AnnotationTarget.PROPERTY, AnnotationTarget.TYPEALIAS)
 @Retention(AnnotationRetention.BINARY)
 public annotation class CompileTimeCalculation
 
-@Target(AnnotationTarget.CLASS, AnnotationTarget.CONSTRUCTOR, AnnotationTarget.FUNCTION, AnnotationTarget.PROPERTY)
+@Target(AnnotationTarget.CLASS, AnnotationTarget.CONSTRUCTOR, AnnotationTarget.FUNCTION, AnnotationTarget.PROPERTY, AnnotationTarget.TYPEALIAS)
 @Retention(AnnotationRetention.BINARY)
 public annotation class EvaluateIntrinsic(val file: String)
