@@ -7,8 +7,12 @@
 
 package kotlin.text
 
+@CompileTimeCalculation
+@EvaluateIntrinsic("java.lang.Appendable")
 @SinceKotlin("1.1") public actual typealias Appendable = java.lang.Appendable
 
+@CompileTimeCalculation
+@EvaluateIntrinsic("java.lang.StringBuilder")
 @Suppress("ACTUAL_WITHOUT_EXPECT") // TODO: some supertypes are missing
 @SinceKotlin("1.1") public actual typealias StringBuilder = java.lang.StringBuilder
 
