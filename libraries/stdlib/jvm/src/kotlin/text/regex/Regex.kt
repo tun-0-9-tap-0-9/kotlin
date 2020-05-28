@@ -26,6 +26,8 @@ private inline fun <reified T> fromInt(value: Int): Set<T> where T : FlagEnum, T
 /**
  * Provides enumeration values to use to set regular expression options.
  */
+@CompileTimeCalculation
+@EvaluateIntrinsic("kotlin.text.RegexOption")
 public actual enum class RegexOption(override val value: Int, override val mask: Int = value) : FlagEnum {
     // common
 
@@ -72,6 +74,8 @@ public actual enum class RegexOption(override val value: Int, override val mask:
  *
  * The [range] property is available on JVM only.
  */
+@CompileTimeCalculation
+@EvaluateIntrinsic("kotlin.text.MatchGroup")
 public actual data class MatchGroup(public actual val value: String, public val range: IntRange)
 
 /**
@@ -80,6 +84,8 @@ public actual data class MatchGroup(public actual val value: String, public val 
  *
  * For pattern syntax reference see [Pattern].
  */
+@CompileTimeCalculation
+@EvaluateIntrinsic("kotlin.text.Regex")
 public actual class Regex
 @PublishedApi
 internal constructor(private val nativePattern: Pattern) : Serializable {
@@ -238,23 +244,27 @@ internal constructor(private val nativePattern: Pattern) : Serializable {
         private fun readResolve(): Any = Regex(Pattern.compile(pattern, flags))
     }
 
+    @EvaluateIntrinsic("kotlin.text.Regex\$Companion")
     actual companion object {
         /**
          * Returns a regular expression that matches the specified [literal] string literally.
          * No characters of that string will have special meaning when searching for an occurrence of the regular expression.
          */
+        @CompileTimeCalculation
         public actual fun fromLiteral(literal: String): Regex = literal.toRegex(RegexOption.LITERAL)
 
         /**
          * Returns a regular expression pattern string that matches the specified [literal] string literally.
          * No characters of that string will have special meaning when searching for an occurrence of the regular expression.
          */
+        @CompileTimeCalculation
         public actual fun escape(literal: String): String = Pattern.quote(literal)
 
         /**
          * Returns a literal replacement expression for the specified [literal] string.
          * No characters of that string will have special meaning when it is used as a replacement string in [Regex.replace] function.
          */
+        @CompileTimeCalculation
         public actual fun escapeReplacement(literal: String): String = Matcher.quoteReplacement(literal)
 
         private fun ensureUnicodeCase(flags: Int) = if (flags and Pattern.CASE_INSENSITIVE != 0) flags or Pattern.UNICODE_CASE else flags
