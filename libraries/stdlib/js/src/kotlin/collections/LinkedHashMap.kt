@@ -17,6 +17,8 @@ import kotlin.collections.MutableMap.MutableEntry
  *
  * The insertion order is preserved by maintaining a doubly-linked list of all of its entries.
  */
+@CompileTimeCalculation
+@EvaluateIntrinsic("java.util.LinkedHashMap")
 public actual open class LinkedHashMap<K, V> : HashMap<K, V>, MutableMap<K, V> {
 
     /**

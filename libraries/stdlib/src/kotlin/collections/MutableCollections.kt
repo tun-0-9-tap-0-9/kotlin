@@ -18,6 +18,7 @@ import kotlin.random.Random
  *
  * @return `true` if the element has been successfully removed; `false` if it was not present in the collection.
  */
+@CompileTimeCalculation
 @kotlin.internal.InlineOnly
 public inline fun <@kotlin.internal.OnlyInputTypes T> MutableCollection<out T>.remove(element: T): Boolean =
     @Suppress("UNCHECKED_CAST") (this as MutableCollection<T>).remove(element)
@@ -29,6 +30,7 @@ public inline fun <@kotlin.internal.OnlyInputTypes T> MutableCollection<out T>.r
  *
  * @return `true` if any of the specified elements was removed from the collection, `false` if the collection was not modified.
  */
+@CompileTimeCalculation
 @kotlin.internal.InlineOnly
 public inline fun <@kotlin.internal.OnlyInputTypes T> MutableCollection<out T>.removeAll(elements: Collection<T>): Boolean =
     @Suppress("UNCHECKED_CAST") (this as MutableCollection<T>).removeAll(elements)
@@ -40,6 +42,7 @@ public inline fun <@kotlin.internal.OnlyInputTypes T> MutableCollection<out T>.r
  *
  * @return `true` if any element was removed from the collection, `false` if the collection was not modified.
  */
+@CompileTimeCalculation
 @kotlin.internal.InlineOnly
 public inline fun <@kotlin.internal.OnlyInputTypes T> MutableCollection<out T>.retainAll(elements: Collection<T>): Boolean =
     @Suppress("UNCHECKED_CAST") (this as MutableCollection<T>).retainAll(elements)
@@ -47,6 +50,7 @@ public inline fun <@kotlin.internal.OnlyInputTypes T> MutableCollection<out T>.r
 /**
  * Adds the specified [element] to this mutable collection.
  */
+@CompileTimeCalculation
 @kotlin.internal.InlineOnly
 public inline operator fun <T> MutableCollection<in T>.plusAssign(element: T) {
     this.add(element)
@@ -55,6 +59,7 @@ public inline operator fun <T> MutableCollection<in T>.plusAssign(element: T) {
 /**
  * Adds all elements of the given [elements] collection to this mutable collection.
  */
+@CompileTimeCalculation
 @kotlin.internal.InlineOnly
 public inline operator fun <T> MutableCollection<in T>.plusAssign(elements: Iterable<T>) {
     this.addAll(elements)
@@ -63,6 +68,7 @@ public inline operator fun <T> MutableCollection<in T>.plusAssign(elements: Iter
 /**
  * Adds all elements of the given [elements] array to this mutable collection.
  */
+@CompileTimeCalculation
 @kotlin.internal.InlineOnly
 public inline operator fun <T> MutableCollection<in T>.plusAssign(elements: Array<T>) {
     this.addAll(elements)
@@ -71,6 +77,7 @@ public inline operator fun <T> MutableCollection<in T>.plusAssign(elements: Arra
 /**
  * Adds all elements of the given [elements] sequence to this mutable collection.
  */
+@CompileTimeCalculation
 @kotlin.internal.InlineOnly
 public inline operator fun <T> MutableCollection<in T>.plusAssign(elements: Sequence<T>) {
     this.addAll(elements)
@@ -79,6 +86,7 @@ public inline operator fun <T> MutableCollection<in T>.plusAssign(elements: Sequ
 /**
  * Removes a single instance of the specified [element] from this mutable collection.
  */
+@CompileTimeCalculation
 @kotlin.internal.InlineOnly
 public inline operator fun <T> MutableCollection<in T>.minusAssign(element: T) {
     this.remove(element)
@@ -111,6 +119,7 @@ public inline operator fun <T> MutableCollection<in T>.minusAssign(elements: Seq
 /**
  * Adds all elements of the given [elements] collection to this [MutableCollection].
  */
+@CompileTimeCalculation
 public fun <T> MutableCollection<in T>.addAll(elements: Iterable<T>): Boolean {
     when (elements) {
         is Collection -> return addAll(elements)
@@ -126,6 +135,7 @@ public fun <T> MutableCollection<in T>.addAll(elements: Iterable<T>): Boolean {
 /**
  * Adds all elements of the given [elements] sequence to this [MutableCollection].
  */
+@CompileTimeCalculation
 public fun <T> MutableCollection<in T>.addAll(elements: Sequence<T>): Boolean {
     var result: Boolean = false
     for (item in elements) {
@@ -137,6 +147,7 @@ public fun <T> MutableCollection<in T>.addAll(elements: Sequence<T>): Boolean {
 /**
  * Adds all elements of the given [elements] array to this [MutableCollection].
  */
+@CompileTimeCalculation
 public fun <T> MutableCollection<in T>.addAll(elements: Array<out T>): Boolean {
     return addAll(elements.asList())
 }
@@ -203,6 +214,7 @@ private fun MutableCollection<*>.retainNothing(): Boolean {
  *
  * @return `true` if any element was removed from this collection, or `false` when no elements were removed and collection was not modified.
  */
+@CompileTimeCalculation
 public fun <T> MutableIterable<T>.removeAll(predicate: (T) -> Boolean): Boolean = filterInPlace(predicate, true)
 
 /**
@@ -210,8 +222,10 @@ public fun <T> MutableIterable<T>.removeAll(predicate: (T) -> Boolean): Boolean 
  *
  * @return `true` if any element was removed from this collection, or `false` when all elements were retained and collection was not modified.
  */
+@CompileTimeCalculation
 public fun <T> MutableIterable<T>.retainAll(predicate: (T) -> Boolean): Boolean = filterInPlace(predicate, false)
 
+@CompileTimeCalculation
 private fun <T> MutableIterable<T>.filterInPlace(predicate: (T) -> Boolean, predicateResultToRemove: Boolean): Boolean {
     var result = false
     with(iterator()) {
@@ -236,6 +250,7 @@ public inline fun <T> MutableList<T>.remove(index: Int): T = removeAt(index)
 /**
  * Removes the first element from this mutable list and returns that removed element, or throws [NoSuchElementException] if this list is empty.
  */
+@CompileTimeCalculation
 @SinceKotlin("1.4")
 @WasExperimental(ExperimentalStdlibApi::class)
 public fun <T> MutableList<T>.removeFirst(): T = if (isEmpty()) throw NoSuchElementException("List is empty.") else removeAt(0)
@@ -243,6 +258,7 @@ public fun <T> MutableList<T>.removeFirst(): T = if (isEmpty()) throw NoSuchElem
 /**
  * Removes the first element from this mutable list and returns that removed element, or returns `null` if this list is empty.
  */
+@CompileTimeCalculation
 @SinceKotlin("1.4")
 @WasExperimental(ExperimentalStdlibApi::class)
 public fun <T> MutableList<T>.removeFirstOrNull(): T? = if (isEmpty()) null else removeAt(0)
@@ -250,6 +266,7 @@ public fun <T> MutableList<T>.removeFirstOrNull(): T? = if (isEmpty()) null else
 /**
  * Removes the last element from this mutable list and returns that removed element, or throws [NoSuchElementException] if this list is empty.
  */
+@CompileTimeCalculation
 @SinceKotlin("1.4")
 @WasExperimental(ExperimentalStdlibApi::class)
 public fun <T> MutableList<T>.removeLast(): T = if (isEmpty()) throw NoSuchElementException("List is empty.") else removeAt(lastIndex)
@@ -257,6 +274,7 @@ public fun <T> MutableList<T>.removeLast(): T = if (isEmpty()) throw NoSuchEleme
 /**
  * Removes the last element from this mutable list and returns that removed element, or returns `null` if this list is empty.
  */
+@CompileTimeCalculation
 @SinceKotlin("1.4")
 @WasExperimental(ExperimentalStdlibApi::class)
 public fun <T> MutableList<T>.removeLastOrNull(): T? = if (isEmpty()) null else removeAt(lastIndex)
@@ -266,6 +284,7 @@ public fun <T> MutableList<T>.removeLastOrNull(): T? = if (isEmpty()) null else 
  *
  * @return `true` if any element was removed from this collection, or `false` when no elements were removed and collection was not modified.
  */
+@CompileTimeCalculation
 public fun <T> MutableList<T>.removeAll(predicate: (T) -> Boolean): Boolean = filterInPlace(predicate, true)
 
 /**
@@ -275,6 +294,7 @@ public fun <T> MutableList<T>.removeAll(predicate: (T) -> Boolean): Boolean = fi
  */
 public fun <T> MutableList<T>.retainAll(predicate: (T) -> Boolean): Boolean = filterInPlace(predicate, false)
 
+@CompileTimeCalculation
 private fun <T> MutableList<T>.filterInPlace(predicate: (T) -> Boolean, predicateResultToRemove: Boolean): Boolean {
     if (this !is RandomAccess)
         return (this as MutableIterable<T>).filterInPlace(predicate, predicateResultToRemove)

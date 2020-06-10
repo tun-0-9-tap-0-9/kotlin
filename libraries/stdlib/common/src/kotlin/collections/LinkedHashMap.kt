@@ -5,6 +5,7 @@
 
 package kotlin.collections
 
+@CompileTimeCalculation
 expect class LinkedHashMap<K, V> : MutableMap<K, V> {
     constructor()
     constructor(initialCapacity: Int)

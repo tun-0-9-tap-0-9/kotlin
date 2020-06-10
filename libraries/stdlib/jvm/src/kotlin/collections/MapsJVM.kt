@@ -24,6 +24,8 @@ import kotlin.collections.builders.MapBuilder
  *
  * @sample samples.collections.Maps.Instantiation.mapFromPairs
  */
+@CompileTimeCalculation
+@EvaluateIntrinsic("kotlin.collections.MapsKt")
 public fun <K, V> mapOf(pair: Pair<K, V>): Map<K, V> = java.util.Collections.singletonMap(pair.first, pair.second)
 
 @PublishedApi
