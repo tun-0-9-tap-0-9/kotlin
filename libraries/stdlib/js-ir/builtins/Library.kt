@@ -33,6 +33,7 @@ public inline fun <reified T> arrayOfNulls(size: Int): Array<T?> = fillArrayVal<
  * Returns an array containing the specified elements.
  */
 @CompileTimeCalculation
+@EvaluateIntrinsic("")
 public inline fun <T> arrayOf(vararg elements: T): Array<T> = elements.unsafeCast<Array<T>>()
 
 /**

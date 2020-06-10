@@ -15,6 +15,8 @@ package kotlin
 /**
  * Returns an empty array of the specified type [T].
  */
+@CompileTimeCalculation
+@EvaluateIntrinsic("")
 public inline fun <T> emptyArray(): Array<T> = js("[]")
 
 /**
