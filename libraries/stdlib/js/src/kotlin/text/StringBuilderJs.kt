@@ -32,7 +32,6 @@ public actual class StringBuilder actual constructor(content: String) : Appendab
     actual override val length: Int
         get() = string.asDynamic().length
 
-    @EvaluateIntrinsic("charAt")
     actual override fun get(index: Int): Char =
         string.getOrElse(index) { throw IndexOutOfBoundsException("index: $index, length: $length}") }
 
