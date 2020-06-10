@@ -13,18 +13,25 @@ import org.jetbrains.kotlin.descriptors.impl.AnonymousFunctionDescriptor
 import org.jetbrains.kotlin.descriptors.impl.TypeAliasConstructorDescriptor
 import org.jetbrains.kotlin.diagnostics.Errors
 import org.jetbrains.kotlin.name.FqName
+import org.jetbrains.kotlin.name.Name
 import org.jetbrains.kotlin.psi.KtAnnotationEntry
 import org.jetbrains.kotlin.psi.KtParameter
 import org.jetbrains.kotlin.psi.KtPrimaryConstructor
 import org.jetbrains.kotlin.resolve.BindingContext
 import org.jetbrains.kotlin.resolve.calls.model.ResolvedCall
+import org.jetbrains.kotlin.resolve.descriptorUtil.fqNameSafe
 import org.jetbrains.kotlin.resolve.descriptorUtil.isAnnotationConstructor
 import org.jetbrains.kotlin.resolve.findTopMostOverriddenDescriptors
+import org.jetbrains.kotlin.resolve.scopes.receivers.AbstractReceiverValue
 import org.jetbrains.kotlin.resolve.source.getPsi
+import org.jetbrains.kotlin.types.AbbreviatedType
 import org.jetbrains.kotlin.utils.addToStdlib.safeAs
 
 object ConstexprCallChecker : CallChecker {
     private val compileTimeAnnotationName = FqName("kotlin.CompileTimeCalculation")
+    private val compileTimeTypeAliases = setOf(
+        "java.lang.StringBuilder", "java.lang.IllegalArgumentException", "java.util.NoSuchElementException"
+    )
 
     override fun check(resolvedCall: ResolvedCall<*>, reportOn: PsiElement, context: CallCheckerContext) {
         if (!context.languageVersionSettings.supportsFeature(LanguageFeature.CompileTimeCalculations)) return
@@ -35,12 +42,20 @@ object ConstexprCallChecker : CallChecker {
         val isInsideCompileTimeFun = hasEnclosingConstDeclaration(context)
         if (!isConst && !isInsideCompileTimeFun) return
 
-        val isCompileTime = isCompileTime(resolvedCall.resultingDescriptor, context)
+        val isCompileTime = isCompileTime(resolvedCall.resultingDescriptor, context) || isCompileTimeTypeAlias(resolvedCall)
         if (isConst && !isCompileTime) {
             context.trace.report(Errors.CONST_VAL_WITH_NON_CONST_INITIALIZER.on(resolvedCall.call.calleeExpression!!))
         } else if (isInsideCompileTimeFun && !isCompileTime) {
             context.trace.report(Errors.NON_COMPILE_TIME_EXPRESSION_IN_COMPILE_TIME_DECLARATION.on(resolvedCall.call.calleeExpression!!))
         }
+    }
+
+    private fun isCompileTimeTypeAlias(resolvedCall: ResolvedCall<*>): Boolean {
+        if (!resolvedCall.resultingDescriptor.containingDeclaration.fqNameSafe.startsWith(Name.identifier("java"))) return false
+        val type = (resolvedCall.dispatchReceiver as AbstractReceiverValue).type
+        if (type !is AbbreviatedType) return false
+
+        return type.abbreviation.constructor.declarationDescriptor?.isMarkedAsCompileTime() ?: false
     }
 
     private fun isCompileTime(descriptor: CallableDescriptor, context: CallCheckerContext): Boolean {
@@ -61,6 +76,7 @@ object ConstexprCallChecker : CallChecker {
     private fun DeclarationDescriptor.isMarkedWith(annotation: FqName): Boolean {
         if (this.annotations.hasAnnotation(annotation)) return true
         if (this is FunctionInvokeDescriptor) return true
+        if (this is ClassDescriptor && this.fqNameSafe.asString() in compileTimeTypeAliases) return true
         if (this is ClassDescriptor && this.isCompanionObject) return false
         if (this is AnonymousFunctionDescriptor) return this.containingDeclaration.isMarkedWith(annotation)
         return (this.containingDeclaration as? ClassDescriptor)?.isMarkedWith(annotation) ?: false
