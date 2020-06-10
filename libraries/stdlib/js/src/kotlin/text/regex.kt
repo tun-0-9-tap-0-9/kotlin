@@ -28,6 +28,8 @@ public actual enum class RegexOption(val value: String) {
  *
  * @param value The value of captured group.
  */
+@CompileTimeCalculation
+@EvaluateIntrinsic("kotlin.text.MatchGroup")
 public actual data class MatchGroup(actual val value: String)
 
 
@@ -40,6 +42,8 @@ public actual data class MatchGroup(actual val value: String)
  *
  * @constructor Creates a regular expression from the specified [pattern] string and the specified set of [options].
  */
+@CompileTimeCalculation
+@EvaluateIntrinsic("kotlin.text.Regex")
 public actual class Regex actual constructor(pattern: String, options: Set<RegexOption>) {
 
     /** Creates a regular expression from the specified [pattern] string and the specified single [option].  */
@@ -123,6 +127,7 @@ public actual class Regex actual constructor(pattern: String, options: Set<Regex
      * the given function [transform] that takes [MatchResult] and returns a string to be used as a
      * replacement for that match.
      */
+    @EvaluateIntrinsic("")
     public actual inline fun replace(input: CharSequence, transform: (MatchResult) -> CharSequence): String {
         var match = find(input)
         if (match == null) return input.toString()
@@ -185,23 +190,27 @@ public actual class Regex actual constructor(pattern: String, options: Set<Regex
      */
     public override fun toString(): String = nativePattern.toString()
 
+    @EvaluateIntrinsic("kotlin.text.Regex\$Companion")
     actual companion object {
         /**
          * Returns a regular expression that matches the specified [literal] string literally.
          * No characters of that string will have special meaning when searching for an occurrence of the regular expression.
          */
+        @CompileTimeCalculation
         public actual fun fromLiteral(literal: String): Regex = Regex(escape(literal))
 
         /**
          * Returns a regular expression pattern string that matches the specified [literal] string literally.
          * No characters of that string will have special meaning when searching for an occurrence of the regular expression.
          */
+        @CompileTimeCalculation
         public actual fun escape(literal: String): String = literal.nativeReplace(patternEscape, "\\$&")
 
         /**
          * Returns a literal replacement expression for the specified [literal] string.
          * No characters of that string will have special meaning when it is used as a replacement string in [Regex.replace] function.
          */
+        @CompileTimeCalculation
         public actual fun escapeReplacement(literal: String): String = literal.nativeReplace(replacementEscape, "$$$$")
 
         private val patternEscape = RegExp("""[\\^$*+?.()|[\]{}]""", "g")

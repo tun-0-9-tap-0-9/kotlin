@@ -15,6 +15,7 @@ package kotlin.text
  * if the corresponding group in the regular expression is optional and
  * there was no match captured by that group.
  */
+@CompileTimeCalculation
 public interface MatchGroupCollection : Collection<MatchGroup?> {
 
     /** Returns a group with the specified [index].
@@ -31,6 +32,7 @@ public interface MatchGroupCollection : Collection<MatchGroup?> {
  * Extends [MatchGroupCollection] by introducing a way to get matched groups by name, when regex supports it.
  */
 @SinceKotlin("1.1")
+@CompileTimeCalculation
 public interface MatchNamedGroupCollection : MatchGroupCollection {
     /**
      * Returns a named group with the specified [name].
@@ -44,6 +46,7 @@ public interface MatchNamedGroupCollection : MatchGroupCollection {
 /**
  * Represents the results from a single regular expression match.
  */
+@CompileTimeCalculation
 public interface MatchResult {
     /** The range of indices in the original string where match was captured. */
     public val range: IntRange
@@ -93,6 +96,7 @@ public interface MatchResult {
      *
      * @sample samples.text.Regexps.matchDestructuringToGroupValues
      */
+    @CompileTimeCalculation
     public class Destructured internal constructor(public val match: MatchResult) {
         @kotlin.internal.InlineOnly
         public operator inline fun component1():  String = match.groupValues[1]
