@@ -36,6 +36,7 @@ class GenerateArrays(out: PrintWriter) : BuiltInsSourceGenerator(out) {
             out.println(" * An array of ${typeLower}s. When targeting the JVM, instances of this class are represented as `$typeLower[]`.")
             out.println(" * @constructor Creates a new array of the specified [size], with all elements initialized to $defaultValue.")
             out.println(" */")
+            out.println("@CompileTimeCalculation")
             out.println("public class ${s}Array(size: Int) {")
             out.println("    /**")
             out.println("     * Creates a new array of the specified [size], where each element is calculated by calling the specified")

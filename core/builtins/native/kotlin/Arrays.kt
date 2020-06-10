@@ -11,6 +11,7 @@ package kotlin
  * An array of bytes. When targeting the JVM, instances of this class are represented as `byte[]`.
  * @constructor Creates a new array of the specified [size], with all elements initialized to zero.
  */
+@CompileTimeCalculation
 public class ByteArray(size: Int) {
     /**
      * Creates a new array of the specified [size], where each element is calculated by calling the specified
@@ -48,6 +49,7 @@ public class ByteArray(size: Int) {
  * An array of chars. When targeting the JVM, instances of this class are represented as `char[]`.
  * @constructor Creates a new array of the specified [size], with all elements initialized to null char (`\u0000').
  */
+@CompileTimeCalculation
 public class CharArray(size: Int) {
     /**
      * Creates a new array of the specified [size], where each element is calculated by calling the specified
@@ -85,6 +87,7 @@ public class CharArray(size: Int) {
  * An array of shorts. When targeting the JVM, instances of this class are represented as `short[]`.
  * @constructor Creates a new array of the specified [size], with all elements initialized to zero.
  */
+@CompileTimeCalculation
 public class ShortArray(size: Int) {
     /**
      * Creates a new array of the specified [size], where each element is calculated by calling the specified
@@ -122,6 +125,7 @@ public class ShortArray(size: Int) {
  * An array of ints. When targeting the JVM, instances of this class are represented as `int[]`.
  * @constructor Creates a new array of the specified [size], with all elements initialized to zero.
  */
+@CompileTimeCalculation
 public class IntArray(size: Int) {
     /**
      * Creates a new array of the specified [size], where each element is calculated by calling the specified
@@ -159,6 +163,7 @@ public class IntArray(size: Int) {
  * An array of longs. When targeting the JVM, instances of this class are represented as `long[]`.
  * @constructor Creates a new array of the specified [size], with all elements initialized to zero.
  */
+@CompileTimeCalculation
 public class LongArray(size: Int) {
     /**
      * Creates a new array of the specified [size], where each element is calculated by calling the specified
@@ -196,6 +201,7 @@ public class LongArray(size: Int) {
  * An array of floats. When targeting the JVM, instances of this class are represented as `float[]`.
  * @constructor Creates a new array of the specified [size], with all elements initialized to zero.
  */
+@CompileTimeCalculation
 public class FloatArray(size: Int) {
     /**
      * Creates a new array of the specified [size], where each element is calculated by calling the specified
@@ -233,6 +239,7 @@ public class FloatArray(size: Int) {
  * An array of doubles. When targeting the JVM, instances of this class are represented as `double[]`.
  * @constructor Creates a new array of the specified [size], with all elements initialized to zero.
  */
+@CompileTimeCalculation
 public class DoubleArray(size: Int) {
     /**
      * Creates a new array of the specified [size], where each element is calculated by calling the specified
@@ -270,6 +277,7 @@ public class DoubleArray(size: Int) {
  * An array of booleans. When targeting the JVM, instances of this class are represented as `boolean[]`.
  * @constructor Creates a new array of the specified [size], with all elements initialized to `false`.
  */
+@CompileTimeCalculation
 public class BooleanArray(size: Int) {
     /**
      * Creates a new array of the specified [size], where each element is calculated by calling the specified
