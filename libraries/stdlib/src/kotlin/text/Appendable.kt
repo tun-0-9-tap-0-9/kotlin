@@ -11,6 +11,7 @@ package kotlin.text
 /**
  * An object to which char sequences and values can be appended.
  */
+@CompileTimeCalculation
 expect interface Appendable {
     /**
      * Appends the specified character [value] to this Appendable and returns this instance.
