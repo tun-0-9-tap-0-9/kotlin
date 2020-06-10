@@ -44,7 +44,8 @@ object ConstexprCallChecker : CallChecker {
             is TypeAliasConstructorDescriptor -> descriptor.typeAliasDescriptor.isCompileTime()
             is PropertyAccessorDescriptor ->
                 descriptor.correspondingProperty.isCompileTime() && (descriptor.isCompileTime() || descriptor.isDefault)
-            is FunctionDescriptor -> descriptor.isCompileTime() || descriptor.isSpecial()
+            is FunctionDescriptor ->
+                descriptor.isCompileTime() || descriptor.isSpecial() || descriptor.overriddenDescriptors.any { it.isCompileTime() }
             is PropertyDescriptor -> descriptor.isCompileTime() || descriptor.isConst
             is ValueParameterDescriptor, is ReceiverParameterDescriptor, is VariableDescriptor ->
                 scope.ownerDescriptor.isCompileTime()
