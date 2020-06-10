@@ -10415,6 +10415,7 @@ public fun CharArray.toList(): List<Char> {
  * Returns a new [MutableList] filled with all elements of this array.
  */
 @CompileTimeCalculation
+@EvaluateIntrinsic("kotlin.collections.ArraysKt")
 public fun <T> Array<out T>.toMutableList(): MutableList<T> {
     return ArrayList(this.asCollection())
 }
