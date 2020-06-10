@@ -12,6 +12,7 @@ import org.jetbrains.kotlin.lexer.KtTokens
 import org.jetbrains.kotlin.name.FqName
 import org.jetbrains.kotlin.psi.*
 import org.jetbrains.kotlin.psi.psiUtil.containingClass
+import org.jetbrains.kotlin.resolve.BindingContext
 
 object ConstexprDeclarationChecker : DeclarationChecker {
     private val compileTimeAnnotationName = FqName("kotlin.CompileTimeCalculation")
@@ -35,7 +36,7 @@ object ConstexprDeclarationChecker : DeclarationChecker {
 
             fun List<KtAnnotationEntry>?.containsCompileTimeAnnotation(): Boolean {
                 this ?: return false
-                return this.any { it.typeReference?.text == compileTimeAnnotationName.shortName().asString() }
+                return this.any { context.trace.bindingContext[BindingContext.ANNOTATION, it]?.fqName == compileTimeAnnotationName }
             }
 
             if (!annotationEntries.containsCompileTimeAnnotation() && !classAnnotationEntries.containsCompileTimeAnnotation()) {

@@ -14,9 +14,13 @@ import org.jetbrains.kotlin.descriptors.impl.TypeAliasConstructorDescriptor
 import org.jetbrains.kotlin.diagnostics.Errors
 import org.jetbrains.kotlin.name.FqName
 import org.jetbrains.kotlin.psi.KtAnnotationEntry
+import org.jetbrains.kotlin.psi.KtParameter
+import org.jetbrains.kotlin.psi.KtPrimaryConstructor
+import org.jetbrains.kotlin.resolve.BindingContext
 import org.jetbrains.kotlin.resolve.calls.model.ResolvedCall
 import org.jetbrains.kotlin.resolve.descriptorUtil.isAnnotationConstructor
-import org.jetbrains.kotlin.resolve.scopes.LexicalScope
+import org.jetbrains.kotlin.resolve.findTopMostOverriddenDescriptors
+import org.jetbrains.kotlin.resolve.source.getPsi
 import org.jetbrains.kotlin.utils.addToStdlib.safeAs
 
 object ConstexprCallChecker : CallChecker {
@@ -31,7 +35,7 @@ object ConstexprCallChecker : CallChecker {
         val isInsideCompileTimeFun = hasEnclosingConstDeclaration(context)
         if (!isConst && !isInsideCompileTimeFun) return
 
-        val isCompileTime = isCompileTime(resolvedCall, context.scope)
+        val isCompileTime = isCompileTime(resolvedCall.resultingDescriptor, context)
         if (isConst && !isCompileTime) {
             context.trace.report(Errors.CONST_VAL_WITH_NON_CONST_INITIALIZER.on(resolvedCall.call.calleeExpression!!))
         } else if (isInsideCompileTimeFun && !isCompileTime) {
@@ -39,16 +43,17 @@ object ConstexprCallChecker : CallChecker {
         }
     }
 
-    private fun isCompileTime(resolvedCall: ResolvedCall<*>, scope: LexicalScope): Boolean {
-        return when (val descriptor = resolvedCall.resultingDescriptor) {
-            is TypeAliasConstructorDescriptor -> descriptor.typeAliasDescriptor.isCompileTime()
+    private fun isCompileTime(descriptor: CallableDescriptor, context: CallCheckerContext): Boolean {
+        return when (descriptor) {
+            is TypeAliasConstructorDescriptor -> descriptor.typeAliasDescriptor.isMarkedAsCompileTime()
             is PropertyAccessorDescriptor ->
-                descriptor.correspondingProperty.isCompileTime() && (descriptor.isCompileTime() || descriptor.isDefault)
+                isCompileTime(descriptor.correspondingProperty, context) && (descriptor.isMarkedAsCompileTime() || descriptor.isDefault)
             is FunctionDescriptor ->
-                descriptor.isCompileTime() || descriptor.isSpecial() || descriptor.overriddenDescriptors.any { it.isCompileTime() }
-            is PropertyDescriptor -> descriptor.isCompileTime() || descriptor.isConst
+                descriptor.isMarkedAsCompileTime() || descriptor.isSpecial() || descriptor.overriddenDescriptors.any { it.isMarkedAsCompileTime() }
+            is PropertyDescriptor ->
+                descriptor.isMarkedAsCompileTime() || descriptor.isConst || descriptor.hasCompileTimePrimaryConstructor(context.trace.bindingContext)
             is ValueParameterDescriptor, is ReceiverParameterDescriptor, is VariableDescriptor ->
-                scope.ownerDescriptor.isCompileTime()
+                context.scope.ownerDescriptor.isMarkedAsCompileTime()
             else -> false
         }
     }
@@ -57,16 +62,26 @@ object ConstexprCallChecker : CallChecker {
         if (this.annotations.hasAnnotation(annotation)) return true
         if (this is FunctionInvokeDescriptor) return true
         if (this is ClassDescriptor && this.isCompanionObject) return false
+        if (this is AnonymousFunctionDescriptor) return this.containingDeclaration.isMarkedWith(annotation)
         return (this.containingDeclaration as? ClassDescriptor)?.isMarkedWith(annotation) ?: false
     }
 
-    private fun DeclarationDescriptor.isCompileTime(): Boolean {
-        if (this is AnonymousFunctionDescriptor) return this.containingDeclaration.isCompileTime()
+    private fun DeclarationDescriptor.isMarkedAsCompileTime(): Boolean {
         return this.isMarkedWith(compileTimeAnnotationName) || this.safeAs<PropertyDescriptor>()?.isConst == true
     }
 
+    private fun PropertyDescriptor.hasCompileTimePrimaryConstructor(bindingContext: BindingContext): Boolean {
+        val property = this.findTopMostOverriddenDescriptors().first()
+        val ktParameter = property.source.getPsi() as? KtParameter ?: return false
+        val primaryConstructor = ktParameter.ownerFunction as? KtPrimaryConstructor ?: return false
+        val classOwner = primaryConstructor.getContainingClassOrObject()
+        val annotations = primaryConstructor.annotationEntries.mapNotNull { bindingContext[BindingContext.ANNOTATION, it] } +
+                classOwner.annotationEntries.mapNotNull { bindingContext[BindingContext.ANNOTATION, it] }
+        return annotations.any { it.fqName == compileTimeAnnotationName }
+    }
+
     private fun hasEnclosingConstDeclaration(context: CallCheckerContext): Boolean {
-        return context.scope.ownerDescriptor.isCompileTime()
+        return context.scope.ownerDescriptor.isMarkedAsCompileTime()
     }
 
     private fun hasEnclosingIntrinsicDeclaration(context: CallCheckerContext): Boolean {
