@@ -95,6 +95,8 @@ public inline fun Char.isJavaIdentifierStart(): Boolean = Character.isJavaIdenti
  *
  * @sample samples.text.Chars.isWhitespace
  */
+@CompileTimeCalculation
+@EvaluateIntrinsic("kotlin.text.CharsKt")
 public actual fun Char.isWhitespace(): Boolean = Character.isWhitespace(this) || Character.isSpaceChar(this)
 
 /**
