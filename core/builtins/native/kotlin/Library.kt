@@ -38,46 +38,55 @@ public fun <reified @PureReifiable T> arrayOfNulls(size: Int): Array<T?>
 /**
  * Returns an array containing the specified elements.
  */
+@CompileTimeCalculation
 public inline fun <reified @PureReifiable T> arrayOf(vararg elements: T): Array<T>
 
 /**
  * Returns an array containing the specified [Double] numbers.
  */
+@CompileTimeCalculation
 public fun doubleArrayOf(vararg elements: Double): DoubleArray
 
 /**
  * Returns an array containing the specified [Float] numbers.
  */
+@CompileTimeCalculation
 public fun floatArrayOf(vararg elements: Float): FloatArray
 
 /**
  * Returns an array containing the specified [Long] numbers.
  */
+@CompileTimeCalculation
 public fun longArrayOf(vararg elements: Long): LongArray
 
 /**
  * Returns an array containing the specified [Int] numbers.
  */
+@CompileTimeCalculation
 public fun intArrayOf(vararg elements: Int): IntArray
 
 /**
  * Returns an array containing the specified characters.
  */
+@CompileTimeCalculation
 public fun charArrayOf(vararg elements: Char): CharArray
 
 /**
  * Returns an array containing the specified [Short] numbers.
  */
+@CompileTimeCalculation
 public fun shortArrayOf(vararg elements: Short): ShortArray
 
 /**
  * Returns an array containing the specified [Byte] numbers.
  */
+@CompileTimeCalculation
 public fun byteArrayOf(vararg elements: Byte): ByteArray
 
 /**
  * Returns an array containing the specified boolean values.
  */
+@CompileTimeCalculation
 public fun booleanArrayOf(vararg elements: Boolean): BooleanArray
 
 /**
