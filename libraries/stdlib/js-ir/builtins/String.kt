@@ -11,16 +11,15 @@ package kotlin
  * The `String` class represents character strings. All string literals in Kotlin programs, such as `"abc"`, are
  * implemented as instances of this class.
  */
+@CompileTimeCalculation
 public class String : Comparable<String>, CharSequence {
     companion object {}
     
     /**
      * Returns a string obtained by concatenating this string with the string representation of the given [other] object.
      */
-    @CompileTimeCalculation
     public operator fun plus(other: Any?): String
 
-    @CompileTimeCalculation
     public override val length: Int
 
     /**
@@ -29,20 +28,15 @@ public class String : Comparable<String>, CharSequence {
      * If the [index] is out of bounds of this string, throws an [IndexOutOfBoundsException] except in Kotlin/JS
      * where the behavior is unspecified.
      */
-    @CompileTimeCalculation
     public override fun get(index: Int): Char
 
-    @CompileTimeCalculation
     public override fun subSequence(startIndex: Int, endIndex: Int): CharSequence
 
-    @CompileTimeCalculation
     public override fun compareTo(other: String): Int
 
-    @CompileTimeCalculation
     public override fun equals(other: Any?): Boolean
 
     public override fun hashCode(): Int
 
-    @CompileTimeCalculation
     public override fun toString(): String
 }

@@ -11,43 +11,37 @@ package kotlin
  * Represents a value which is either `true` or `false`. On the JVM, non-nullable values of this type are
  * represented as values of the primitive type `boolean`.
  */
+@CompileTimeCalculation
 public class Boolean private constructor() : Comparable<Boolean> {
     /**
      * Returns the inverse of this boolean.
      */
-    @CompileTimeCalculation
     public operator fun not(): Boolean
 
     /**
      * Performs a logical `and` operation between this Boolean and the [other] one. Unlike the `&&` operator,
      * this function does not perform short-circuit evaluation. Both `this` and [other] will always be evaluated.
      */
-    @CompileTimeCalculation
     public infix fun and(other: Boolean): Boolean
 
     /**
      * Performs a logical `or` operation between this Boolean and the [other] one. Unlike the `||` operator,
      * this function does not perform short-circuit evaluation. Both `this` and [other] will always be evaluated.
      */
-    @CompileTimeCalculation
     public infix fun or(other: Boolean): Boolean
 
     /**
      * Performs a logical `xor` operation between this Boolean and the [other] one.
      */
-    @CompileTimeCalculation
     public infix fun xor(other: Boolean): Boolean
 
-    @CompileTimeCalculation
     public override fun compareTo(other: Boolean): Int
 
 
-    @CompileTimeCalculation
     public override fun equals(other: Any?): Boolean
 
     public override fun hashCode(): Int
 
-    @CompileTimeCalculation
     public override fun toString(): String
 
     @SinceKotlin("1.3")

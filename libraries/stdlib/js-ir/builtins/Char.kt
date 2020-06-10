@@ -11,6 +11,7 @@ package kotlin
  */
 // TODO: KT-35100
 //public inline class Char internal constructor (val value: Int) : Comparable<Char> {
+@CompileTimeCalculation
 public class Char
 @SinceKotlin("1.5")
 @WasExperimental(ExperimentalStdlibApi::class)
@@ -22,18 +23,14 @@ constructor(code: UShort) : Comparable<Char> {
      * Returns zero if this value is equal to the specified other value, a negative number if it's less than other,
      * or a positive number if it's greater than other.
      */
-    @CompileTimeCalculation
     public override fun compareTo(other: Char): Int = value - other.value
 
     /** Adds the other Int value to this value resulting a Char. */
-    @CompileTimeCalculation
     public operator fun plus(other: Int): Char = (value + other).toChar()
 
     /** Subtracts the other Char value from this value resulting an Int. */
-    @CompileTimeCalculation
     public operator fun minus(other: Char): Int = value - other.value
     /** Subtracts the other Int value from this value resulting a Char. */
-    @CompileTimeCalculation
     public operator fun minus(other: Int): Char = (value - other).toChar()
 
     /**
@@ -51,44 +48,35 @@ constructor(code: UShort) : Comparable<Char> {
     public operator fun dec(): Char = (value - 1).toChar()
 
     /** Creates a range from this value to the specified [other] value. */
-    @CompileTimeCalculation
     public operator fun rangeTo(other: Char): CharRange = CharRange(this, other)
 
     /** Returns the value of this character as a `Byte`. */
     @Deprecated("Conversion of Char to Number is deprecated. Use Char.code property instead.", ReplaceWith("this.code.toByte()"))
     @DeprecatedSinceKotlin(warningSince = "1.5")
-    @CompileTimeCalculation
     public fun toByte(): Byte = value.toByte()
     /** Returns the value of this character as a `Char`. */
-    @CompileTimeCalculation
     public fun toChar(): Char = this
     /** Returns the value of this character as a `Short`. */
     @Deprecated("Conversion of Char to Number is deprecated. Use Char.code property instead.", ReplaceWith("this.code.toShort()"))
     @DeprecatedSinceKotlin(warningSince = "1.5")
-    @CompileTimeCalculation
     public fun toShort(): Short = value.toShort()
     /** Returns the value of this character as a `Int`. */
     @Deprecated("Conversion of Char to Number is deprecated. Use Char.code property instead.", ReplaceWith("this.code"))
     @DeprecatedSinceKotlin(warningSince = "1.5")
-    @CompileTimeCalculation
     public fun toInt(): Int = value
     /** Returns the value of this character as a `Long`. */
     @Deprecated("Conversion of Char to Number is deprecated. Use Char.code property instead.", ReplaceWith("this.code.toLong()"))
     @DeprecatedSinceKotlin(warningSince = "1.5")
-    @CompileTimeCalculation
     public fun toLong(): Long = value.toLong()
     /** Returns the value of this character as a `Float`. */
     @Deprecated("Conversion of Char to Number is deprecated. Use Char.code property instead.", ReplaceWith("this.code.toFloat()"))
     @DeprecatedSinceKotlin(warningSince = "1.5")
-    @CompileTimeCalculation
     public fun toFloat(): Float = value.toFloat()
     /** Returns the value of this character as a `Double`. */
     @Deprecated("Conversion of Char to Number is deprecated. Use Char.code property instead.", ReplaceWith("this.code.toDouble()"))
     @DeprecatedSinceKotlin(warningSince = "1.5")
-    @CompileTimeCalculation
     public fun toDouble(): Double = value.toDouble()
 
-    @CompileTimeCalculation
     override fun equals(other: Any?): Boolean {
         @Suppress("IMPLICIT_BOXING_IN_IDENTITY_EQUALS")
         if (other === this) return true
@@ -102,7 +90,6 @@ constructor(code: UShort) : Comparable<Char> {
     // TODO implicit usages of toString and valueOf must be covered in DCE
     @Suppress("JS_NAME_PROHIBITED_FOR_OVERRIDE")
     @JsName("toString")
-    @CompileTimeCalculation
     public override fun toString(): String {
         return js("String").fromCharCode(value).unsafeCast<String>()
     }
