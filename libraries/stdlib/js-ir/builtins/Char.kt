@@ -12,6 +12,7 @@ package kotlin
 // TODO: KT-35100
 //public inline class Char internal constructor (val value: Int) : Comparable<Char> {
 @CompileTimeCalculation
+@EvaluateIntrinsic("kotlin.Char")
 public class Char
 @SinceKotlin("1.5")
 @WasExperimental(ExperimentalStdlibApi::class)

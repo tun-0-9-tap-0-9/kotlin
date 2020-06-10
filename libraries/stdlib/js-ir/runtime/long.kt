@@ -10,6 +10,8 @@ package kotlin
 /**
  * Represents a 64-bit signed integer.
  */
+@CompileTimeCalculation
+@EvaluateIntrinsic("kotlin.Long")
 public class Long internal constructor(
     internal val low: Int,
     internal val high: Int
@@ -279,6 +281,7 @@ public class Long internal constructor(
     public override fun toFloat(): Float = toDouble().toFloat()
     public override fun toDouble(): Double = toNumber()
 
+    // TODO mark as non compile time
     // This method is used by `toString()`
     @JsName("valueOf")
     internal fun valueOf() = toDouble()
