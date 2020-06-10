@@ -10,6 +10,8 @@ import kotlin.js.RegExp
 /**
  * Provides enumeration values to use to set regular expression options.
  */
+@CompileTimeCalculation
+@EvaluateIntrinsic("kotlin.text.RegexOption")
 public actual enum class RegexOption(val value: String) {
     /** Enables case-insensitive matching. */
     IGNORE_CASE("i"),
