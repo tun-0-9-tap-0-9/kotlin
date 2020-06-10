@@ -135,7 +135,9 @@ fun Project.getLanguageVersionSettings(
         compilerSettings.additionalArgumentsAsList
     )
 
-    val extraLanguageFeatures = additionalArguments.configureLanguageFeatures(MessageCollector.NONE)
+    val extraLanguageFeatures = additionalArguments.configureLanguageFeatures(MessageCollector.NONE).apply {
+        put(LanguageFeature.CompileTimeCalculations, LanguageFeature.State.ENABLED)
+    }
 
     val extraAnalysisFlags = additionalArguments.configureAnalysisFlags(MessageCollector.NONE).apply {
         if (javaTypeEnhancementState != null) put(JvmAnalysisFlags.javaTypeEnhancementState, javaTypeEnhancementState)
@@ -217,6 +219,7 @@ private fun Module.computeLanguageVersionSettings(): LanguageVersionSettings {
 
     val languageFeatures = facetSettings?.mergedCompilerArguments?.configureLanguageFeatures(MessageCollector.NONE)?.apply {
         configureMultiplatformSupport(facetSettings.targetPlatform?.idePlatformKind, this@computeLanguageVersionSettings)
+        put(LanguageFeature.CompileTimeCalculations, LanguageFeature.State.ENABLED)
     }.orEmpty()
 
     val analysisFlags = facetSettings

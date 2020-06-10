@@ -9,6 +9,8 @@ import org.jetbrains.kotlin.backend.common.atMostOne
 import org.jetbrains.kotlin.backend.common.ir.Ir
 import org.jetbrains.kotlin.backend.common.ir.Symbols
 import org.jetbrains.kotlin.builtins.PrimitiveType
+import org.jetbrains.kotlin.cli.common.CLIConfigurationKeys
+import org.jetbrains.kotlin.cli.common.messages.CompilerMessageSeverity
 import org.jetbrains.kotlin.config.CompilerConfiguration
 import org.jetbrains.kotlin.descriptors.*
 import org.jetbrains.kotlin.descriptors.impl.EmptyPackageFragmentDescriptor
@@ -33,6 +35,8 @@ import org.jetbrains.kotlin.js.config.ErrorTolerancePolicy
 import org.jetbrains.kotlin.js.config.JSConfigurationKeys
 import org.jetbrains.kotlin.name.FqName
 import org.jetbrains.kotlin.name.Name
+import org.jetbrains.kotlin.psi.KtExpression
+import org.jetbrains.kotlin.psi.psiUtil.isDotSelector
 import org.jetbrains.kotlin.resolve.scopes.MemberScope
 import org.jetbrains.kotlin.types.Variance
 
@@ -387,6 +391,19 @@ class JsIrBackendContext(
 
     override fun report(element: IrElement?, irFile: IrFile?, message: String, isError: Boolean) {
         /*TODO*/
+        val psiFileEntry = irFile?.fileEntry as? PsiIrFileEntry
+        val elementInfo = when {
+            psiFileEntry != null && element != null -> {
+                var psi = psiFileEntry.findPsiElement(element)
+                while ((psi as? KtExpression)?.isDotSelector() == true) psi = psi.parent
+                "${psi?.text} at ${psiFileEntry.getLineNumber(element.startOffset)} line"
+            }
+            else -> ""
+        }
+        val messageCollector = configuration[CLIConfigurationKeys.MESSAGE_COLLECTOR_KEY]!!
+        val severity = /*if (isError) CompilerMessageSeverity.ERROR else*/ CompilerMessageSeverity.INFO
+        val textInTheMiddle = if (isError) "will produce exception:" else "will be replaced on:"
+        messageCollector.report(severity, "$elementInfo $textInTheMiddle $message")
         print(message)
     }
 
