@@ -29,6 +29,7 @@ public fun Any?.toString(): String
  * Concatenates this string with the string representation of the given [other] object. If either the receiver
  * or the [other] object are null, they are represented as the string "null".
  */
+@CompileTimeCalculation
 public operator fun String?.plus(other: Any?): String
 
 /**
