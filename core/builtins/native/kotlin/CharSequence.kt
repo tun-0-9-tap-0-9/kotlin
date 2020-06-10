@@ -19,6 +19,7 @@ package kotlin
 /**
  * Represents a readable sequence of [Char] values.
  */
+@CompileTimeCalculation
 public interface CharSequence {
     /**
      * Returns the length of this character sequence.

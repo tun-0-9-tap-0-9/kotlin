@@ -41,6 +41,7 @@ public class String : Comparable<String>, CharSequence {
     @CompileTimeCalculation
     public override fun get(index: Int): Char
 
+    @CompileTimeCalculation
     public override fun subSequence(startIndex: Int, endIndex: Int): CharSequence
 
     @CompileTimeCalculation

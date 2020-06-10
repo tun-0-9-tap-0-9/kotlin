@@ -252,4 +252,6 @@ public actual fun Char.isISOControl(): Boolean {
  *
  * @sample samples.text.Chars.isWhitespace
  */
+@CompileTimeCalculation
+@EvaluateIntrinsic("kotlin.text.CharsKt")
 public actual fun Char.isWhitespace(): Boolean = isWhitespaceImpl()
