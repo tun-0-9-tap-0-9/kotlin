@@ -166,7 +166,7 @@ class JvmIrLinker(
                 declareJavaFieldStub(symbol)
             } else {
                 stubGenerator.generateMemberStub(symbol.descriptor)
-                if (symbol.descriptor.annotations.hasAnnotation(FqName("kotlin.CompileTimeCalculation"))) {
+                if (symbol.isCompileTime()) {
                     deserializerForCompileTime?.declare(symbol)
                 }
             }
@@ -175,5 +175,24 @@ class JvmIrLinker(
         override val moduleFragment: IrModuleFragment = IrModuleFragmentImpl(moduleDescriptor, builtIns, emptyList())
         override val moduleDependencies: Collection<IrModuleDeserializer> = dependencies
 
+        private fun IrSymbol.isCompileTime(): Boolean {
+            if (!this.isPublicApi) return false
+
+            val packageStr = this.signature?.packageFqName()?.asString() ?: return false
+            val declarationName = (this.signature as? IdSignature.PublicSignature)?.declarationFqName
+            val name = this.descriptor.name.asString()
+
+            if (packageStr == "kotlin" && name == "assert") return false
+            if (packageStr == "kotlin" && name == "Throws") return false
+            if (this.descriptor.annotations.hasAnnotation(FqName("kotlin.CompileTimeCalculation"))) return true
+            if (!packageStr.startsWith("kotlin")) return false
+
+            return !packageStr.startsWith("kotlin.io") &&
+                    !packageStr.startsWith("kotlin.jvm") &&
+                    !packageStr.startsWith("kotlin.coroutines") &&
+                    !packageStr.startsWith("kotlin.reflect.jvm") &&
+                    !packageStr.startsWith("kotlin.reflect.full") &&
+                    !(packageStr.startsWith("kotlin") && declarationName?.startsWith("Cloneable") == true)
+        }
     }
 }
