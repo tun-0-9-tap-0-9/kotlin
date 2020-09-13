@@ -15,12 +15,14 @@ package kotlin.reflect
  *
  * @param V the type of the property value.
  */
+@CompileTimeCalculation
 public expect interface KProperty<out V> : KCallable<V> {
 }
 
 /**
  * Represents a property declared as a `var`.
  */
+@CompileTimeCalculation
 public expect interface KMutableProperty<V> : KProperty<V> {
 }
 
@@ -30,6 +32,7 @@ public expect interface KMutableProperty<V> : KProperty<V> {
  * Such property is either originally declared in a receiverless context such as a package,
  * or has the receiver bound to it.
  */
+@CompileTimeCalculation
 public expect interface KProperty0<out V> : KProperty<V>, () -> V {
     /**
      * Returns the current value of the property.
@@ -40,6 +43,7 @@ public expect interface KProperty0<out V> : KProperty<V>, () -> V {
 /**
  * Represents a `var`-property without any kind of receiver.
  */
+@CompileTimeCalculation
 public expect interface KMutableProperty0<V> : KProperty0<V>, KMutableProperty<V> {
     /**
      * Modifies the value of the property.
@@ -56,6 +60,7 @@ public expect interface KMutableProperty0<V> : KProperty0<V>, KMutableProperty<V
  * @param T the type of the receiver which should be used to obtain the value of the property.
  * @param V the type of the property value.
  */
+@CompileTimeCalculation
 public expect interface KProperty1<T, out V> : KProperty<V>, (T) -> V {
     /**
      * Returns the current value of the property.
@@ -70,6 +75,7 @@ public expect interface KProperty1<T, out V> : KProperty<V>, (T) -> V {
 /**
  * Represents a `var`-property, operations on which take one receiver as a parameter.
  */
+@CompileTimeCalculation
 public expect interface KMutableProperty1<T, V> : KProperty1<T, V>, KMutableProperty<V> {
     /**
      * Modifies the value of the property.
@@ -93,6 +99,7 @@ public expect interface KMutableProperty1<T, V> : KProperty1<T, V>, KMutableProp
  *        the type of the extension receiver.
  * @param V the type of the property value.
  */
+@CompileTimeCalculation
 public expect interface KProperty2<D, E, out V> : KProperty<V>, (D, E) -> V {
     /**
      * Returns the current value of the property. In case of the extension property in a class,
@@ -107,6 +114,7 @@ public expect interface KProperty2<D, E, out V> : KProperty<V>, (D, E) -> V {
 /**
  * Represents a `var`-property, operations on which take two receivers as parameters.
  */
+@CompileTimeCalculation
 public expect interface KMutableProperty2<D, E, V> : KProperty2<D, E, V>, KMutableProperty<V> {
     /**
      * Modifies the value of the property.
