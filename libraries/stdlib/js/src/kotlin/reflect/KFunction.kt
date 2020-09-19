@@ -8,4 +8,5 @@ package kotlin.reflect
 /**
  * Represents a function with introspection capabilities.
  */
+@CompileTimeCalculation
 public actual interface KFunction<out R> : KCallable<R>, Function<R>

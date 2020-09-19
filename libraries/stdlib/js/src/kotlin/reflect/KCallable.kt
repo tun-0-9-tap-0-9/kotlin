@@ -10,6 +10,7 @@ package kotlin.reflect
  *
  * @param R return type of the callable.
  */
+@CompileTimeCalculation
 public actual interface KCallable<out R> {
     /**
      * The name of this callable as it was declared in the source code.

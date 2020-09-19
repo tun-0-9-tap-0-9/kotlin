@@ -10,6 +10,7 @@ package kotlin.reflect
  * See the [Kotlin language documentation](https://kotlinlang.org/docs/reference/annotations.html)
  * for more information.
  */
+@CompileTimeCalculation
 public interface KAnnotatedElement {
     /**
      * Annotations which are present on this element.
