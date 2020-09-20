@@ -13,6 +13,7 @@ package kotlin.reflect
  *
  * @param T the type of the class.
  */
+@CompileTimeCalculation
 public actual interface KClass<T : Any> : KClassifier {
     /**
      * The simple name of the class as it was declared in the source code,

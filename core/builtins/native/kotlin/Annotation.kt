@@ -10,4 +10,5 @@ package kotlin
  * See [Kotlin language documentation](https://kotlinlang.org/docs/reference/annotations.html) for more information
  * on annotations.
  */
+@CompileTimeCalculation
 public interface Annotation

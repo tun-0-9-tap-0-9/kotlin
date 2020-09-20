@@ -11,5 +11,6 @@ package kotlin.reflect
  * @see [KClass]
  * @see [KTypeParameter]
  */
+@CompileTimeCalculation
 @SinceKotlin("1.1")
 public interface KClassifier
