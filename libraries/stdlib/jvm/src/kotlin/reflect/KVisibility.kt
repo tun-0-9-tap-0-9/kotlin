@@ -26,6 +26,8 @@ package kotlin.reflect
  * See the [Kotlin language documentation](https://kotlinlang.org/docs/reference/visibility-modifiers.html)
  * for more information.
  */
+@CompileTimeCalculation
+@EvaluateIntrinsic("kotlin.reflect.KVisibility")
 @SinceKotlin("1.1")
 enum class KVisibility {
     /**
