@@ -15,6 +15,8 @@ package kotlin.reflect
  * @see [KTypeParameter.variance]
  * @see [KTypeProjection]
  */
+@CompileTimeCalculation
+@EvaluateIntrinsic("kotlin.reflect.KVariance")
 @SinceKotlin("1.1")
 enum class KVariance {
     /**

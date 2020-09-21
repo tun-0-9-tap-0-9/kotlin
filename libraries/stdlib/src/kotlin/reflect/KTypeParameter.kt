@@ -10,6 +10,7 @@ package kotlin.reflect
  * See the [Kotlin language documentation](https://kotlinlang.org/docs/reference/generics.html#generics)
  * for more information.
  */
+@CompileTimeCalculation
 @SinceKotlin("1.1")
 public interface KTypeParameter : KClassifier {
     /**

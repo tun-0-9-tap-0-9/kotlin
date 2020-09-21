@@ -19,6 +19,8 @@ import kotlin.jvm.JvmStatic
  * See the [Kotlin language documentation](https://kotlinlang.org/docs/reference/generics.html#type-projections)
  * for more information.
  */
+@CompileTimeCalculation
+@EvaluateIntrinsic("kotlin.reflect.KTypeProjection")
 @SinceKotlin("1.1")
 public data class KTypeProjection constructor(
     /**

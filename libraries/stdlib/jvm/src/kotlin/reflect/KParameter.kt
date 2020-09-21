@@ -20,6 +20,7 @@ package kotlin.reflect
  * Represents a parameter passed to a function or a property getter/setter,
  * including `this` and extension receiver parameters.
  */
+@CompileTimeCalculation
 public interface KParameter : KAnnotatedElement {
     /**
      * 0-based index of this parameter in the parameter list of its containing callable.
