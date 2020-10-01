@@ -24,6 +24,7 @@ package kotlin
  * @constructor Creates a new instance of Pair.
  */
 @CompileTimeCalculation
+@EvaluateIntrinsic("kotlin.Pair")
 public data class Pair<out A, out B>(
     public val first: A,
     public val second: B
