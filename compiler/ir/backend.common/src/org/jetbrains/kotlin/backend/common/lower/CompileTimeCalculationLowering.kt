@@ -7,7 +7,7 @@ package org.jetbrains.kotlin.backend.common.lower
 
 import org.jetbrains.kotlin.backend.common.CommonBackendContext
 import org.jetbrains.kotlin.backend.common.FileLoweringPass
-import org.jetbrains.kotlin.ir.interpreter.IrCompileTimeChecker
+import org.jetbrains.kotlin.ir.interpreter.checker.IrCompileTimeChecker
 import org.jetbrains.kotlin.ir.interpreter.*
 import org.jetbrains.kotlin.config.CommonConfigurationKeys
 import org.jetbrains.kotlin.config.LanguageFeature
@@ -45,7 +45,7 @@ class CompileTimeCalculationLowering(val context: CommonBackendContext) : FileLo
 
         override fun visitCall(expression: IrCall): IrExpression {
             if (expression.accept(IrCompileTimeChecker(), null)) {
-                return interpreter.interpret(expression).report(expression)
+                return interpreter.interpret(expression, irFile).report(expression)
             }
             return super.visitCall(expression)
         }
@@ -60,7 +60,7 @@ class CompileTimeCalculationLowering(val context: CommonBackendContext) : FileLo
             if (isConst && !isCompileTimeComputable) {
                 context.report(expression, irFile, "Const property is used only with functions annotated as CompileTimeCalculation", true)
             } else if (isCompileTimeComputable) {
-                initializer.expression = interpreter.interpret(expression).report(expression)
+                initializer.expression = interpreter.interpret(expression, irFile).report(expression)
             }
             return declaration
         }
