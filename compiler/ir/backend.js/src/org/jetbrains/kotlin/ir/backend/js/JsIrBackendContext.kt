@@ -36,8 +36,10 @@ import org.jetbrains.kotlin.js.config.JSConfigurationKeys
 import org.jetbrains.kotlin.name.FqName
 import org.jetbrains.kotlin.name.Name
 import org.jetbrains.kotlin.psi.KtBlockExpression
+import org.jetbrains.kotlin.psi.KtCallElement
 import org.jetbrains.kotlin.psi.KtExpression
 import org.jetbrains.kotlin.psi.KtProperty
+import org.jetbrains.kotlin.psi.psiUtil.getCallNameExpression
 import org.jetbrains.kotlin.resolve.scopes.MemberScope
 import org.jetbrains.kotlin.types.Variance
 
@@ -397,7 +399,9 @@ class JsIrBackendContext(
             psiFileEntry != null && element != null -> {
                 var psi = psiFileEntry.findPsiElement(element)
                 while (psi?.parent !is KtProperty && psi?.parent !is KtBlockExpression && psi?.parent is KtExpression) psi = psi.parent
-                "${psi?.text} at ${psiFileEntry.getLineNumber(element.startOffset) + 1} line"
+                val prefixIfDefault = (psi as? KtCallElement)?.getCallNameExpression()?.getReferencedName()
+                    ?.let { if (element is IrCall && it != element.symbol.owner.name.asString()) " (it's default argument)" else "" } ?: ""
+                "${psi?.text}$prefixIfDefault at ${psiFileEntry.getLineNumber(element.startOffset) + 1} line"
             }
             else -> ""
         }

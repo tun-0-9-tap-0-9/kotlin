@@ -33,6 +33,7 @@ import org.jetbrains.kotlin.ir.builders.irBlock
 import org.jetbrains.kotlin.ir.declarations.*
 import org.jetbrains.kotlin.ir.declarations.impl.IrFactoryImpl
 import org.jetbrains.kotlin.ir.descriptors.IrBuiltIns
+import org.jetbrains.kotlin.ir.expressions.IrCall
 import org.jetbrains.kotlin.ir.expressions.IrExpression
 import org.jetbrains.kotlin.ir.expressions.IrFunctionReference
 import org.jetbrains.kotlin.ir.symbols.*
@@ -162,7 +163,9 @@ class JvmBackendContext(
             psiFileEntry != null && element != null -> {
                 var psi = psiFileEntry.findPsiElement(element)
                 while (psi?.parent !is KtProperty && psi?.parent !is KtBlockExpression && psi?.parent is KtExpression) psi = psi.parent
-                "${psi?.text} at ${psiFileEntry.getLineNumber(element.startOffset) + 1} line"
+                val prefixIfDefault = (psi as? KtCallElement)?.getCallNameExpression()?.getReferencedName()
+                    ?.let { if (element is IrCall && it != element.symbol.owner.name.asString()) " (it's default argument)" else "" } ?: ""
+                "${psi?.text}$prefixIfDefault at ${psiFileEntry.getLineNumber(element.startOffset) + 1} line"
             }
             else -> ""
         }
