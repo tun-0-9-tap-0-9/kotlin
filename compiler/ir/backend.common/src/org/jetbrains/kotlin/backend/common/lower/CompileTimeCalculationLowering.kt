@@ -15,7 +15,9 @@ import org.jetbrains.kotlin.config.languageVersionSettings
 import org.jetbrains.kotlin.ir.IrStatement
 import org.jetbrains.kotlin.ir.declarations.*
 import org.jetbrains.kotlin.ir.expressions.*
+import org.jetbrains.kotlin.ir.expressions.impl.IrCallImpl
 import org.jetbrains.kotlin.ir.util.IdSignature
+import org.jetbrains.kotlin.ir.util.copyTypeAndValueArgumentsFrom
 import org.jetbrains.kotlin.ir.visitors.IrElementTransformerVoid
 
 class CompileTimeCalculationLowering(val context: CommonBackendContext) : FileLoweringPass {
@@ -44,6 +46,22 @@ class CompileTimeCalculationLowering(val context: CommonBackendContext) : FileLo
         }
 
         override fun visitCall(expression: IrCall): IrExpression {
+            expression.symbol.owner.valueParameters
+                .forEachIndexed { index, parameter ->
+                    if (expression.getValueArgument(index) != null || !expression.symbol.owner.isInline) return@forEachIndexed
+                    val default = parameter.defaultValue?.expression as? IrCall ?: return@forEachIndexed
+                    val withNewOffsets = IrCallImpl(
+                        expression.startOffset, expression.endOffset, default.type, default.symbol,
+                        default.typeArgumentsCount, default.valueArgumentsCount, default.origin, default.superQualifierSymbol
+                    )
+                    withNewOffsets.copyTypeAndValueArgumentsFrom(default)
+                    if (withNewOffsets.accept(IrCompileTimeChecker(), null)) {
+                        interpreter.interpret(withNewOffsets, irFile)
+                            .report(withNewOffsets)
+                            .takeIf { it != withNewOffsets }
+                            ?.apply { expression.putArgument(parameter, this) }
+                    }
+                }
             if (expression.accept(IrCompileTimeChecker(), null)) {
                 return interpreter.interpret(expression, irFile).report(expression)
             }
