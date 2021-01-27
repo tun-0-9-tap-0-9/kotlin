@@ -354,3 +354,5 @@ projectTest("wasmTest", true) {
 
     setUpBoxTests()
 }
+
+val buildKlib by generator("org.jetbrains.kotlin.GenerateKlibKt")
