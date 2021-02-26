@@ -484,6 +484,12 @@ default: `indy-with-constants` for JVM target 9 or greater, `inline` otherwise""
     )
     var typeEnhancementImprovementsInStrictMode: Boolean by FreezableVar(false)
 
+    @Argument(
+        value = "-Xserialize-ir",
+        description = "Save IR to metadata"
+    )
+    var serializeIr: Boolean by FreezableVar(false)
+
     override fun configureAnalysisFlags(collector: MessageCollector): MutableMap<AnalysisFlag<*>, Any> {
         val result = super.configureAnalysisFlags(collector)
         result[JvmAnalysisFlags.strictMetadataVersionSemantics] = strictMetadataVersionSemantics
