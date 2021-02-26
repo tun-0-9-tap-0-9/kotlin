@@ -8,7 +8,7 @@ import kotlin.reflect.*
 import kotlin.reflect.full.*
 
 fun checkAnnotation(className: String, annotationName: String) =
-    Class.forName(className).annotations.find { it.annotationClass.qualifiedName == annotationName } != null
+    java.lang.Class.forName(className).annotations.find { it.annotationClass.qualifiedName == annotationName } != null
 
 fun checkSuperClass(classRef: KClass<*>, superClassName: String) =
     classRef.superclasses.find { it.qualifiedName == superClassName } != null
@@ -61,10 +61,10 @@ fun checkSuperTypeAnnotation(classRef: KClass<*>, superClassName: String, annota
 fun checkClassName(ref: KClass<*>, expectedQualifiedName: String) = ref.qualifiedName == expectedQualifiedName
 
 fun checkPackageName(fileClass: String, expectedName: String) =
-    Class.forName(fileClass).`package`.name == expectedName
+    java.lang.Class.forName(fileClass).`package`.name == expectedName
 
 fun checkFileAnnotation(fileClass: String, expectedName: String) =
-    Class.forName(fileClass)?.annotations?.find { it.annotationClass.qualifiedName == expectedName } != null
+    java.lang.Class.forName(fileClass)?.annotations?.find { it.annotationClass.qualifiedName == expectedName } != null
 
 fun checkFileAnnotations(fileClass: String, expectedNames: List<String>) =
     expectedNames.all { checkFileAnnotation(fileClass, it) }
