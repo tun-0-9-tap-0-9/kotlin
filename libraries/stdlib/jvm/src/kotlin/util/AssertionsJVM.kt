@@ -19,6 +19,8 @@ internal object _Assertions {
  * and runtime assertions have been enabled on the JVM using the *-ea* JVM option.
  */
 @kotlin.internal.InlineOnly
+@CompileTimeCalculation
+@EvaluateIntrinsic("")
 public inline fun assert(value: Boolean) {
     assert(value) { "Assertion failed" }
 }
@@ -28,6 +30,8 @@ public inline fun assert(value: Boolean) {
  * and runtime assertions have been enabled on the JVM using the *-ea* JVM option.
  */
 @kotlin.internal.InlineOnly
+@CompileTimeCalculation
+@EvaluateIntrinsic("")
 public inline fun assert(value: Boolean, lazyMessage: () -> Any) {
     if (_Assertions.ENABLED) {
         if (!value) {
