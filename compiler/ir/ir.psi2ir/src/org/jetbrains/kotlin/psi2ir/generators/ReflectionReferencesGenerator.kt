@@ -585,7 +585,7 @@ class ReflectionReferencesGenerator(statementGenerator: StatementGenerator) : St
     }
 
     private fun KotlinType.kFunctionTypeToFunctionType(suspendFunction: Boolean) = createFunctionType(
-        statementGenerator.context.builtIns,
+        statementGenerator.context.irBuiltIns.builtIns,
         annotations,
         null,
         arguments.dropLast(1).map { it.type },

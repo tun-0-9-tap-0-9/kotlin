@@ -59,7 +59,6 @@ import org.jetbrains.kotlin.util.OperatorNameConventions
 
 fun insertImplicitCasts(file: IrFile, context: GeneratorContext) {
     InsertImplicitCasts(
-        context.builtIns,
         context.irBuiltIns,
         context.typeTranslator,
         context.callToSubstitutedDescriptorMap,
@@ -70,7 +69,6 @@ fun insertImplicitCasts(file: IrFile, context: GeneratorContext) {
 }
 
 internal class InsertImplicitCasts(
-    private val builtIns: KotlinBuiltIns,
     private val irBuiltIns: IrBuiltIns,
     private val typeTranslator: TypeTranslator,
     private val callToSubstitutedDescriptorMap: Map<IrDeclarationReference, CallableDescriptor>,
@@ -255,20 +253,20 @@ internal class InsertImplicitCasts(
     override fun visitWhen(expression: IrWhen): IrExpression =
         expression.transformPostfix {
             for (irBranch in branches) {
-                irBranch.condition = irBranch.condition.cast(builtIns.booleanType)
+                irBranch.condition = irBranch.condition.cast(irBuiltIns.booleanType)
                 irBranch.result = irBranch.result.cast(type)
             }
         }
 
     override fun visitLoop(loop: IrLoop): IrExpression =
         loop.transformPostfix {
-            condition = condition.cast(builtIns.booleanType)
+            condition = condition.cast(irBuiltIns.booleanType)
             body = body?.coerceToUnit()
         }
 
     override fun visitThrow(expression: IrThrow): IrExpression =
         expression.transformPostfix {
-            value = value.cast(builtIns.throwable.defaultType)
+            value = value.cast(irBuiltIns.throwableType)
         }
 
     override fun visitTry(aTry: IrTry): IrExpression =
@@ -464,7 +462,7 @@ internal class InsertImplicitCasts(
     }
 
     private fun IrExpression.invokeIntegerCoercionFunction(targetType: KotlinType, coercionFunName: String): IrExpression {
-        val coercionFunction = builtIns.int.unsubstitutedMemberScope.findSingleFunction(Name.identifier(coercionFunName))
+        val coercionFunction = irBuiltIns.builtIns.int.unsubstitutedMemberScope.findSingleFunction(Name.identifier(coercionFunName))
         return IrCallImpl(
             startOffset, endOffset,
             targetType.toIrType(),

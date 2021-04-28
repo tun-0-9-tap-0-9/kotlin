@@ -139,8 +139,8 @@ abstract class DataClassMembersGenerator(
             +irReturnTrue()
         }
 
-        private val intClass = context.builtIns.int
-        private val intType = context.builtIns.intType
+        private val intClass = context.irBuiltIns.builtIns.int
+        private val intType = context.irBuiltIns.int
 
         private val intTimesSymbol: IrSimpleFunctionSymbol =
             intClass.unsubstitutedMemberScope.findFirstFunction("times") {

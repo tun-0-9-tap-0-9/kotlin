@@ -55,7 +55,7 @@ fun Generator.getExpressionTypeWithCoercionToUnit(key: KtExpression): KotlinType
     if (key.isUsedAsExpression(context.bindingContext))
         getTypeInferredByFrontend(key)
     else
-        context.builtIns.unitType
+        context.irBuiltIns.unit
 
 fun Generator.getExpressionTypeWithCoercionToUnitOrFail(key: KtExpression): KotlinType =
     getExpressionTypeWithCoercionToUnit(key) ?: throw RuntimeException("No type for expression: ${key.text}")

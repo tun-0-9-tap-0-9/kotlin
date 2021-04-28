@@ -13,6 +13,7 @@ import org.jetbrains.kotlin.descriptors.impl.SimpleFunctionDescriptorImpl
 import org.jetbrains.kotlin.descriptors.impl.TypeParameterDescriptorImpl
 import org.jetbrains.kotlin.descriptors.impl.ValueParameterDescriptorImpl
 import org.jetbrains.kotlin.incremental.components.NoLookupLocation
+import org.jetbrains.kotlin.ir.ObsoleteDescriptorBasedAPI
 import org.jetbrains.kotlin.ir.UNDEFINED_OFFSET
 import org.jetbrains.kotlin.ir.declarations.IrDeclarationOriginImpl
 import org.jetbrains.kotlin.ir.declarations.IrFactory
@@ -36,6 +37,7 @@ import org.jetbrains.kotlin.storage.LockBasedStorageManager
 import org.jetbrains.kotlin.types.*
 
 class IrBuiltIns(
+    @ObsoleteDescriptorBasedAPI
     val builtIns: KotlinBuiltIns,
     private val typeTranslator: TypeTranslator,
     private val symbolTable: SymbolTable
@@ -266,15 +268,6 @@ class IrBuiltIns(
         else -> error("No KProperty for n=$n mutable=$mutable")
     }
 
-    // TODO switch to IrType
-    val primitiveTypes = listOf(bool, char, byte, short, int, float, long, double)
-    val primitiveIrTypes = listOf(booleanType, charType, byteType, shortType, intType, floatType, longType, doubleType)
-    private val primitiveIrTypesWithComparisons = listOf(charType, byteType, shortType, intType, floatType, longType, doubleType)
-    private val primitiveFloatingPointIrTypes = listOf(floatType, doubleType)
-    val primitiveArrays = PrimitiveType.values().map { builtIns.getPrimitiveArrayClassDescriptor(it).toIrSymbol() }
-    val primitiveArrayElementTypes = primitiveArrays.zip(primitiveIrTypes).toMap()
-    val primitiveArrayForType = primitiveArrayElementTypes.asSequence().associate { it.value to it.key }
-
     val primitiveTypeToIrType = mapOf(
         PrimitiveType.BOOLEAN to booleanType,
         PrimitiveType.CHAR to charType,
@@ -285,6 +278,16 @@ class IrBuiltIns(
         PrimitiveType.LONG to longType,
         PrimitiveType.DOUBLE to doubleType
     )
+
+    // TODO switch to IrType
+    val primitiveTypes = listOf(bool, char, byte, short, int, float, long, double)
+    val primitiveIrTypes = listOf(booleanType, charType, byteType, shortType, intType, floatType, longType, doubleType)
+    private val primitiveIrTypesWithComparisons = listOf(charType, byteType, shortType, intType, floatType, longType, doubleType)
+    private val primitiveFloatingPointIrTypes = listOf(floatType, doubleType)
+    val primitiveArraysToPrimitiveTypes = PrimitiveType.values().associate { builtIns.getPrimitiveArrayClassDescriptor(it).toIrSymbol() to it }
+    val primitiveArrays = primitiveArraysToPrimitiveTypes.keys
+    val primitiveArrayElementTypes = primitiveArraysToPrimitiveTypes.mapValues { primitiveTypeToIrType[it.value] }
+    val primitiveArrayForType = primitiveArrayElementTypes.asSequence().associate { it.value to it.key }
 
     val lessFunByOperandType = primitiveIrTypesWithComparisons.defineComparisonOperatorForEachIrType(OperatorNames.LESS)
     val lessOrEqualFunByOperandType = primitiveIrTypesWithComparisons.defineComparisonOperatorForEachIrType(OperatorNames.LESS_OR_EQUAL)

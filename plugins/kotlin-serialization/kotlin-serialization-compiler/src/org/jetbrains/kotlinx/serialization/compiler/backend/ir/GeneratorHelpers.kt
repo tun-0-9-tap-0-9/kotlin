@@ -701,7 +701,7 @@ interface IrBuilderExtension {
     }
 
     fun kClassTypeFor(projection: TypeProjection): SimpleType {
-        val kClass = compilerContext.builtIns.kClass
+        val kClass = compilerContext.irBuiltIns.builtIns.kClass
         return KotlinTypeFactory.simpleNotNullType(Annotations.EMPTY, kClass, listOf(projection))
     }
 

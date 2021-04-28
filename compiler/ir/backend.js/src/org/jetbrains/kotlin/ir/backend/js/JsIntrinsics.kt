@@ -220,10 +220,9 @@ class JsIntrinsics(private val irBuiltIns: IrBuiltIns, val context: JsIrBackendC
     val jsEnsureNonNull = getFunctionInKotlinPackage("ensureNotNull")
 
     // Arrays:
-    val array = context.symbolTable.referenceClass(irBuiltIns.builtIns.array)
+    val array get() = irBuiltIns.arrayClass
 
-    val primitiveArrays = PrimitiveType.values()
-        .associate { context.symbolTable.referenceClass(irBuiltIns.builtIns.getPrimitiveArrayClassDescriptor(it)) to it }
+    val primitiveArrays get() = irBuiltIns.primitiveArraysToPrimitiveTypes
 
     val jsArray = getInternalFunction("arrayWithFun")
     val jsFillArray = getInternalFunction("fillArrayFun")

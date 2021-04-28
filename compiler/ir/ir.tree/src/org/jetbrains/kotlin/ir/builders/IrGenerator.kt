@@ -34,9 +34,6 @@ interface IrGeneratorContextInterface {
 }
 
 interface IrGeneratorContext : IrGeneratorContextInterface {
-    @ObsoleteDescriptorBasedAPI
-    val builtIns: KotlinBuiltIns get() = irBuiltIns.builtIns
-
     val irFactory: IrFactory get() = irBuiltIns.irFactory
 }
 
