@@ -121,14 +121,15 @@ open class BuiltinSymbolsBase(protected val irBuiltIns: IrBuiltIns, protected va
 
     val closedRange = progression("ClosedRange")
 
-    val getProgressionLastElementByReturnType = builtInsPackage("kotlin", "internal")
+    open val getProgressionLastElementByReturnType = builtInsPackage("kotlin", "internal")
         .getContributedFunctions(Name.identifier("getProgressionLastElement"), NoLookupLocation.FROM_BACKEND)
         .filter { it.containingDeclaration !is BuiltInsPackageFragment }
         .map { d ->
             val klass = d.returnType?.constructor?.declarationDescriptor?.let { symbolTable.referenceClassifier(it) }
             val function = symbolTable.referenceSimpleFunction(d)
             klass to function
-        }.toMap()
+        }
+        .toMap()
 
     val toUIntByExtensionReceiver = builtInsPackage("kotlin").getContributedFunctions(
         Name.identifier("toUInt"),
