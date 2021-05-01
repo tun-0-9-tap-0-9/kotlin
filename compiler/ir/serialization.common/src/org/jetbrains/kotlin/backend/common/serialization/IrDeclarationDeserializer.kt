@@ -11,14 +11,11 @@ import org.jetbrains.kotlin.backend.common.serialization.encodings.*
 import org.jetbrains.kotlin.backend.common.serialization.proto.IrDeclaration.DeclaratorCase.*
 import org.jetbrains.kotlin.backend.common.serialization.proto.IrType.KindCase.*
 import org.jetbrains.kotlin.descriptors.InlineClassRepresentation
+import org.jetbrains.kotlin.ir.IrBuiltIns
 import org.jetbrains.kotlin.ir.IrElement
 import org.jetbrains.kotlin.ir.declarations.*
 import org.jetbrains.kotlin.ir.declarations.impl.IrVariableImpl
-import org.jetbrains.kotlin.ir.descriptors.IrBuiltIns
-import org.jetbrains.kotlin.ir.expressions.IrBlockBody
-import org.jetbrains.kotlin.ir.expressions.IrBody
-import org.jetbrains.kotlin.ir.expressions.IrConstructorCall
-import org.jetbrains.kotlin.ir.expressions.IrExpressionBody
+import org.jetbrains.kotlin.ir.expressions.*
 import org.jetbrains.kotlin.ir.expressions.impl.IrErrorExpressionImpl
 import org.jetbrains.kotlin.ir.symbols.*
 import org.jetbrains.kotlin.ir.symbols.impl.IrPublicSymbolBase
@@ -30,6 +27,21 @@ import org.jetbrains.kotlin.name.Name
 import org.jetbrains.kotlin.protobuf.CodedInputStream
 import org.jetbrains.kotlin.protobuf.ExtensionRegistryLite
 import org.jetbrains.kotlin.types.Variance
+import kotlin.collections.ArrayList
+import kotlin.collections.List
+import kotlin.collections.any
+import kotlin.collections.associateBy
+import kotlin.collections.emptyList
+import kotlin.collections.filterNot
+import kotlin.collections.getOrPut
+import kotlin.collections.indices
+import kotlin.collections.listOf
+import kotlin.collections.map
+import kotlin.collections.mapTo
+import kotlin.collections.mutableMapOf
+import kotlin.collections.plus
+import kotlin.collections.set
+import kotlin.collections.toList
 import org.jetbrains.kotlin.backend.common.serialization.proto.IrAnonymousInit as ProtoAnonymousInit
 import org.jetbrains.kotlin.backend.common.serialization.proto.IrClass as ProtoClass
 import org.jetbrains.kotlin.backend.common.serialization.proto.IrConstructor as ProtoConstructor

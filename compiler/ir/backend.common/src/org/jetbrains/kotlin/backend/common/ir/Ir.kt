@@ -13,10 +13,12 @@ import org.jetbrains.kotlin.descriptors.ClassDescriptor
 import org.jetbrains.kotlin.descriptors.SimpleFunctionDescriptor
 import org.jetbrains.kotlin.descriptors.findClassAcrossModuleDependencies
 import org.jetbrains.kotlin.incremental.components.NoLookupLocation
+import org.jetbrains.kotlin.ir.IrBuiltIns
+import org.jetbrains.kotlin.ir.ObsoleteDescriptorBasedAPI
 import org.jetbrains.kotlin.ir.declarations.IrFunction
 import org.jetbrains.kotlin.ir.declarations.IrModuleFragment
 import org.jetbrains.kotlin.ir.declarations.IrPackageFragment
-import org.jetbrains.kotlin.ir.descriptors.IrBuiltIns
+import org.jetbrains.kotlin.ir.descriptors.IrBuiltInsOverDescriptors
 import org.jetbrains.kotlin.ir.symbols.IrClassSymbol
 import org.jetbrains.kotlin.ir.symbols.IrFunctionSymbol
 import org.jetbrains.kotlin.ir.symbols.IrSimpleFunctionSymbol
@@ -49,7 +51,11 @@ abstract class Ir<out T : CommonBackendContext>(val context: T, val irModule: Ir
 /**
  * Symbols for builtins that are available without any context and are not specific to any backend
  */
-open class BuiltinSymbolsBase(protected val irBuiltIns: IrBuiltIns, protected val builtIns: KotlinBuiltIns, private val symbolTable: ReferenceSymbolTable) {
+open class BuiltinSymbolsBase(protected val irBuiltIns: IrBuiltIns, private val symbolTable: ReferenceSymbolTable) {
+
+    @OptIn(ObsoleteDescriptorBasedAPI::class)
+    protected val builtIns: KotlinBuiltIns = (irBuiltIns as IrBuiltInsOverDescriptors).builtIns
+
     protected fun builtInsPackage(vararg packageNameSegments: String) =
         builtIns.builtInsModule.getPackage(FqName.fromSegments(listOf(*packageNameSegments))).memberScope
 
@@ -274,8 +280,8 @@ open class BuiltinSymbolsBase(protected val irBuiltIns: IrBuiltIns, protected va
         }
     }
 
-    open fun functionN(n: Int): IrClassSymbol = irBuiltIns.function(n)
-    open fun suspendFunctionN(n: Int): IrClassSymbol = irBuiltIns.suspendFunction(n)
+    open fun functionN(n: Int): IrClassSymbol = irBuiltIns.functionN(n).symbol
+    open fun suspendFunctionN(n: Int): IrClassSymbol = irBuiltIns.suspendFunctionN(n).symbol
 
     fun kproperty0(): IrClassSymbol = symbolTable.referenceClass(builtIns.kProperty0)
     fun kproperty1(): IrClassSymbol = symbolTable.referenceClass(builtIns.kProperty1)
@@ -300,7 +306,7 @@ open class BuiltinSymbolsBase(protected val irBuiltIns: IrBuiltIns, protected va
 // Some symbols below are used in kotlin-native, so they can't be private
 @Suppress("MemberVisibilityCanBePrivate", "PropertyName")
 abstract class Symbols<out T : CommonBackendContext>(val context: T, irBuiltIns: IrBuiltIns, symbolTable: SymbolTable) :
-    BuiltinSymbolsBase(irBuiltIns, context.builtIns, symbolTable) {
+    BuiltinSymbolsBase(irBuiltIns, symbolTable) {
     abstract val throwNullPointerException: IrSimpleFunctionSymbol
     abstract val throwNoWhenBranchMatchedException: IrSimpleFunctionSymbol
     abstract val throwTypeCastException: IrSimpleFunctionSymbol

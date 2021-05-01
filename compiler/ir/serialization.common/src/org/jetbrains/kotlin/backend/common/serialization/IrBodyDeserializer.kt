@@ -10,6 +10,7 @@ import org.jetbrains.kotlin.backend.common.serialization.proto.IrConst.ValueCase
 import org.jetbrains.kotlin.backend.common.serialization.proto.IrOperation.OperationCase.*
 import org.jetbrains.kotlin.backend.common.serialization.proto.IrStatement.StatementCase
 import org.jetbrains.kotlin.backend.common.serialization.proto.IrVarargElement.VarargElementCase
+import org.jetbrains.kotlin.ir.IrBuiltIns
 import org.jetbrains.kotlin.ir.IrElement
 import org.jetbrains.kotlin.ir.IrStatement
 import org.jetbrains.kotlin.ir.declarations.*

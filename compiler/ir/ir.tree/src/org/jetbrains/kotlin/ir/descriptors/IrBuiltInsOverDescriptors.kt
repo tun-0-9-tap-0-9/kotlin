@@ -13,8 +13,8 @@ import org.jetbrains.kotlin.descriptors.impl.SimpleFunctionDescriptorImpl
 import org.jetbrains.kotlin.descriptors.impl.TypeParameterDescriptorImpl
 import org.jetbrains.kotlin.descriptors.impl.ValueParameterDescriptorImpl
 import org.jetbrains.kotlin.incremental.components.NoLookupLocation
-import org.jetbrains.kotlin.ir.ObsoleteDescriptorBasedAPI
-import org.jetbrains.kotlin.ir.UNDEFINED_OFFSET
+import org.jetbrains.kotlin.ir.*
+import org.jetbrains.kotlin.ir.declarations.IrClass
 import org.jetbrains.kotlin.ir.declarations.IrDeclarationOriginImpl
 import org.jetbrains.kotlin.ir.declarations.IrFactory
 import org.jetbrains.kotlin.ir.declarations.impl.IrExternalPackageFragmentImpl
@@ -33,19 +33,21 @@ import org.jetbrains.kotlin.ir.util.SymbolTable
 import org.jetbrains.kotlin.ir.util.TypeTranslator
 import org.jetbrains.kotlin.name.FqName
 import org.jetbrains.kotlin.name.Name
+import org.jetbrains.kotlin.resolve.scopes.MemberScope
 import org.jetbrains.kotlin.storage.LockBasedStorageManager
 import org.jetbrains.kotlin.types.*
+import org.jetbrains.kotlin.types.checker.KotlinTypeChecker
 
-class IrBuiltIns(
-    @ObsoleteDescriptorBasedAPI
+@ObsoleteDescriptorBasedAPI
+class IrBuiltInsOverDescriptors(
     val builtIns: KotlinBuiltIns,
     private val typeTranslator: TypeTranslator,
     private val symbolTable: SymbolTable
-) {
-    val languageVersionSettings = typeTranslator.languageVersionSettings
+) : IrBuiltIns() {
+    override val languageVersionSettings = typeTranslator.languageVersionSettings
 
-    lateinit var functionFactory: IrAbstractFunctionFactory
-    val irFactory: IrFactory = symbolTable.irFactory
+    private val functionFactory = IrDescriptorBasedFunctionFactory(this, symbolTable)
+    override val irFactory: IrFactory = symbolTable.irFactory
 
     private val builtInsModule = builtIns.builtInsModule
 
@@ -186,89 +188,89 @@ class IrBuiltIns(
     private fun List<IrType>.defineComparisonOperatorForEachIrType(name: String) =
         associate { it.classifierOrFail to defineComparisonOperator(name, it) }
 
-    val any = builtIns.anyType
-    val anyType = any.toIrType()
-    val anyClass = builtIns.any.toIrSymbol()
-    val anyNType = anyType.withHasQuestionMark(true)
+    override val any = builtIns.anyType
+    override val anyType = any.toIrType()
+    override val anyClass = builtIns.any.toIrSymbol()
+    override val anyNType = anyType.withHasQuestionMark(true)
 
-    val bool = builtIns.booleanType
-    val booleanType = bool.toIrType()
-    val booleanClass = builtIns.boolean.toIrSymbol()
+    override val bool = builtIns.booleanType
+    override val booleanType = bool.toIrType()
+    override val booleanClass = builtIns.boolean.toIrSymbol()
 
-    val char = builtIns.charType
-    val charType = char.toIrType()
-    val charClass = builtIns.char.toIrSymbol()
+    override val char = builtIns.charType
+    override val charType = char.toIrType()
+    override val charClass = builtIns.char.toIrSymbol()
 
-    val number = builtIns.number.defaultType
-    val numberType = number.toIrType()
-    val numberClass = builtIns.number.toIrSymbol()
+    override val number = builtIns.number.defaultType
+    override val numberType = number.toIrType()
+    override val numberClass = builtIns.number.toIrSymbol()
 
-    val byte = builtIns.byteType
-    val byteType = byte.toIrType()
-    val byteClass = builtIns.byte.toIrSymbol()
+    override val byte = builtIns.byteType
+    override val byteType = byte.toIrType()
+    override val byteClass = builtIns.byte.toIrSymbol()
 
-    val short = builtIns.shortType
-    val shortType = short.toIrType()
-    val shortClass = builtIns.short.toIrSymbol()
+    override val short = builtIns.shortType
+    override val shortType = short.toIrType()
+    override val shortClass = builtIns.short.toIrSymbol()
 
-    val int = builtIns.intType
-    val intType = int.toIrType()
-    val intClass = builtIns.int.toIrSymbol()
+    override val int = builtIns.intType
+    override val intType = int.toIrType()
+    override val intClass = builtIns.int.toIrSymbol()
 
-    val long = builtIns.longType
-    val longType = long.toIrType()
-    val longClass = builtIns.long.toIrSymbol()
+    override val long = builtIns.longType
+    override val longType = long.toIrType()
+    override val longClass = builtIns.long.toIrSymbol()
 
-    val float = builtIns.floatType
-    val floatType = float.toIrType()
-    val floatClass = builtIns.float.toIrSymbol()
+    override val float = builtIns.floatType
+    override val floatType = float.toIrType()
+    override val floatClass = builtIns.float.toIrSymbol()
 
-    val double = builtIns.doubleType
-    val doubleType = double.toIrType()
-    val doubleClass = builtIns.double.toIrSymbol()
+    override val double = builtIns.doubleType
+    override val doubleType = double.toIrType()
+    override val doubleClass = builtIns.double.toIrSymbol()
 
-    val nothing = builtIns.nothingType
-    val nothingType = nothing.toIrType()
-    val nothingClass = builtIns.nothing.toIrSymbol()
-    val nothingNType = nothingType.withHasQuestionMark(true)
+    override val nothing = builtIns.nothingType
+    override val nothingType = nothing.toIrType()
+    override val nothingClass = builtIns.nothing.toIrSymbol()
+    override val nothingNType = nothingType.withHasQuestionMark(true)
 
-    val unit = builtIns.unitType
-    val unitType = unit.toIrType()
-    val unitClass = builtIns.unit.toIrSymbol()
+    override val unit = builtIns.unitType
+    override val unitType = unit.toIrType()
+    override val unitClass = builtIns.unit.toIrSymbol()
 
-    val string = builtIns.stringType
-    val stringType = string.toIrType()
-    val stringClass = builtIns.string.toIrSymbol()
+    override val string = builtIns.stringType
+    override val stringType = string.toIrType()
+    override val stringClass = builtIns.string.toIrSymbol()
 
-    val collectionClass = builtIns.collection.toIrSymbol()
+    override val collectionClass = builtIns.collection.toIrSymbol()
 
-    val arrayClass = builtIns.array.toIrSymbol()
+    override val arrayClass = builtIns.array.toIrSymbol()
 
-    val throwableType = builtIns.throwable.defaultType.toIrType()
-    val throwableClass = builtIns.throwable.toIrSymbol()
+    override val throwableType = builtIns.throwable.defaultType.toIrType()
+    override val throwableClass = builtIns.throwable.toIrSymbol()
 
-    val kCallableClass = builtIns.kCallable.toIrSymbol()
-    val kPropertyClass = builtIns.kProperty.toIrSymbol()
-    val kClassClass = builtIns.kClass.toIrSymbol()
+    override val kCallableClass = builtIns.kCallable.toIrSymbol()
+    override val kPropertyClass = builtIns.kProperty.toIrSymbol()
+    override val kClassClass = builtIns.kClass.toIrSymbol()
 
-    private val kProperty0Class = builtIns.kProperty0.toIrSymbol()
-    private val kProperty1Class = builtIns.kProperty1.toIrSymbol()
-    private val kProperty2Class = builtIns.kProperty2.toIrSymbol()
-    private val kMutableProperty0Class = builtIns.kMutableProperty0.toIrSymbol()
-    private val kMutableProperty1Class = builtIns.kMutableProperty1.toIrSymbol()
-    private val kMutableProperty2Class = builtIns.kMutableProperty2.toIrSymbol()
+    override val kProperty0Class = builtIns.kProperty0.toIrSymbol()
+    override val kProperty1Class = builtIns.kProperty1.toIrSymbol()
+    override val kProperty2Class = builtIns.kProperty2.toIrSymbol()
+    override val kMutableProperty0Class = builtIns.kMutableProperty0.toIrSymbol()
+    override val kMutableProperty1Class = builtIns.kMutableProperty1.toIrSymbol()
+    override val kMutableProperty2Class = builtIns.kMutableProperty2.toIrSymbol()
 
-    val functionClass = builtIns.getBuiltInClassByFqName(FqName("kotlin.Function")).toIrSymbol()
-    val kFunctionClass = builtIns.getBuiltInClassByFqName(FqName("kotlin.reflect.KFunction")).toIrSymbol()
+    override val functionClass = builtIns.getBuiltInClassByFqName(FqName("kotlin.Function")).toIrSymbol()
+    override val kFunctionClass = builtIns.getBuiltInClassByFqName(FqName("kotlin.reflect.KFunction")).toIrSymbol()
 
-    fun getKPropertyClass(mutable: Boolean, n: Int): IrClassSymbol = when (n) {
+    override fun getKPropertyClass(mutable: Boolean, n: Int): IrClassSymbol = when (n) {
         0 -> if (mutable) kMutableProperty0Class else kProperty0Class
         1 -> if (mutable) kMutableProperty1Class else kProperty1Class
         2 -> if (mutable) kMutableProperty2Class else kProperty2Class
         else -> error("No KProperty for n=$n mutable=$mutable")
     }
 
-    val primitiveTypeToIrType = mapOf(
+    override val primitiveTypeToIrType = mapOf(
         PrimitiveType.BOOLEAN to booleanType,
         PrimitiveType.CHAR to charType,
         PrimitiveType.BYTE to byteType,
@@ -280,67 +282,80 @@ class IrBuiltIns(
     )
 
     // TODO switch to IrType
-    val primitiveTypes = listOf(bool, char, byte, short, int, float, long, double)
-    val primitiveIrTypes = listOf(booleanType, charType, byteType, shortType, intType, floatType, longType, doubleType)
-    private val primitiveIrTypesWithComparisons = listOf(charType, byteType, shortType, intType, floatType, longType, doubleType)
-    private val primitiveFloatingPointIrTypes = listOf(floatType, doubleType)
-    val primitiveArraysToPrimitiveTypes = PrimitiveType.values().associate { builtIns.getPrimitiveArrayClassDescriptor(it).toIrSymbol() to it }
-    val primitiveArrays = primitiveArraysToPrimitiveTypes.keys
-    val primitiveArrayElementTypes = primitiveArraysToPrimitiveTypes.mapValues { primitiveTypeToIrType[it.value] }
-    val primitiveArrayForType = primitiveArrayElementTypes.asSequence().associate { it.value to it.key }
+    override val primitiveTypes = listOf(bool, char, byte, short, int, float, long, double)
+    override val primitiveIrTypes = listOf(booleanType, charType, byteType, shortType, intType, floatType, longType, doubleType)
+    override val primitiveIrTypesWithComparisons = listOf(charType, byteType, shortType, intType, floatType, longType, doubleType)
+    override val primitiveFloatingPointIrTypes = listOf(floatType, doubleType)
+    override val primitiveArraysToPrimitiveTypes = PrimitiveType.values().associate { builtIns.getPrimitiveArrayClassDescriptor(it).toIrSymbol() to it }
+    override val primitiveArrays = primitiveArraysToPrimitiveTypes.keys
+    override val primitiveArrayElementTypes = primitiveArraysToPrimitiveTypes.mapValues { primitiveTypeToIrType[it.value] }
+    override val primitiveArrayForType = primitiveArrayElementTypes.asSequence().associate { it.value to it.key }
 
-    val lessFunByOperandType = primitiveIrTypesWithComparisons.defineComparisonOperatorForEachIrType(OperatorNames.LESS)
-    val lessOrEqualFunByOperandType = primitiveIrTypesWithComparisons.defineComparisonOperatorForEachIrType(OperatorNames.LESS_OR_EQUAL)
-    val greaterOrEqualFunByOperandType = primitiveIrTypesWithComparisons.defineComparisonOperatorForEachIrType(OperatorNames.GREATER_OR_EQUAL)
-    val greaterFunByOperandType = primitiveIrTypesWithComparisons.defineComparisonOperatorForEachIrType(OperatorNames.GREATER)
+    override val lessFunByOperandType = primitiveIrTypesWithComparisons.defineComparisonOperatorForEachIrType(BuiltInOperatorNames.LESS)
+    override val lessOrEqualFunByOperandType = primitiveIrTypesWithComparisons.defineComparisonOperatorForEachIrType(BuiltInOperatorNames.LESS_OR_EQUAL)
+    override val greaterOrEqualFunByOperandType = primitiveIrTypesWithComparisons.defineComparisonOperatorForEachIrType(BuiltInOperatorNames.GREATER_OR_EQUAL)
+    override val greaterFunByOperandType = primitiveIrTypesWithComparisons.defineComparisonOperatorForEachIrType(BuiltInOperatorNames.GREATER)
 
-    val ieee754equalsFunByOperandType =
+    override val ieee754equalsFunByOperandType =
         primitiveFloatingPointIrTypes.map {
-            it.classifierOrFail to defineOperator(OperatorNames.IEEE754_EQUALS, booleanType, listOf(it.makeNullable(), it.makeNullable()))
+            it.classifierOrFail to defineOperator(BuiltInOperatorNames.IEEE754_EQUALS, booleanType, listOf(it.makeNullable(), it.makeNullable()))
         }.toMap()
 
-    private val booleanNot = builtIns.boolean.unsubstitutedMemberScope.getContributedFunctions(Name.identifier("not"), NoLookupLocation.FROM_BACKEND).single()
-    val booleanNotSymbol = symbolTable.referenceSimpleFunction(booleanNot)
+    override val booleanNot = builtIns.boolean.unsubstitutedMemberScope.getContributedFunctions(Name.identifier("not"), NoLookupLocation.FROM_BACKEND).single()
+    override val booleanNotSymbol = symbolTable.referenceSimpleFunction(booleanNot)
 
-    val eqeqeqSymbol = defineOperator(OperatorNames.EQEQEQ, booleanType, listOf(anyNType, anyNType))
-    val eqeqSymbol = defineOperator(OperatorNames.EQEQ, booleanType, listOf(anyNType, anyNType))
-    val throwCceSymbol = defineOperator(OperatorNames.THROW_CCE, nothingType, listOf())
-    val throwIseSymbol = defineOperator(OperatorNames.THROW_ISE, nothingType, listOf())
-    val andandSymbol = defineOperator(OperatorNames.ANDAND, booleanType, listOf(booleanType, booleanType))
-    val ororSymbol = defineOperator(OperatorNames.OROR, booleanType, listOf(booleanType, booleanType))
-    val noWhenBranchMatchedExceptionSymbol = defineOperator(OperatorNames.NO_WHEN_BRANCH_MATCHED_EXCEPTION, nothingType, listOf())
-    val illegalArgumentExceptionSymbol = defineOperator(OperatorNames.ILLEGAL_ARGUMENT_EXCEPTION, nothingType, listOf(stringType))
+    override val eqeqeqSymbol = defineOperator(BuiltInOperatorNames.EQEQEQ, booleanType, listOf(anyNType, anyNType))
+    override val eqeqSymbol = defineOperator(BuiltInOperatorNames.EQEQ, booleanType, listOf(anyNType, anyNType))
+    override val throwCceSymbol = defineOperator(BuiltInOperatorNames.THROW_CCE, nothingType, listOf())
+    override val throwIseSymbol = defineOperator(BuiltInOperatorNames.THROW_ISE, nothingType, listOf())
+    override val andandSymbol = defineOperator(BuiltInOperatorNames.ANDAND, booleanType, listOf(booleanType, booleanType))
+    override val ororSymbol = defineOperator(BuiltInOperatorNames.OROR, booleanType, listOf(booleanType, booleanType))
+    override val noWhenBranchMatchedExceptionSymbol = defineOperator(BuiltInOperatorNames.NO_WHEN_BRANCH_MATCHED_EXCEPTION, nothingType, listOf())
+    override val illegalArgumentExceptionSymbol = defineOperator(BuiltInOperatorNames.ILLEGAL_ARGUMENT_EXCEPTION, nothingType, listOf(stringType))
 
-    val checkNotNullSymbol = defineCheckNotNullOperator()
+    override val checkNotNullSymbol = defineCheckNotNullOperator()
 
     private fun TypeConstructor.makeNonNullType() = KotlinTypeFactory.simpleType(Annotations.EMPTY, this, listOf(), false)
     private fun TypeConstructor.makeNullableType() = KotlinTypeFactory.simpleType(Annotations.EMPTY, this, listOf(), true)
 
-    val dataClassArrayMemberHashCodeSymbol = defineOperator("dataClassArrayMemberHashCode", intType, listOf(anyType))
+    override val dataClassArrayMemberHashCodeSymbol = defineOperator("dataClassArrayMemberHashCode", intType, listOf(anyType))
 
-    val dataClassArrayMemberToStringSymbol = defineOperator("dataClassArrayMemberToString", stringType, listOf(anyNType))
+    override val dataClassArrayMemberToStringSymbol = defineOperator("dataClassArrayMemberToString", stringType, listOf(anyNType))
 
-    fun function(n: Int): IrClassSymbol = functionFactory.functionN(n).symbol
-    fun suspendFunction(n: Int): IrClassSymbol = functionFactory.suspendFunctionN(n).symbol
+    override val intTimesSymbol: IrSimpleFunctionSymbol =
+        builtIns.int.unsubstitutedMemberScope.findFirstFunction("times") {
+            KotlinTypeChecker.DEFAULT.equalTypes(it.valueParameters[0].type, int)
+        }.let { symbolTable.referenceSimpleFunction(it) }
 
-    companion object {
-        val KOTLIN_INTERNAL_IR_FQN = FqName("kotlin.internal.ir")
-        val BUILTIN_OPERATOR = object : IrDeclarationOriginImpl("OPERATOR") {}
+    override val intPlusSymbol: IrSimpleFunctionSymbol =
+        builtIns.int.unsubstitutedMemberScope.findFirstFunction("plus") {
+            KotlinTypeChecker.DEFAULT.equalTypes(it.valueParameters[0].type, int)
+        }.let { symbolTable.referenceSimpleFunction(it) }
+
+    override fun getHashCodeFunction(type: KotlinType): IrSimpleFunctionSymbol {
+        TODO("Not yet implemented")
     }
 
-    object OperatorNames {
-        const val LESS = "less"
-        const val LESS_OR_EQUAL = "lessOrEqual"
-        const val GREATER = "greater"
-        const val GREATER_OR_EQUAL = "greaterOrEqual"
-        const val EQEQ = "EQEQ"
-        const val EQEQEQ = "EQEQEQ"
-        const val IEEE754_EQUALS = "ieee754equals"
-        const val THROW_CCE = "THROW_CCE"
-        const val THROW_ISE = "THROW_ISE"
-        const val NO_WHEN_BRANCH_MATCHED_EXCEPTION = "noWhenBranchMatchedException"
-        const val ILLEGAL_ARGUMENT_EXCEPTION = "illegalArgumentException"
-        const val ANDAND = "ANDAND"
-        const val OROR = "OROR"
-    }
+    override val enumClass = builtIns.enum.toIrSymbol()
+
+    override fun functionN(arity: Int, declarator: SymbolTable.((IrClassSymbol) -> IrClass) -> IrClass): IrClass =
+        functionFactory.functionN(arity, declarator)
+
+    override fun kFunctionN(arity: Int, declarator: SymbolTable.((IrClassSymbol) -> IrClass) -> IrClass): IrClass =
+        functionFactory.kFunctionN(arity, declarator)
+
+    override fun suspendFunctionN(arity: Int, declarator: SymbolTable.((IrClassSymbol) -> IrClass) -> IrClass): IrClass =
+        functionFactory.suspendFunctionN(arity, declarator)
+
+    override fun kSuspendFunctionN(arity: Int, declarator: SymbolTable.((IrClassSymbol) -> IrClass) -> IrClass): IrClass =
+        functionFactory.kSuspendFunctionN(arity, declarator)
+
+    override fun functionN(arity: Int): IrClass = functionFactory.functionN(arity)
+    override fun kFunctionN(arity: Int): IrClass = functionFactory.kFunctionN(arity)
+    override fun suspendFunctionN(arity: Int): IrClass = functionFactory.suspendFunctionN(arity)
+    override fun kSuspendFunctionN(arity: Int): IrClass = functionFactory.kSuspendFunctionN(arity)
+
 }
+
+private inline fun MemberScope.findFirstFunction(name: String, predicate: (CallableMemberDescriptor) -> Boolean) =
+    getContributedFunctions(Name.identifier(name), NoLookupLocation.FROM_BACKEND).first(predicate)

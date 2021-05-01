@@ -6,10 +6,14 @@
 package org.jetbrains.kotlin.backend.common.serialization
 
 import org.jetbrains.kotlin.backend.common.serialization.encodings.BinarySymbolData
-import org.jetbrains.kotlin.descriptors.*
+import org.jetbrains.kotlin.descriptors.CallableMemberDescriptor
+import org.jetbrains.kotlin.descriptors.DeclarationDescriptor
+import org.jetbrains.kotlin.descriptors.DeserializedDescriptor
+import org.jetbrains.kotlin.descriptors.PropertyAccessorDescriptor
 import org.jetbrains.kotlin.ir.declarations.IrModuleFragment
 import org.jetbrains.kotlin.ir.declarations.IrSymbolOwner
-import org.jetbrains.kotlin.ir.descriptors.IrBuiltIns
+import org.jetbrains.kotlin.ir.IrBuiltIns
+import org.jetbrains.kotlin.ir.descriptors.IrBuiltInsOverDescriptors
 import org.jetbrains.kotlin.ir.symbols.IrSymbol
 import org.jetbrains.kotlin.ir.util.IdSignature
 import org.jetbrains.kotlin.ir.util.SymbolTable
@@ -111,7 +115,7 @@ class CurrentModuleWithICDeserializer(
     }
 
     override fun init(delegate: IrModuleDeserializer) {
-        val knownBuiltIns = irBuiltIns.knownBuiltins.map { (it as IrSymbolOwner).symbol }.toSet()
+        val knownBuiltIns = (irBuiltIns as IrBuiltInsOverDescriptors).knownBuiltins.map { (it as IrSymbolOwner).symbol }.toSet()
         symbolTable.forEachPublicSymbol {
             if (it.descriptor.isDirtyDescriptor()) { // public && non-deserialized should be dirty symbol
                 if (it !in knownBuiltIns) {

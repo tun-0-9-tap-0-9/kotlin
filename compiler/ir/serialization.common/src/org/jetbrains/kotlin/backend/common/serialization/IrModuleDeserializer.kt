@@ -9,9 +9,9 @@ import org.jetbrains.kotlin.backend.common.serialization.encodings.BinarySymbolD
 import org.jetbrains.kotlin.builtins.functions.FunctionClassDescriptor
 import org.jetbrains.kotlin.builtins.functions.FunctionClassKind
 import org.jetbrains.kotlin.descriptors.ModuleDescriptor
+import org.jetbrains.kotlin.ir.ObsoleteDescriptorBasedAPI
 import org.jetbrains.kotlin.ir.declarations.*
-import org.jetbrains.kotlin.ir.descriptors.IrAbstractFunctionFactory
-import org.jetbrains.kotlin.ir.descriptors.IrBuiltIns
+import org.jetbrains.kotlin.ir.descriptors.*
 import org.jetbrains.kotlin.ir.symbols.*
 import org.jetbrains.kotlin.ir.util.IdSignature
 import org.jetbrains.kotlin.library.IrLibrary
@@ -65,9 +65,9 @@ abstract class IrModuleDeserializer(val moduleDescriptor: ModuleDescriptor) {
 }
 
 // Used to resolve built in symbols like `kotlin.ir.internal.*` or `kotlin.FunctionN`
+@OptIn(ObsoleteDescriptorBasedAPI::class)
 class IrModuleDeserializerWithBuiltIns(
-    builtIns: IrBuiltIns,
-    private val functionFactory: IrAbstractFunctionFactory,
+    private val builtIns: IrBuiltInsOverDescriptors,
     private val delegate: IrModuleDeserializer
 ) : IrModuleDeserializer(delegate.moduleDescriptor) {
 
@@ -105,7 +105,7 @@ class IrModuleDeserializerWithBuiltIns(
         val isK = className[0] == 'K'
         val isSuspend = (if (isK) className[1] else className[0]) == 'S'
         val arity = className.run { substring(indexOfFirst { it.isDigit() }).toInt(10) }
-        return functionFactory.run {
+        return builtIns.builtIns.run {
             when {
                 isK && isSuspend -> kSuspendFunctionClassDescriptor(arity)
                 isK -> kFunctionClassDescriptor(arity)
@@ -125,16 +125,16 @@ class IrModuleDeserializerWithBuiltIns(
         val topLevelSignature = IdSignature.PublicSignature(publicSig.packageFqName, className, null, publicSig.mask)
 
         val functionClass = when (functionDescriptor.functionKind) {
-            FunctionClassKind.KSuspendFunction -> functionFactory.kSuspendFunctionN(functionDescriptor.arity) { callback ->
+            FunctionClassKind.KSuspendFunction -> builtIns.kSuspendFunctionN(functionDescriptor.arity) { callback ->
                 declareClassFromLinker(functionDescriptor, topLevelSignature) { callback(it) }
             }
-            FunctionClassKind.KFunction -> functionFactory.kFunctionN(functionDescriptor.arity) { callback ->
+            FunctionClassKind.KFunction -> builtIns.kFunctionN(functionDescriptor.arity) { callback ->
                 declareClassFromLinker(functionDescriptor, topLevelSignature) { callback(it) }
             }
-            FunctionClassKind.SuspendFunction -> functionFactory.suspendFunctionN(functionDescriptor.arity) { callback ->
+            FunctionClassKind.SuspendFunction -> builtIns.suspendFunctionN(functionDescriptor.arity) { callback ->
                 declareClassFromLinker(functionDescriptor, topLevelSignature) { callback(it) }
             }
-            FunctionClassKind.Function -> functionFactory.functionN(functionDescriptor.arity) { callback ->
+            FunctionClassKind.Function -> builtIns.functionN(functionDescriptor.arity) { callback ->
                 declareClassFromLinker(functionDescriptor, topLevelSignature) { callback(it) }
             }
         }

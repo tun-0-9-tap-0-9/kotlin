@@ -38,8 +38,8 @@ import org.jetbrains.kotlin.ir.backend.js.lower.serialization.ir.JsManglerDesc
 import org.jetbrains.kotlin.ir.backend.js.transformers.irToJs.IrModuleToJsTransformer
 import org.jetbrains.kotlin.ir.declarations.IrModuleFragment
 import org.jetbrains.kotlin.ir.declarations.persistent.PersistentIrFactory
-import org.jetbrains.kotlin.ir.descriptors.IrBuiltIns
-import org.jetbrains.kotlin.ir.descriptors.IrFunctionFactory
+import org.jetbrains.kotlin.ir.IrBuiltIns
+import org.jetbrains.kotlin.ir.descriptors.IrDescriptorBasedFunctionFactory
 import org.jetbrains.kotlin.ir.util.ExternalDependenciesGenerator
 import org.jetbrains.kotlin.ir.util.IrMessageLogger
 import org.jetbrains.kotlin.ir.util.SymbolTable
@@ -457,7 +457,7 @@ class GenerateIrRuntime {
         val psi2IrContext = psi2Ir.createGeneratorContext(analysisResult.moduleDescriptor, analysisResult.bindingContext, symbolTable)
 
         val irBuiltIns = psi2IrContext.irBuiltIns
-        val functionFactory = IrFunctionFactory(irBuiltIns, psi2IrContext.symbolTable)
+        val functionFactory = IrDescriptorBasedFunctionFactory(irBuiltIns, psi2IrContext.symbolTable)
         irBuiltIns.functionFactory = functionFactory
 
         val irLinker = JsIrLinker(
@@ -521,7 +521,7 @@ class GenerateIrRuntime {
         val typeTranslator = TypeTranslatorImpl(symbolTable, languageVersionSettings, moduleDescriptor)
 
         val irBuiltIns = IrBuiltIns(moduleDescriptor.builtIns, typeTranslator, symbolTable)
-        val functionFactory = IrFunctionFactory(irBuiltIns, symbolTable)
+        val functionFactory = IrDescriptorBasedFunctionFactory(irBuiltIns, symbolTable)
         irBuiltIns.functionFactory = functionFactory
 
         val jsLinker = JsIrLinker(moduleDescriptor, IrMessageLogger.None, irBuiltIns, symbolTable, functionFactory, null)
@@ -548,7 +548,7 @@ class GenerateIrRuntime {
         val typeTranslator = TypeTranslatorImpl(symbolTable, languageVersionSettings, moduleDescriptor)
         val irBuiltIns = IrBuiltIns(moduleDescriptor.builtIns, typeTranslator, symbolTable)
 
-        val functionFactory = IrFunctionFactory(irBuiltIns, symbolTable)
+        val functionFactory = IrDescriptorBasedFunctionFactory(irBuiltIns, symbolTable)
         irBuiltIns.functionFactory = functionFactory
 
         val jsLinker = JsIrLinker(moduleDescriptor, IrMessageLogger.None, irBuiltIns, symbolTable, functionFactory, null)

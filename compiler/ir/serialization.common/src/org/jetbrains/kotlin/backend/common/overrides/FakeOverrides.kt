@@ -20,7 +20,7 @@ import org.jetbrains.kotlin.backend.common.serialization.DeclarationTable
 import org.jetbrains.kotlin.backend.common.serialization.GlobalDeclarationTable
 import org.jetbrains.kotlin.backend.common.serialization.signature.IdSignatureSerializer
 import org.jetbrains.kotlin.ir.declarations.*
-import org.jetbrains.kotlin.ir.descriptors.IrBuiltIns
+import org.jetbrains.kotlin.ir.IrBuiltIns
 import org.jetbrains.kotlin.ir.overrides.FakeOverrideBuilderStrategy
 import org.jetbrains.kotlin.ir.overrides.IrOverridingUtil
 import org.jetbrains.kotlin.ir.symbols.IrPropertySymbol

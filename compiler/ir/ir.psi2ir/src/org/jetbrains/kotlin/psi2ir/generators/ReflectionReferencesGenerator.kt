@@ -21,6 +21,7 @@ import org.jetbrains.kotlin.descriptors.*
 import org.jetbrains.kotlin.ir.ObsoleteDescriptorBasedAPI
 import org.jetbrains.kotlin.ir.UNDEFINED_OFFSET
 import org.jetbrains.kotlin.ir.declarations.*
+import org.jetbrains.kotlin.ir.descriptors.IrBuiltInsOverDescriptors
 import org.jetbrains.kotlin.ir.expressions.*
 import org.jetbrains.kotlin.ir.expressions.impl.*
 import org.jetbrains.kotlin.ir.symbols.*
@@ -585,7 +586,7 @@ class ReflectionReferencesGenerator(statementGenerator: StatementGenerator) : St
     }
 
     private fun KotlinType.kFunctionTypeToFunctionType(suspendFunction: Boolean) = createFunctionType(
-        statementGenerator.context.irBuiltIns.builtIns,
+        (statementGenerator.context.irBuiltIns as IrBuiltInsOverDescriptors).builtIns,
         annotations,
         null,
         arguments.dropLast(1).map { it.type },

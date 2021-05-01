@@ -20,14 +20,13 @@ import org.jetbrains.kotlin.descriptors.ModuleDescriptor
 import org.jetbrains.kotlin.descriptors.konan.DeserializedKlibModuleOrigin
 import org.jetbrains.kotlin.descriptors.konan.KlibModuleOrigin
 import org.jetbrains.kotlin.idea.MainFunctionDetector
+import org.jetbrains.kotlin.ir.IrBuiltIns
 import org.jetbrains.kotlin.ir.backend.jvm.serialization.JvmIrLinker
 import org.jetbrains.kotlin.ir.backend.jvm.serialization.JvmManglerDesc
 import org.jetbrains.kotlin.ir.builders.TranslationPluginContext
 import org.jetbrains.kotlin.ir.declarations.IrFile
 import org.jetbrains.kotlin.ir.declarations.IrModuleFragment
 import org.jetbrains.kotlin.ir.declarations.impl.IrFactoryImpl
-import org.jetbrains.kotlin.ir.descriptors.IrBuiltIns
-import org.jetbrains.kotlin.ir.descriptors.IrFunctionFactory
 import org.jetbrains.kotlin.ir.linkage.IrProvider
 import org.jetbrains.kotlin.ir.util.*
 import org.jetbrains.kotlin.psi.KtFile
@@ -73,8 +72,6 @@ open class JvmIrCodegenFactory(
         val messageLogger = state.configuration[IrMessageLogger.IR_MESSAGE_LOGGER] ?: IrMessageLogger.None
         val psi2irContext = psi2ir.createGeneratorContext(state.module, state.bindingContext, symbolTable, jvmGeneratorExtensions)
         val pluginExtensions = IrGenerationExtension.getInstances(state.project)
-        val functionFactory = IrFunctionFactory(psi2irContext.irBuiltIns, symbolTable)
-        psi2irContext.irBuiltIns.functionFactory = functionFactory
 
         val stubGenerator =
             DeclarationStubGeneratorImpl(psi2irContext.moduleDescriptor, symbolTable, state.languageVersionSettings, jvmGeneratorExtensions)
@@ -93,7 +90,6 @@ open class JvmIrCodegenFactory(
             messageLogger,
             psi2irContext.irBuiltIns,
             symbolTable,
-            functionFactory,
             frontEndContext,
             stubGenerator,
             mangler
@@ -101,7 +97,7 @@ open class JvmIrCodegenFactory(
 
         val pluginContext by lazy {
             psi2irContext.run {
-                val symbols = BuiltinSymbolsBase(irBuiltIns, moduleDescriptor.builtIns, symbolTable.lazyWrapper)
+                val symbols = BuiltinSymbolsBase(irBuiltIns, symbolTable.lazyWrapper)
                 IrPluginContextImpl(
                     moduleDescriptor,
                     bindingContext,
@@ -216,7 +212,6 @@ open class JvmIrCodegenFactory(
         symbolTable: SymbolTable,
         extensions: JvmGeneratorExtensionsImpl,
     ): List<IrProvider> {
-        irModuleFragment.irBuiltins.functionFactory = IrFunctionFactory(irModuleFragment.irBuiltins, symbolTable)
         return generateTypicalIrProviderList(
             irModuleFragment.descriptor, irModuleFragment.irBuiltins, symbolTable, extensions = extensions
         )

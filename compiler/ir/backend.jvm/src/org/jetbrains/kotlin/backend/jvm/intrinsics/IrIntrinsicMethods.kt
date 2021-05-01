@@ -125,7 +125,7 @@ class IrIntrinsicMethods(val irBuiltIns: IrBuiltIns, val symbols: JvmSymbols) {
             ).toMap()
 
     private fun intrinsicsThatShouldHaveBeenLowered() =
-        (symbols.primitiveArrays.values.map { primitiveClassSymbol ->
+        (symbols.primitiveArrays.map { primitiveClassSymbol ->
             val name = primitiveClassSymbol.owner.name.asString()
             // IntArray -> intArrayOf
             val arrayOfFunName = name.decapitalizeAsciiOnly() + "Of"
@@ -168,7 +168,7 @@ class IrIntrinsicMethods(val irBuiltIns: IrBuiltIns, val symbols: JvmSymbols) {
                 numberConversionMethods(irBuiltIns.numberClass)
 
     private fun arrayMethods(): List<Pair<Key, IntrinsicMethod>> =
-        symbols.primitiveArrays.flatMap { (key, value) -> arrayMethods(key.symbol, value) } +
+        symbols.primitiveArraysToPrimitiveTypes.flatMap { (array, primitiveType) -> arrayMethods(primitiveType.symbol, array) } +
                 arrayMethods(symbols.array.owner.typeParameters.single().symbol, symbols.array)
 
     private fun arrayMethods(elementClass: IrClassifierSymbol, arrayClass: IrClassSymbol) =

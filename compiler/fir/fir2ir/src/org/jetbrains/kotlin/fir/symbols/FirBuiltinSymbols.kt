@@ -6,18 +6,16 @@
 package org.jetbrains.kotlin.fir.symbols
 
 import org.jetbrains.kotlin.backend.common.ir.BuiltinSymbolsBase
-import org.jetbrains.kotlin.builtins.KotlinBuiltIns
 import org.jetbrains.kotlin.descriptors.ClassDescriptor
 import org.jetbrains.kotlin.incremental.components.NoLookupLocation
-import org.jetbrains.kotlin.ir.descriptors.IrBuiltIns
+import org.jetbrains.kotlin.ir.IrBuiltIns
 import org.jetbrains.kotlin.ir.util.ReferenceSymbolTable
 import org.jetbrains.kotlin.name.Name
 
 class FirBuiltinSymbols(
     irBuiltIns: IrBuiltIns,
-    builtIns: KotlinBuiltIns,
     symbolTable: ReferenceSymbolTable
-) : BuiltinSymbolsBase(irBuiltIns, builtIns, symbolTable) {
+) : BuiltinSymbolsBase(irBuiltIns, symbolTable) {
 
     init {
         val builtInsPackage = builtInsPackage("kotlin")

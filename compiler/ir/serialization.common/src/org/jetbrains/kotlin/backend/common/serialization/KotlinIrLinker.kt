@@ -11,6 +11,7 @@ import org.jetbrains.kotlin.backend.common.serialization.encodings.BinarySymbolD
 import org.jetbrains.kotlin.descriptors.CallableMemberDescriptor
 import org.jetbrains.kotlin.descriptors.DeclarationDescriptor
 import org.jetbrains.kotlin.descriptors.ModuleDescriptor
+import org.jetbrains.kotlin.ir.IrBuiltIns
 import org.jetbrains.kotlin.ir.builders.TranslationPluginContext
 import org.jetbrains.kotlin.ir.declarations.IrDeclaration
 import org.jetbrains.kotlin.ir.declarations.IrModuleFragment
@@ -90,8 +91,6 @@ abstract class KotlinIrLinker(
         klib: IrLibrary?,
         strategy: DeserializationStrategy,
     ): IrModuleDeserializer
-
-    protected abstract val functionalInterfaceFactory: IrAbstractFunctionFactory
 
     protected abstract fun isBuiltInModule(moduleDescriptor: ModuleDescriptor): Boolean
 
@@ -304,7 +303,7 @@ abstract class KotlinIrLinker(
         moduleDescriptor: ModuleDescriptor,
         moduleDeserializer: IrModuleDeserializer
     ): IrModuleDeserializer =
-        if (isBuiltInModule(moduleDescriptor)) IrModuleDeserializerWithBuiltIns(builtIns, functionalInterfaceFactory, moduleDeserializer)
+        if (isBuiltInModule(moduleDescriptor)) IrModuleDeserializerWithBuiltIns(builtIns as IrBuiltInsOverDescriptors, moduleDeserializer)
         else moduleDeserializer
 
     fun deserializeIrModuleHeader(moduleDescriptor: ModuleDescriptor, kotlinLibrary: KotlinLibrary?): IrModuleFragment {
