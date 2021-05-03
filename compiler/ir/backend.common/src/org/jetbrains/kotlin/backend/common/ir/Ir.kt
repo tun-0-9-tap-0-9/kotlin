@@ -60,24 +60,16 @@ open class BuiltinSymbolsBase(protected val irBuiltIns: IrBuiltIns, private val 
         builtIns.builtInsModule.getPackage(FqName.fromSegments(listOf(*packageNameSegments))).memberScope
 
     // consider making this public so it can be used to easily locate stdlib functions from any place (in particular, plugins and lowerings)
+    @OptIn(ObsoleteDescriptorBasedAPI::class)
     private fun getSimpleFunction(
         name: Name,
         vararg packageNameSegments: String = arrayOf("kotlin"),
         condition: (SimpleFunctionDescriptor) -> Boolean
     ): IrSimpleFunctionSymbol =
-        symbolTable.referenceSimpleFunction(
-            builtInsPackage(*packageNameSegments).getContributedFunctions(name, NoLookupLocation.FROM_BACKEND)
-                .first(condition)
-        )
+        irBuiltIns.findFunctions(name, *packageNameSegments).first { condition(it.descriptor as SimpleFunctionDescriptor) }
 
     private fun getClass(name: Name, vararg packageNameSegments: String = arrayOf("kotlin")): IrClassSymbol =
-        getClassOrNull(name, *packageNameSegments) ?: error("Class '$name' not found in package '${packageNameSegments.joinToString(".")}'")
-
-    private fun getClassOrNull(name: Name, vararg packageNameSegments: String = arrayOf("kotlin")): IrClassSymbol? =
-        (builtInsPackage(*packageNameSegments).getContributedClassifier(
-            name,
-            NoLookupLocation.FROM_BACKEND
-        ) as? ClassDescriptor)?.let { symbolTable.referenceClass(it) }
+        irBuiltIns.findClass(name, *packageNameSegments) ?: error("Class '$name' not found in package '${packageNameSegments.joinToString(".")}'")
 
     /**
      * Use this table to reference external dependencies.
@@ -100,20 +92,20 @@ open class BuiltinSymbolsBase(protected val irBuiltIns: IrBuiltIns, private val 
         .map { symbolTable.referenceFunction(it) }
 
     private fun progression(name: String) = getClass(Name.identifier(name), "kotlin", "ranges")
-    private fun progressionOrNull(name: String) = getClassOrNull(Name.identifier(name), "kotlin", "ranges")
+    private fun progressionOrNull(name: String) = irBuiltIns.findClass(Name.identifier(name), "kotlin", "ranges")
 
     // The "...OrNull" variants are used for the classes below because the minimal stdlib used in tests do not include those classes.
     // It was not feasible to add them to the JS reduced runtime because all its transitive dependencies also need to be
     // added, which would include a lot of the full stdlib.
-    open val uByte = getClassOrNull(Name.identifier("UByte"), "kotlin")
-    open val uShort = getClassOrNull(Name.identifier("UShort"), "kotlin")
-    open val uInt = getClassOrNull(Name.identifier("UInt"), "kotlin")
-    open val uLong = getClassOrNull(Name.identifier("ULong"), "kotlin")
+    open val uByte = irBuiltIns.findClass(Name.identifier("UByte"), "kotlin")
+    open val uShort = irBuiltIns.findClass(Name.identifier("UShort"), "kotlin")
+    open val uInt = irBuiltIns.findClass(Name.identifier("UInt"), "kotlin")
+    open val uLong = irBuiltIns.findClass(Name.identifier("ULong"), "kotlin")
     val uIntProgression = progressionOrNull("UIntProgression")
     val uLongProgression = progressionOrNull("ULongProgression")
     val uIntRange = progressionOrNull("UIntRange")
     val uLongRange = progressionOrNull("ULongRange")
-    val sequence = getClassOrNull(Name.identifier("Sequence"), "kotlin", "sequences")
+    val sequence = irBuiltIns.findClass(Name.identifier("Sequence"), "kotlin", "sequences")
 
     val charProgression = progression("CharProgression")
     val intProgression = progression("IntProgression")

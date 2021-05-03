@@ -338,6 +338,21 @@ class IrBuiltInsOverDescriptors(
 
     override val enumClass = builtIns.enum.toIrSymbol()
 
+    private fun builtInsPackage(vararg packageNameSegments: String) =
+        builtIns.builtInsModule.getPackage(FqName.fromSegments(listOf(*packageNameSegments))).memberScope
+
+    override fun findFunctions(name: Name, vararg packageNameSegments: String): Iterable<IrSimpleFunctionSymbol> =
+        builtInsPackage(*packageNameSegments).getContributedFunctions(name, NoLookupLocation.FROM_BACKEND).map {
+            symbolTable.referenceSimpleFunction(it)
+        }
+
+    override fun findClass(name: Name, vararg packageNameSegments: String): IrClassSymbol? =
+        (builtInsPackage(*packageNameSegments).getContributedClassifier(
+            name,
+            NoLookupLocation.FROM_BACKEND
+        ) as? ClassDescriptor)?.let { symbolTable.referenceClass(it) }
+
+
     override fun functionN(arity: Int, declarator: SymbolTable.((IrClassSymbol) -> IrClass) -> IrClass): IrClass =
         functionFactory.functionN(arity, declarator)
 
