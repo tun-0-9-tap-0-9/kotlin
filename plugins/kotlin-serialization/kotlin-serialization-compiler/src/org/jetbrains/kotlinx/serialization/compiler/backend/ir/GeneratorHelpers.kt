@@ -14,6 +14,7 @@ import org.jetbrains.kotlin.descriptors.annotations.Annotations
 import org.jetbrains.kotlin.ir.builders.*
 import org.jetbrains.kotlin.ir.builders.declarations.buildFun
 import org.jetbrains.kotlin.ir.declarations.*
+import org.jetbrains.kotlin.ir.descriptors.IrBuiltInsOverDescriptors
 import org.jetbrains.kotlin.ir.descriptors.IrPropertyDelegateDescriptorImpl
 import org.jetbrains.kotlin.ir.expressions.*
 import org.jetbrains.kotlin.ir.expressions.impl.*
@@ -701,7 +702,7 @@ interface IrBuilderExtension {
     }
 
     fun kClassTypeFor(projection: TypeProjection): SimpleType {
-        val kClass = compilerContext.irBuiltIns.builtIns.kClass
+        val kClass = (compilerContext.irBuiltIns as IrBuiltInsOverDescriptors).builtIns.kClass
         return KotlinTypeFactory.simpleNotNullType(Annotations.EMPTY, kClass, listOf(projection))
     }
 
