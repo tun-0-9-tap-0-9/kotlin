@@ -22,6 +22,10 @@ import org.jetbrains.kotlin.name.Name
 import org.jetbrains.kotlin.types.KotlinType
 import org.jetbrains.kotlin.types.SimpleType
 
+/**
+ * Symbols for builtins that are available without any context and are not specific to any backend
+ * (but specific to the frontend)
+ */
 abstract class IrBuiltIns {
     abstract val languageVersionSettings: LanguageVersionSettings
 
@@ -68,8 +72,26 @@ abstract class IrBuiltIns {
     abstract val string: SimpleType
     abstract val stringType: IrType
     abstract val stringClass: IrClassSymbol
+    abstract val charSequenceClass: IrClassSymbol
+
     abstract val collectionClass: IrClassSymbol
     abstract val arrayClass: IrClassSymbol
+    abstract val setClass: IrClassSymbol
+    abstract val listClass: IrClassSymbol
+    abstract val mapClass: IrClassSymbol
+    abstract val mapEntryClass: IrClassSymbol
+    abstract val iterableClass: IrClassSymbol
+    abstract val listIteratorClass: IrClassSymbol
+    abstract val mutableCollectionClass: IrClassSymbol
+    abstract val mutableSetClass: IrClassSymbol
+    abstract val mutableListClass: IrClassSymbol
+    abstract val mutableMapClass: IrClassSymbol
+    abstract val mutableMapEntryClass: IrClassSymbol
+    abstract val mutableIterableClass: IrClassSymbol
+    abstract val mutableIteratorClass: IrClassSymbol
+    abstract val mutableListIteratorClass: IrClassSymbol
+
+    abstract val comparableClass: IrClassSymbol
     abstract val throwableType: IrType
     abstract val throwableClass: IrClassSymbol
     abstract val kCallableClass: IrClassSymbol
@@ -90,10 +112,23 @@ abstract class IrBuiltIns {
     abstract val primitiveIrTypes: List<IrType>
     abstract val primitiveIrTypesWithComparisons: List<IrType>
     abstract val primitiveFloatingPointIrTypes: List<IrType>
+
+    abstract val byteArray: IrClassSymbol
+    abstract val charArray: IrClassSymbol
+    abstract val shortArray: IrClassSymbol
+    abstract val intArray: IrClassSymbol
+    abstract val longArray: IrClassSymbol
+    abstract val floatArray: IrClassSymbol
+    abstract val doubleArray: IrClassSymbol
+    abstract val booleanArray: IrClassSymbol
+
     abstract val primitiveArraysToPrimitiveTypes: Map<IrClassSymbol, PrimitiveType>
     abstract val primitiveArrays: Set<IrClassSymbol>
     abstract val primitiveArrayElementTypes: Map<IrClassSymbol, IrType?>
     abstract val primitiveArrayForType: Map<IrType?, IrClassSymbol>
+
+    abstract val unsignedArrays: Set<IrClassSymbol>
+
     abstract val lessFunByOperandType: Map<IrClassifierSymbol, IrSimpleFunctionSymbol>
     abstract val lessOrEqualFunByOperandType: Map<IrClassifierSymbol, IrSimpleFunctionSymbol>
     abstract val greaterOrEqualFunByOperandType: Map<IrClassifierSymbol, IrSimpleFunctionSymbol>
@@ -118,6 +153,9 @@ abstract class IrBuiltIns {
     abstract val intPlusSymbol: IrSimpleFunctionSymbol
     abstract val intTimesSymbol: IrSimpleFunctionSymbol
 
+    abstract val arrayOf: IrSimpleFunctionSymbol
+    abstract val arrayOfNulls: IrSimpleFunctionSymbol
+
     abstract fun getHashCodeFunction(type: KotlinType): IrSimpleFunctionSymbol
 
     abstract fun functionN(arity: Int, declarator: SymbolTable.((IrClassSymbol) -> IrClass) -> IrClass): IrClass
@@ -132,6 +170,9 @@ abstract class IrBuiltIns {
 
     abstract fun findFunctions(name: Name, vararg packageNameSegments: String = arrayOf("kotlin")): Iterable<IrSimpleFunctionSymbol>
     abstract fun findClass(name: Name, vararg packageNameSegments: String = arrayOf("kotlin")): IrClassSymbol?
+
+    abstract fun getBinaryOperator(name: Name, lhsType: IrType, rhsType: IrType): IrSimpleFunctionSymbol
+    abstract fun getUnaryOperator(name: Name, receiverType: IrType): IrSimpleFunctionSymbol
 
     companion object {
         val KOTLIN_INTERNAL_IR_FQN = FqName("kotlin.internal.ir")

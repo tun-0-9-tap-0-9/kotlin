@@ -8,7 +8,6 @@ package org.jetbrains.kotlin.backend.jvm
 import org.jetbrains.kotlin.analyzer.hasJdkCapability
 import org.jetbrains.kotlin.backend.common.extensions.IrGenerationExtension
 import org.jetbrains.kotlin.backend.common.extensions.IrPluginContextImpl
-import org.jetbrains.kotlin.backend.common.ir.BuiltinSymbolsBase
 import org.jetbrains.kotlin.backend.common.phaser.PhaseConfig
 import org.jetbrains.kotlin.backend.common.phaser.invokeToplevel
 import org.jetbrains.kotlin.backend.jvm.ir.getKtFile
@@ -97,7 +96,6 @@ open class JvmIrCodegenFactory(
 
         val pluginContext by lazy {
             psi2irContext.run {
-                val symbols = BuiltinSymbolsBase(irBuiltIns, symbolTable.lazyWrapper)
                 IrPluginContextImpl(
                     moduleDescriptor,
                     bindingContext,
@@ -106,8 +104,7 @@ open class JvmIrCodegenFactory(
                     typeTranslator,
                     irBuiltIns,
                     irLinker,
-                    messageLogger,
-                    symbols
+                    messageLogger
                 )
             }
         }

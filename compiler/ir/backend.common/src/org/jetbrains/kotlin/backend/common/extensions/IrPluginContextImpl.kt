@@ -5,7 +5,6 @@
 
 package org.jetbrains.kotlin.backend.common.extensions
 
-import org.jetbrains.kotlin.backend.common.ir.BuiltinSymbolsBase
 import org.jetbrains.kotlin.config.LanguageVersionSettings
 import org.jetbrains.kotlin.descriptors.ClassDescriptor
 import org.jetbrains.kotlin.descriptors.ModuleDescriptor
@@ -35,8 +34,7 @@ open class IrPluginContextImpl constructor(
     override val typeTranslator: TypeTranslator,
     override val irBuiltIns: IrBuiltIns,
     val linker: IrDeserializer,
-    private val diagnosticReporter: IrMessageLogger,
-    override val symbols: BuiltinSymbolsBase = BuiltinSymbolsBase(irBuiltIns, st)
+    private val diagnosticReporter: IrMessageLogger
 ) : IrPluginContext {
 
     override val platform: TargetPlatform? = module.platform

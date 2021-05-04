@@ -5,29 +5,28 @@
 
 package org.jetbrains.kotlin.fir.symbols
 
-import org.jetbrains.kotlin.backend.common.ir.BuiltinSymbolsBase
-import org.jetbrains.kotlin.descriptors.ClassDescriptor
-import org.jetbrains.kotlin.incremental.components.NoLookupLocation
-import org.jetbrains.kotlin.ir.IrBuiltIns
-import org.jetbrains.kotlin.ir.util.ReferenceSymbolTable
-import org.jetbrains.kotlin.name.Name
-
-class FirBuiltinSymbols(
-    irBuiltIns: IrBuiltIns,
-    symbolTable: ReferenceSymbolTable
-) : BuiltinSymbolsBase(irBuiltIns, symbolTable) {
-
-    init {
-        val builtInsPackage = builtInsPackage("kotlin")
-        // Comparable is a base interface for many pre-generated built-in classes,
-        // like String, so it's easier if it's generated together with them
-        // Otherwise we have problems like "IrLazyClass inherits Fir2IrLazyClass",
-        // which does not work properly yet
-        for (name in listOf("Comparable")) {
-            (builtInsPackage.getContributedClassifier(
-                Name.identifier(name),
-                NoLookupLocation.FROM_BACKEND
-            ) as? ClassDescriptor)?.let { symbolTable.referenceClass(it) }
-        }
-    }
-}
+//import org.jetbrains.kotlin.descriptors.ClassDescriptor
+//import org.jetbrains.kotlin.incremental.components.NoLookupLocation
+//import org.jetbrains.kotlin.ir.IrBuiltIns
+//import org.jetbrains.kotlin.ir.util.ReferenceSymbolTable
+//import org.jetbrains.kotlin.name.Name
+//
+//class FirBuiltinSymbols(
+//    irBuiltIns: IrBuiltIns,
+//    symbolTable: ReferenceSymbolTable
+//) : BuiltinSymbolsBase(irBuiltIns, symbolTable) {
+//
+//    init {
+//        val builtInsPackage = builtInsPackage("kotlin")
+//        // Comparable is a base interface for many pre-generated built-in classes,
+//        // like String, so it's easier if it's generated together with them
+//        // Otherwise we have problems like "IrLazyClass inherits Fir2IrLazyClass",
+//        // which does not work properly yet
+//        for (name in listOf("Comparable")) {
+//            (builtInsPackage.getContributedClassifier(
+//                Name.identifier(name),
+//                NoLookupLocation.FROM_BACKEND
+//            ) as? ClassDescriptor)?.let { symbolTable.referenceClass(it) }
+//        }
+//    }
+//}

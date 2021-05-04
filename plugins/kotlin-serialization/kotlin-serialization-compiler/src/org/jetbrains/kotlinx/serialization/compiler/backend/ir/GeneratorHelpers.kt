@@ -243,7 +243,7 @@ interface IrBuilderExtension {
         val arg0 = IrVarargImpl(startOffset, endOffset, arrayType, arrayElementType, arrayElements)
         val typeArguments = listOf(arrayElementType)
 
-        return irCall(compilerContext.symbols.arrayOf, arrayType, typeArguments = typeArguments).apply {
+        return irCall(compilerContext.irBuiltIns.arrayOf, arrayType, typeArguments = typeArguments).apply {
             putValueArgument(0, arg0)
         }
     }
@@ -266,7 +266,7 @@ interface IrBuilderExtension {
         val arg0 = IrVarargImpl(startOffset, endOffset, arrayType, elementPrimitiveType, arrayElements)
         val typeArguments = listOf(elementPrimitiveType)
 
-        return irCall(compilerContext.symbols.arrayOf, arrayType, typeArguments = typeArguments).apply {
+        return irCall(compilerContext.irBuiltIns.arrayOf, arrayType, typeArguments = typeArguments).apply {
             putValueArgument(0, arg0)
         }
     }

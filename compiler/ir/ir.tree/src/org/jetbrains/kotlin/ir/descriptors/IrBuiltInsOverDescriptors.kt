@@ -7,30 +7,31 @@ package org.jetbrains.kotlin.ir.descriptors
 
 import org.jetbrains.kotlin.builtins.KotlinBuiltIns
 import org.jetbrains.kotlin.builtins.PrimitiveType
+import org.jetbrains.kotlin.builtins.UnsignedType
 import org.jetbrains.kotlin.descriptors.*
 import org.jetbrains.kotlin.descriptors.annotations.Annotations
 import org.jetbrains.kotlin.descriptors.impl.SimpleFunctionDescriptorImpl
 import org.jetbrains.kotlin.descriptors.impl.TypeParameterDescriptorImpl
 import org.jetbrains.kotlin.descriptors.impl.ValueParameterDescriptorImpl
 import org.jetbrains.kotlin.incremental.components.NoLookupLocation
-import org.jetbrains.kotlin.ir.*
+import org.jetbrains.kotlin.ir.BuiltInOperatorNames
+import org.jetbrains.kotlin.ir.IrBuiltIns
+import org.jetbrains.kotlin.ir.ObsoleteDescriptorBasedAPI
+import org.jetbrains.kotlin.ir.UNDEFINED_OFFSET
 import org.jetbrains.kotlin.ir.declarations.IrClass
-import org.jetbrains.kotlin.ir.declarations.IrDeclarationOriginImpl
 import org.jetbrains.kotlin.ir.declarations.IrFactory
 import org.jetbrains.kotlin.ir.declarations.impl.IrExternalPackageFragmentImpl
 import org.jetbrains.kotlin.ir.symbols.IrClassSymbol
 import org.jetbrains.kotlin.ir.symbols.IrSimpleFunctionSymbol
 import org.jetbrains.kotlin.ir.symbols.impl.IrTypeParameterSymbolImpl
 import org.jetbrains.kotlin.ir.symbols.impl.IrValueParameterSymbolImpl
-import org.jetbrains.kotlin.ir.types.IrType
-import org.jetbrains.kotlin.ir.types.classifierOrFail
+import org.jetbrains.kotlin.ir.types.*
 import org.jetbrains.kotlin.ir.types.impl.IrSimpleTypeBuilder
 import org.jetbrains.kotlin.ir.types.impl.buildSimpleType
 import org.jetbrains.kotlin.ir.types.impl.originalKotlinType
-import org.jetbrains.kotlin.ir.types.makeNullable
-import org.jetbrains.kotlin.ir.types.withHasQuestionMark
 import org.jetbrains.kotlin.ir.util.SymbolTable
 import org.jetbrains.kotlin.ir.util.TypeTranslator
+import org.jetbrains.kotlin.ir.util.functions
 import org.jetbrains.kotlin.name.FqName
 import org.jetbrains.kotlin.name.Name
 import org.jetbrains.kotlin.resolve.scopes.MemberScope
@@ -241,8 +242,25 @@ class IrBuiltInsOverDescriptors(
     override val string = builtIns.stringType
     override val stringType = string.toIrType()
     override val stringClass = builtIns.string.toIrSymbol()
+    // TODO: check if correct
+    override val charSequenceClass = findClass(Name.identifier("CharSequence"), "kotlin")!!
 
     override val collectionClass = builtIns.collection.toIrSymbol()
+    override val setClass = builtIns.set.toIrSymbol()
+    override val listClass = builtIns.list.toIrSymbol()
+    override val mapClass = builtIns.map.toIrSymbol()
+    override val mapEntryClass = builtIns.mapEntry.toIrSymbol()
+    override val iterableClass = builtIns.iterable.toIrSymbol()
+    override val listIteratorClass = builtIns.listIterator.toIrSymbol()
+    override val mutableCollectionClass = builtIns.mutableCollection.toIrSymbol()
+    override val mutableSetClass = builtIns.mutableSet.toIrSymbol()
+    override val mutableListClass = builtIns.mutableList.toIrSymbol()
+    override val mutableMapClass = builtIns.mutableMap.toIrSymbol()
+    override val mutableMapEntryClass = builtIns.mutableMapEntry.toIrSymbol()
+    override val mutableIterableClass = builtIns.mutableIterable.toIrSymbol()
+    override val mutableIteratorClass = builtIns.mutableIterator.toIrSymbol()
+    override val mutableListIteratorClass = builtIns.mutableListIterator.toIrSymbol()
+    override val comparableClass = builtIns.comparable.toIrSymbol()
 
     override val arrayClass = builtIns.array.toIrSymbol()
 
@@ -286,10 +304,24 @@ class IrBuiltInsOverDescriptors(
     override val primitiveIrTypes = listOf(booleanType, charType, byteType, shortType, intType, floatType, longType, doubleType)
     override val primitiveIrTypesWithComparisons = listOf(charType, byteType, shortType, intType, floatType, longType, doubleType)
     override val primitiveFloatingPointIrTypes = listOf(floatType, doubleType)
+
+    override val byteArray = builtIns.getPrimitiveArrayClassDescriptor(PrimitiveType.BYTE).toIrSymbol()
+    override val charArray = builtIns.getPrimitiveArrayClassDescriptor(PrimitiveType.CHAR).toIrSymbol()
+    override val shortArray = builtIns.getPrimitiveArrayClassDescriptor(PrimitiveType.SHORT).toIrSymbol()
+    override val intArray = builtIns.getPrimitiveArrayClassDescriptor(PrimitiveType.INT).toIrSymbol()
+    override val longArray = builtIns.getPrimitiveArrayClassDescriptor(PrimitiveType.LONG).toIrSymbol()
+    override val floatArray = builtIns.getPrimitiveArrayClassDescriptor(PrimitiveType.FLOAT).toIrSymbol()
+    override val doubleArray = builtIns.getPrimitiveArrayClassDescriptor(PrimitiveType.DOUBLE).toIrSymbol()
+    override val booleanArray = builtIns.getPrimitiveArrayClassDescriptor(PrimitiveType.BOOLEAN).toIrSymbol()
+
     override val primitiveArraysToPrimitiveTypes = PrimitiveType.values().associate { builtIns.getPrimitiveArrayClassDescriptor(it).toIrSymbol() to it }
     override val primitiveArrays = primitiveArraysToPrimitiveTypes.keys
     override val primitiveArrayElementTypes = primitiveArraysToPrimitiveTypes.mapValues { primitiveTypeToIrType[it.value] }
     override val primitiveArrayForType = primitiveArrayElementTypes.asSequence().associate { it.value to it.key }
+
+    override val unsignedArrays: Set<IrClassSymbol> = UnsignedType.values().mapNotNullTo(mutableSetOf()) { unsignedType ->
+        builtIns.builtInsModule.findClassAcrossModuleDependencies(unsignedType.arrayClassId)?.toIrSymbol()
+    }
 
     override val lessFunByOperandType = primitiveIrTypesWithComparisons.defineComparisonOperatorForEachIrType(BuiltInOperatorNames.LESS)
     override val lessOrEqualFunByOperandType = primitiveIrTypesWithComparisons.defineComparisonOperatorForEachIrType(BuiltInOperatorNames.LESS_OR_EQUAL)
@@ -332,6 +364,16 @@ class IrBuiltInsOverDescriptors(
             KotlinTypeChecker.DEFAULT.equalTypes(it.valueParameters[0].type, int)
         }.let { symbolTable.referenceSimpleFunction(it) }
 
+    override val arrayOf = findFunctions(Name.identifier("arrayOf")).first {
+        it.descriptor.extensionReceiverParameter == null && it.descriptor.dispatchReceiverParameter == null &&
+                it.descriptor.valueParameters.size == 1 && it.descriptor.valueParameters[0].varargElementType != null
+    }
+
+    override val arrayOfNulls = findFunctions(Name.identifier("arrayOfNulls")).first {
+        it.descriptor.extensionReceiverParameter == null && it.descriptor.dispatchReceiverParameter == null &&
+                it.descriptor.valueParameters.size == 1 && KotlinBuiltIns.isInt(it.descriptor.valueParameters[0].type)
+    }
+
     override fun getHashCodeFunction(type: KotlinType): IrSimpleFunctionSymbol {
         TODO("Not yet implemented")
     }
@@ -352,6 +394,39 @@ class IrBuiltInsOverDescriptors(
             NoLookupLocation.FROM_BACKEND
         ) as? ClassDescriptor)?.let { symbolTable.referenceClass(it) }
 
+    private val binaryOperatorCache = mutableMapOf<Triple<Name, IrType, IrType>, IrSimpleFunctionSymbol>()
+
+    override fun getBinaryOperator(name: Name, lhsType: IrType, rhsType: IrType): IrSimpleFunctionSymbol {
+        require(lhsType is IrSimpleType) { "Expected IrSimpleType in getBinaryOperator, got $lhsType" }
+        val classifier = lhsType.classifier
+        require(classifier is IrClassSymbol && classifier.isBound) {
+            "Expected a bound IrClassSymbol for lhsType in getBinaryOperator, got $classifier"
+        }
+        val key = Triple(name, lhsType, rhsType)
+        return binaryOperatorCache.getOrPut(key) {
+            classifier.functions.single {
+                val function = it.owner
+                function.name == name && function.valueParameters.size == 1 && function.valueParameters[0].type == rhsType
+            }
+        }
+    }
+
+    private val unaryOperatorCache = mutableMapOf<Pair<Name, IrType>, IrSimpleFunctionSymbol>()
+
+    override fun getUnaryOperator(name: Name, receiverType: IrType): IrSimpleFunctionSymbol {
+        require(receiverType is IrSimpleType) { "Expected IrSimpleType in getBinaryOperator, got $receiverType" }
+        val classifier = receiverType.classifier
+        require(classifier is IrClassSymbol && classifier.isBound) {
+            "Expected a bound IrClassSymbol for receiverType in getBinaryOperator, got $classifier"
+        }
+        val key = Pair(name, receiverType)
+        return unaryOperatorCache.getOrPut(key) {
+            classifier.functions.single {
+                val function = it.owner
+                function.name == name && function.valueParameters.isEmpty()
+            }
+        }
+    }
 
     override fun functionN(arity: Int, declarator: SymbolTable.((IrClassSymbol) -> IrClass) -> IrClass): IrClass =
         functionFactory.functionN(arity, declarator)
