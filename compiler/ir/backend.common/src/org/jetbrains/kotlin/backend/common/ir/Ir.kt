@@ -87,9 +87,7 @@ open class BuiltinSymbolsBase(protected val irBuiltIns: IrBuiltIns, private val 
         type to iteratorClass
     }
 
-    val asserts = builtInsPackage("kotlin")
-        .getContributedFunctions(Name.identifier("assert"), NoLookupLocation.FROM_BACKEND)
-        .map { symbolTable.referenceFunction(it) }
+    val asserts = irBuiltIns.findFunctions(Name.identifier("assert"), "kotlin")
 
     private fun progression(name: String) = getClass(Name.identifier(name), "kotlin", "ranges")
     private fun progressionOrNull(name: String) = irBuiltIns.findClass(Name.identifier(name), "kotlin", "ranges")
