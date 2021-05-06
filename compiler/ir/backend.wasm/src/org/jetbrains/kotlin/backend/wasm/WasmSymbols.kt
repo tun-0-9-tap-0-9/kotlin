@@ -5,7 +5,6 @@
 
 package org.jetbrains.kotlin.backend.wasm
 
-import org.jetbrains.kotlin.backend.common.descriptors.SymbolsOverDescriptors
 import org.jetbrains.kotlin.backend.common.ir.Symbols
 import org.jetbrains.kotlin.descriptors.ClassDescriptor
 import org.jetbrains.kotlin.descriptors.PackageViewDescriptor
@@ -26,7 +25,7 @@ import org.jetbrains.kotlin.util.OperatorNameConventions
 class WasmSymbols(
     context: WasmBackendContext,
     private val symbolTable: SymbolTable
-) : SymbolsOverDescriptors<WasmBackendContext>(context, context.irBuiltIns, symbolTable) {
+) : Symbols<WasmBackendContext>(context, context.irBuiltIns, symbolTable) {
 
     private val wasmInternalPackage: PackageViewDescriptor =
         context.module.getPackage(FqName("kotlin.wasm.internal"))

@@ -100,11 +100,14 @@ abstract class Symbols<out T : CommonBackendContext>(
 
     val closedRange = progression("ClosedRange")
 
-    abstract val getProgressionLastElementByReturnType: Map<IrClassifierSymbol?, IrSimpleFunctionSymbol>
+    open val getProgressionLastElementByReturnType: Map<IrClassifierSymbol?, IrSimpleFunctionSymbol>
+        get() = irBuiltIns.getProgressionLastElementByReturnType
 
-    abstract val toUIntByExtensionReceiver: Map<IrClassifierSymbol, IrSimpleFunctionSymbol>
+    val toUIntByExtensionReceiver: Map<IrClassifierSymbol, IrSimpleFunctionSymbol>
+        get() = irBuiltIns.toUIntByExtensionReceiver
 
-    abstract val toULongByExtensionReceiver: Map<IrClassifierSymbol, IrSimpleFunctionSymbol>
+    val toULongByExtensionReceiver: Map<IrClassifierSymbol, IrSimpleFunctionSymbol>
+        get() = irBuiltIns.toULongByExtensionReceiver
 
     val any get() = irBuiltIns.anyClass
     val unit get() = irBuiltIns.unitClass
@@ -188,8 +191,8 @@ abstract class Symbols<out T : CommonBackendContext>(
     fun kmutableproperty1(): IrClassSymbol = irBuiltIns.kMutableProperty1Class
     fun kmutableproperty2(): IrClassSymbol = irBuiltIns.kMutableProperty2Class
 
-    abstract val extensionToString: IrSimpleFunctionSymbol
-    abstract val stringPlus: IrSimpleFunctionSymbol
+    val extensionToString: IrSimpleFunctionSymbol get() = irBuiltIns.extensionToString
+    val stringPlus: IrSimpleFunctionSymbol get() = irBuiltIns.stringPlus
     
     abstract val throwNullPointerException: IrSimpleFunctionSymbol
     abstract val throwNoWhenBranchMatchedException: IrSimpleFunctionSymbol

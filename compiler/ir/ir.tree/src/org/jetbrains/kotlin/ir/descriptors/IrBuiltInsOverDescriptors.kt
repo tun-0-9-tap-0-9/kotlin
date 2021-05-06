@@ -5,6 +5,7 @@
 
 package org.jetbrains.kotlin.ir.descriptors
 
+import org.jetbrains.kotlin.builtins.BuiltInsPackageFragment
 import org.jetbrains.kotlin.builtins.KotlinBuiltIns
 import org.jetbrains.kotlin.builtins.PrimitiveType
 import org.jetbrains.kotlin.builtins.UnsignedType
@@ -22,6 +23,7 @@ import org.jetbrains.kotlin.ir.declarations.IrClass
 import org.jetbrains.kotlin.ir.declarations.IrFactory
 import org.jetbrains.kotlin.ir.declarations.impl.IrExternalPackageFragmentImpl
 import org.jetbrains.kotlin.ir.symbols.IrClassSymbol
+import org.jetbrains.kotlin.ir.symbols.IrClassifierSymbol
 import org.jetbrains.kotlin.ir.symbols.IrSimpleFunctionSymbol
 import org.jetbrains.kotlin.ir.symbols.impl.IrTypeParameterSymbolImpl
 import org.jetbrains.kotlin.ir.symbols.impl.IrValueParameterSymbolImpl
@@ -32,6 +34,7 @@ import org.jetbrains.kotlin.ir.types.impl.originalKotlinType
 import org.jetbrains.kotlin.ir.util.SymbolTable
 import org.jetbrains.kotlin.ir.util.TypeTranslator
 import org.jetbrains.kotlin.ir.util.functions
+import org.jetbrains.kotlin.ir.util.referenceClassifier
 import org.jetbrains.kotlin.name.FqName
 import org.jetbrains.kotlin.name.Name
 import org.jetbrains.kotlin.resolve.scopes.MemberScope
@@ -428,6 +431,44 @@ class IrBuiltInsOverDescriptors(
         }
     }
 
+    override val toUIntByExtensionReceiver: Map<IrClassifierSymbol, IrSimpleFunctionSymbol> =
+        builtInsPackage("kotlin").getContributedFunctions(
+            Name.identifier("toUInt"),
+            NoLookupLocation.FROM_BACKEND
+        ).filter { it.containingDeclaration !is BuiltInsPackageFragment && it.extensionReceiverParameter != null }
+            .map {
+                val klass = symbolTable.referenceClassifier(it.extensionReceiverParameter!!.type.constructor.declarationDescriptor!!)
+                val function = symbolTable.referenceSimpleFunction(it)
+                klass to function
+            }.toMap()
+
+    override val toULongByExtensionReceiver: Map<IrClassifierSymbol, IrSimpleFunctionSymbol> =
+        builtInsPackage("kotlin").getContributedFunctions(
+            Name.identifier("toULong"),
+            NoLookupLocation.FROM_BACKEND
+        ).filter { it.containingDeclaration !is BuiltInsPackageFragment && it.extensionReceiverParameter != null }
+            .map {
+                val klass = symbolTable.referenceClassifier(it.extensionReceiverParameter!!.type.constructor.declarationDescriptor!!)
+                val function = symbolTable.referenceSimpleFunction(it)
+                klass to function
+            }.toMap()
+
+    override val extensionToString: IrSimpleFunctionSymbol = findFunctions(Name.identifier("toString"), "kotlin").first {
+        val descriptor = it.descriptor
+        descriptor is SimpleFunctionDescriptor && descriptor.dispatchReceiverParameter == null &&
+                descriptor.extensionReceiverParameter != null &&
+                KotlinBuiltIns.isNullableAny(descriptor.extensionReceiverParameter!!.type) && descriptor.valueParameters.size == 0
+    }
+
+    override val stringPlus: IrSimpleFunctionSymbol = findFunctions(Name.identifier("plus"), "kotlin").first {
+        val descriptor = it.descriptor
+        descriptor is SimpleFunctionDescriptor && descriptor.dispatchReceiverParameter == null &&
+                descriptor.extensionReceiverParameter != null &&
+                KotlinBuiltIns.isStringOrNullableString(descriptor.extensionReceiverParameter!!.type) &&
+                descriptor.valueParameters.size == 1 &&
+                KotlinBuiltIns.isNullableAny(descriptor.valueParameters.first().type)
+    }
+
     override fun functionN(arity: Int, declarator: SymbolTable.((IrClassSymbol) -> IrClass) -> IrClass): IrClass =
         functionFactory.functionN(arity, declarator)
 
@@ -445,6 +486,16 @@ class IrBuiltInsOverDescriptors(
     override fun suspendFunctionN(arity: Int): IrClass = functionFactory.suspendFunctionN(arity)
     override fun kSuspendFunctionN(arity: Int): IrClass = functionFactory.kSuspendFunctionN(arity)
 
+    override val getProgressionLastElementByReturnType: Map<IrClassifierSymbol?, IrSimpleFunctionSymbol> =
+        builtInsPackage("kotlin", "internal")
+            .getContributedFunctions(Name.identifier("getProgressionLastElement"), NoLookupLocation.FROM_BACKEND)
+            .filter { it.containingDeclaration !is BuiltInsPackageFragment }
+            .map { d ->
+                val klass = d.returnType?.constructor?.declarationDescriptor?.let { symbolTable.referenceClassifier(it) }
+                val function = symbolTable.referenceSimpleFunction(d)
+                klass to function
+            }
+            .toMap()
 }
 
 private inline fun MemberScope.findFirstFunction(name: String, predicate: (CallableMemberDescriptor) -> Boolean) =

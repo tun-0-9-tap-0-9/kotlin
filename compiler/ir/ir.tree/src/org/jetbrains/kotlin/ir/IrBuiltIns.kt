@@ -153,8 +153,14 @@ abstract class IrBuiltIns {
     abstract val intPlusSymbol: IrSimpleFunctionSymbol
     abstract val intTimesSymbol: IrSimpleFunctionSymbol
 
+    abstract val extensionToString: IrSimpleFunctionSymbol
+    abstract val stringPlus: IrSimpleFunctionSymbol
+
     abstract val arrayOf: IrSimpleFunctionSymbol
     abstract val arrayOfNulls: IrSimpleFunctionSymbol
+
+    abstract val toUIntByExtensionReceiver: Map<IrClassifierSymbol, IrSimpleFunctionSymbol>
+    abstract val toULongByExtensionReceiver: Map<IrClassifierSymbol, IrSimpleFunctionSymbol>
 
     abstract fun getHashCodeFunction(type: KotlinType): IrSimpleFunctionSymbol
 
@@ -173,6 +179,8 @@ abstract class IrBuiltIns {
 
     abstract fun getBinaryOperator(name: Name, lhsType: IrType, rhsType: IrType): IrSimpleFunctionSymbol
     abstract fun getUnaryOperator(name: Name, receiverType: IrType): IrSimpleFunctionSymbol
+
+    abstract val getProgressionLastElementByReturnType: Map<IrClassifierSymbol?, IrSimpleFunctionSymbol>
 
     companion object {
         val KOTLIN_INTERNAL_IR_FQN = FqName("kotlin.internal.ir")

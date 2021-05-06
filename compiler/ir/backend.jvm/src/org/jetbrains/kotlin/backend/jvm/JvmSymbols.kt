@@ -7,7 +7,6 @@
 
 package org.jetbrains.kotlin.backend.jvm
 
-import org.jetbrains.kotlin.backend.common.descriptors.SymbolsOverDescriptors
 import org.jetbrains.kotlin.backend.common.ir.Symbols
 import org.jetbrains.kotlin.backend.common.ir.createImplicitParameterDeclarationWithWrappedDescriptor
 import org.jetbrains.kotlin.backend.jvm.intrinsics.IrIntrinsicMethods
@@ -37,7 +36,7 @@ import org.jetbrains.kotlin.types.Variance
 class JvmSymbols(
     context: JvmBackendContext,
     symbolTable: SymbolTable
-) : SymbolsOverDescriptors<JvmBackendContext>(context, context.irBuiltIns, symbolTable) {
+) : Symbols<JvmBackendContext>(context, context.irBuiltIns, symbolTable) {
     private val storageManager = LockBasedStorageManager(this::class.java.simpleName)
     private val irFactory = context.irFactory
 
@@ -584,7 +583,6 @@ class JvmSymbols(
             }
         }.toMap()
     }
-
 
 
     val arrayOfAnyType = irBuiltIns.arrayClass.typeWith(irBuiltIns.anyType)
