@@ -192,57 +192,57 @@ class IrBuiltInsOverDescriptors(
     private fun List<IrType>.defineComparisonOperatorForEachIrType(name: String) =
         associate { it.classifierOrFail to defineComparisonOperator(name, it) }
 
-    override val any = builtIns.anyType
+    val any = builtIns.anyType
     override val anyType = any.toIrType()
     override val anyClass = builtIns.any.toIrSymbol()
     override val anyNType = anyType.withHasQuestionMark(true)
 
-    override val bool = builtIns.booleanType
+    val bool = builtIns.booleanType
     override val booleanType = bool.toIrType()
     override val booleanClass = builtIns.boolean.toIrSymbol()
 
-    override val char = builtIns.charType
+    val char = builtIns.charType
     override val charType = char.toIrType()
     override val charClass = builtIns.char.toIrSymbol()
 
-    override val number = builtIns.number.defaultType
+    val number = builtIns.number.defaultType
     override val numberType = number.toIrType()
     override val numberClass = builtIns.number.toIrSymbol()
 
-    override val byte = builtIns.byteType
+    val byte = builtIns.byteType
     override val byteType = byte.toIrType()
     override val byteClass = builtIns.byte.toIrSymbol()
 
-    override val short = builtIns.shortType
+    val short = builtIns.shortType
     override val shortType = short.toIrType()
     override val shortClass = builtIns.short.toIrSymbol()
 
-    override val int = builtIns.intType
+    val int = builtIns.intType
     override val intType = int.toIrType()
     override val intClass = builtIns.int.toIrSymbol()
 
-    override val long = builtIns.longType
+    val long = builtIns.longType
     override val longType = long.toIrType()
     override val longClass = builtIns.long.toIrSymbol()
 
-    override val float = builtIns.floatType
+    val float = builtIns.floatType
     override val floatType = float.toIrType()
     override val floatClass = builtIns.float.toIrSymbol()
 
-    override val double = builtIns.doubleType
+    val double = builtIns.doubleType
     override val doubleType = double.toIrType()
     override val doubleClass = builtIns.double.toIrSymbol()
 
-    override val nothing = builtIns.nothingType
+    val nothing = builtIns.nothingType
     override val nothingType = nothing.toIrType()
     override val nothingClass = builtIns.nothing.toIrSymbol()
     override val nothingNType = nothingType.withHasQuestionMark(true)
 
-    override val unit = builtIns.unitType
+    val unit = builtIns.unitType
     override val unitType = unit.toIrType()
     override val unitClass = builtIns.unit.toIrSymbol()
 
-    override val string = builtIns.stringType
+    val string = builtIns.stringType
     override val stringType = string.toIrType()
     override val stringClass = builtIns.string.toIrSymbol()
     // TODO: check if correct
@@ -303,7 +303,7 @@ class IrBuiltInsOverDescriptors(
     )
 
     // TODO switch to IrType
-    override val primitiveTypes = listOf(bool, char, byte, short, int, float, long, double)
+    val primitiveTypes = listOf(bool, char, byte, short, int, float, long, double)
     override val primitiveIrTypes = listOf(booleanType, charType, byteType, shortType, intType, floatType, longType, doubleType)
     override val primitiveIrTypesWithComparisons = listOf(charType, byteType, shortType, intType, floatType, longType, doubleType)
     override val primitiveFloatingPointIrTypes = listOf(floatType, doubleType)
@@ -336,7 +336,7 @@ class IrBuiltInsOverDescriptors(
             it.classifierOrFail to defineOperator(BuiltInOperatorNames.IEEE754_EQUALS, booleanType, listOf(it.makeNullable(), it.makeNullable()))
         }.toMap()
 
-    override val booleanNot = builtIns.boolean.unsubstitutedMemberScope.getContributedFunctions(Name.identifier("not"), NoLookupLocation.FROM_BACKEND).single()
+    val booleanNot = builtIns.boolean.unsubstitutedMemberScope.getContributedFunctions(Name.identifier("not"), NoLookupLocation.FROM_BACKEND).single()
     override val booleanNotSymbol = symbolTable.referenceSimpleFunction(booleanNot)
 
     override val eqeqeqSymbol = defineOperator(BuiltInOperatorNames.EQEQEQ, booleanType, listOf(anyNType, anyNType))
@@ -375,10 +375,6 @@ class IrBuiltInsOverDescriptors(
     override val arrayOfNulls = findFunctions(Name.identifier("arrayOfNulls")).first {
         it.descriptor.extensionReceiverParameter == null && it.descriptor.dispatchReceiverParameter == null &&
                 it.descriptor.valueParameters.size == 1 && KotlinBuiltIns.isInt(it.descriptor.valueParameters[0].type)
-    }
-
-    override fun getHashCodeFunction(type: KotlinType): IrSimpleFunctionSymbol {
-        TODO("Not yet implemented")
     }
 
     override val enumClass = builtIns.enum.toIrSymbol()

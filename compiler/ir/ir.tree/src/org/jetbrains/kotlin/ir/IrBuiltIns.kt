@@ -7,8 +7,6 @@ package org.jetbrains.kotlin.ir
 
 import org.jetbrains.kotlin.builtins.PrimitiveType
 import org.jetbrains.kotlin.config.LanguageVersionSettings
-import org.jetbrains.kotlin.descriptors.FunctionDescriptor
-import org.jetbrains.kotlin.descriptors.SimpleFunctionDescriptor
 import org.jetbrains.kotlin.ir.declarations.IrClass
 import org.jetbrains.kotlin.ir.declarations.IrDeclarationOriginImpl
 import org.jetbrains.kotlin.ir.declarations.IrFactory
@@ -19,8 +17,6 @@ import org.jetbrains.kotlin.ir.types.IrType
 import org.jetbrains.kotlin.ir.util.SymbolTable
 import org.jetbrains.kotlin.name.FqName
 import org.jetbrains.kotlin.name.Name
-import org.jetbrains.kotlin.types.KotlinType
-import org.jetbrains.kotlin.types.SimpleType
 
 /**
  * Symbols for builtins that are available without any context and are not specific to any backend
@@ -31,45 +27,32 @@ abstract class IrBuiltIns {
 
     abstract val irFactory: IrFactory
 
-    abstract val any: SimpleType
     abstract val anyType: IrType
     abstract val anyClass: IrClassSymbol
     abstract val anyNType: IrType
-    abstract val bool: SimpleType
     abstract val booleanType: IrType
     abstract val booleanClass: IrClassSymbol
-    abstract val char: SimpleType
     abstract val charType: IrType
     abstract val charClass: IrClassSymbol
-    abstract val number: SimpleType
     abstract val numberType: IrType
     abstract val numberClass: IrClassSymbol
-    abstract val byte: SimpleType
     abstract val byteType: IrType
     abstract val byteClass: IrClassSymbol
-    abstract val short: SimpleType
     abstract val shortType: IrType
     abstract val shortClass: IrClassSymbol
-    abstract val int: SimpleType
     abstract val intType: IrType
     abstract val intClass: IrClassSymbol
-    abstract val long: SimpleType
     abstract val longType: IrType
     abstract val longClass: IrClassSymbol
-    abstract val float: SimpleType
     abstract val floatType: IrType
     abstract val floatClass: IrClassSymbol
-    abstract val double: SimpleType
     abstract val doubleType: IrType
     abstract val doubleClass: IrClassSymbol
-    abstract val nothing: SimpleType
     abstract val nothingType: IrType
     abstract val nothingClass: IrClassSymbol
     abstract val nothingNType: IrType
-    abstract val unit: SimpleType
     abstract val unitType: IrType
     abstract val unitClass: IrClassSymbol
-    abstract val string: SimpleType
     abstract val stringType: IrType
     abstract val stringClass: IrClassSymbol
     abstract val charSequenceClass: IrClassSymbol
@@ -107,8 +90,6 @@ abstract class IrBuiltIns {
     abstract val kFunctionClass: IrClassSymbol
     abstract val primitiveTypeToIrType: Map<PrimitiveType, IrType>
 
-    // TODO switch to IrType
-    abstract val primitiveTypes: List<SimpleType>
     abstract val primitiveIrTypes: List<IrType>
     abstract val primitiveIrTypesWithComparisons: List<IrType>
     abstract val primitiveFloatingPointIrTypes: List<IrType>
@@ -134,7 +115,6 @@ abstract class IrBuiltIns {
     abstract val greaterOrEqualFunByOperandType: Map<IrClassifierSymbol, IrSimpleFunctionSymbol>
     abstract val greaterFunByOperandType: Map<IrClassifierSymbol, IrSimpleFunctionSymbol>
     abstract val ieee754equalsFunByOperandType: Map<IrClassifierSymbol, IrSimpleFunctionSymbol>
-    abstract val booleanNot: @JvmWildcard SimpleFunctionDescriptor
     abstract val booleanNotSymbol: IrSimpleFunctionSymbol
     abstract val eqeqeqSymbol: IrSimpleFunctionSymbol
     abstract val eqeqSymbol: IrSimpleFunctionSymbol
@@ -161,8 +141,6 @@ abstract class IrBuiltIns {
 
     abstract val toUIntByExtensionReceiver: Map<IrClassifierSymbol, IrSimpleFunctionSymbol>
     abstract val toULongByExtensionReceiver: Map<IrClassifierSymbol, IrSimpleFunctionSymbol>
-
-    abstract fun getHashCodeFunction(type: KotlinType): IrSimpleFunctionSymbol
 
     abstract fun functionN(arity: Int, declarator: SymbolTable.((IrClassSymbol) -> IrClass) -> IrClass): IrClass
     abstract fun kFunctionN(arity: Int, declarator: SymbolTable.((IrClassSymbol) -> IrClass) -> IrClass): IrClass

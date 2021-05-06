@@ -205,7 +205,7 @@ class OperatorExpressionGenerator(statementGenerator: StatementGenerator) : Stat
         // Infer type for elvis manually. Take into account possibly nested elvises.
         val rightType = getResultTypeForElvis(binaryExpression.right!!).unwrap()
         val leftType = getResultTypeForElvis(binaryExpression.left!!).unwrap()
-        val leftNNType = intersectTypes(listOf(leftType, context.irBuiltIns.any))
+        val leftNNType = intersectTypes(listOf(leftType, context.irBuiltInsOverDescriptors.any))
         return NewCommonSuperTypeCalculator.commonSuperType(listOf(rightType, leftNNType))
     }
 
@@ -432,7 +432,7 @@ class OperatorExpressionGenerator(statementGenerator: StatementGenerator) : Stat
         return memberScope.findSingleFunction(Name.identifier("to$targetTypeName"))
     }
 
-    private val primitiveTypeMapping = context.irBuiltIns.run { primitiveTypes.zip(primitiveIrTypes).toMap() }
+    private val primitiveTypeMapping = context.irBuiltInsOverDescriptors.run { primitiveTypes.zip(primitiveIrTypes).toMap() }
     private fun kotlinTypeToIrType(kotlinType: KotlinType?) = kotlinType?.let { primitiveTypeMapping[it] }
 
     private fun generateComparisonOperator(ktExpression: KtBinaryExpression, origin: IrStatementOrigin): IrExpression {
