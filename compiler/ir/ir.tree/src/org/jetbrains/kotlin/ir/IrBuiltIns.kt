@@ -8,6 +8,7 @@ package org.jetbrains.kotlin.ir
 import org.jetbrains.kotlin.builtins.PrimitiveType
 import org.jetbrains.kotlin.config.LanguageVersionSettings
 import org.jetbrains.kotlin.ir.declarations.IrClass
+import org.jetbrains.kotlin.ir.declarations.IrDeclarationOrigin
 import org.jetbrains.kotlin.ir.declarations.IrDeclarationOriginImpl
 import org.jetbrains.kotlin.ir.declarations.IrFactory
 import org.jetbrains.kotlin.ir.symbols.IrClassSymbol
@@ -88,6 +89,8 @@ abstract class IrBuiltIns {
     abstract val kMutableProperty2Class: IrClassSymbol
     abstract val functionClass: IrClassSymbol
     abstract val kFunctionClass: IrClassSymbol
+
+    // TODO: consider removing to get rid of descriptor-related dependencies
     abstract val primitiveTypeToIrType: Map<PrimitiveType, IrType>
 
     abstract val primitiveIrTypes: List<IrType>
@@ -154,6 +157,7 @@ abstract class IrBuiltIns {
 
     abstract fun findFunctions(name: Name, vararg packageNameSegments: String = arrayOf("kotlin")): Iterable<IrSimpleFunctionSymbol>
     abstract fun findClass(name: Name, vararg packageNameSegments: String = arrayOf("kotlin")): IrClassSymbol?
+    abstract fun findBuiltInClassMemberFunctions(builtInClass: IrClassSymbol, name: Name): Iterable<IrSimpleFunctionSymbol>
 
     abstract fun getBinaryOperator(name: Name, lhsType: IrType, rhsType: IrType): IrSimpleFunctionSymbol
     abstract fun getUnaryOperator(name: Name, receiverType: IrType): IrSimpleFunctionSymbol
