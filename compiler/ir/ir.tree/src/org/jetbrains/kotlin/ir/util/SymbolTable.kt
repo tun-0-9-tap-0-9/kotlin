@@ -456,6 +456,13 @@ class SymbolTable(
     override fun referenceClass(descriptor: ClassDescriptor) =
         classSymbolTable.referenced(descriptor) { createClassSymbol(descriptor) }
 
+    fun referenceClass(
+        sig: IdSignature,
+        symbolFactory: () -> IrClassSymbol,
+        classFactory: (IrClassSymbol) -> IrClass
+    ) =
+        classSymbolTable.referenced(sig) { declareClass(sig, symbolFactory, classFactory).symbol }
+
     fun referenceClassIfAny(sig: IdSignature): IrClassSymbol? =
         classSymbolTable.get(sig)
 
