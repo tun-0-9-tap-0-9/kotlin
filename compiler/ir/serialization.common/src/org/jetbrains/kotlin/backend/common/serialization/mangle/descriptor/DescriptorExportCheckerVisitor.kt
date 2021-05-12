@@ -25,7 +25,9 @@ abstract class DescriptorExportCheckerVisitor : DeclarationDescriptorVisitor<Boo
         val speciallyExported = annotations.hasAnnotation(publishedApiAnnotation) || isPlatformSpecificExported()
         val selfExported = speciallyExported || visibility == null || visibility.isPubliclyVisible()
 
-        return selfExported && containingDeclaration.accept(this@DescriptorExportCheckerVisitor, SpecialDeclarationType.REGULAR) ?: false
+        return selfExported &&
+                (this is ClassDescriptor && !isInner ||
+                        containingDeclaration.accept(this@DescriptorExportCheckerVisitor, SpecialDeclarationType.REGULAR) ?: false)
     }
 
     override fun visitPackageFragmentDescriptor(descriptor: PackageFragmentDescriptor, data: SpecialDeclarationType) = true
