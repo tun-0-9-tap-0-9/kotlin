@@ -2014,6 +2014,11 @@ public class IrJsCodegenInlineTestGenerated extends AbstractIrJsCodegenInlineTes
         public void testCaptureThisAndOuter() throws Exception {
             runTest("compiler/testData/codegen/boxInline/innerClasses/captureThisAndOuter.kt");
         }
+
+        @TestMetadata("fakeOverride.kt")
+        public void testFakeOverride() throws Exception {
+            runTest("compiler/testData/codegen/boxInline/innerClasses/fakeOverride.kt");
+        }
     }
 
     @TestMetadata("compiler/testData/codegen/boxInline/invokedynamic")
