@@ -14,7 +14,6 @@ import org.jetbrains.kotlin.ir.types.IrSimpleType
 import org.jetbrains.kotlin.ir.types.IrType
 import org.jetbrains.kotlin.ir.util.DeclarationStubGenerator
 import org.jetbrains.kotlin.ir.util.DeserializableClass
-import org.jetbrains.kotlin.ir.util.ExternalDependenciesGenerator
 import org.jetbrains.kotlin.ir.util.TypeTranslator
 import org.jetbrains.kotlin.ir.util.render
 import org.jetbrains.kotlin.metadata.ProtoBuf
@@ -119,14 +118,8 @@ class IrLazyClass(
         assert(parent is IrPackageFragment)
         irLoaded?.let { return it }
         irLoaded = stubGenerator.extensions.deserializeLazyClass(
-            this,
-            stubGenerator.moduleDescriptor,
-            stubGenerator.irBuiltIns,
-            stubGenerator.symbolTable,
-            parent,
-            allowErrorNodes = false
+            this, stubGenerator, parent, allowErrorNodes = false
         )
-        ExternalDependenciesGenerator(stubGenerator.symbolTable, listOf(stubGenerator)).generateUnboundSymbolsAsDependencies()
         return irLoaded as Boolean
     }
 }
