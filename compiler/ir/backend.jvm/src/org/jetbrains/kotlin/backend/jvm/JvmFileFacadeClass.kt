@@ -30,15 +30,7 @@ class JvmFileFacadeClass(
 
     override fun loadIr(): Boolean {
         irLoaded?.let { return it }
-        irLoaded = stubGenerator.extensions.deserializeFacadeClass(
-            this,
-            stubGenerator.moduleDescriptor,
-            stubGenerator.irBuiltIns,
-            stubGenerator.symbolTable,
-            parent,
-            allowErrorNodes = false
-        )
-        ExternalDependenciesGenerator(stubGenerator.symbolTable, listOf(stubGenerator)).generateUnboundSymbolsAsDependencies()
-        return irLoaded as Boolean
+        irLoaded = stubGenerator.extensions.deserializeFacadeClass(this, stubGenerator, parent, allowErrorNodes = false)
+        return irLoaded!!
     }
 }
