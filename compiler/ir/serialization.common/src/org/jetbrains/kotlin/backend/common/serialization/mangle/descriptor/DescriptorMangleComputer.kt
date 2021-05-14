@@ -252,7 +252,9 @@ abstract class DescriptorMangleComputer(protected val builder: StringBuilder, pr
         constructorDescriptor.mangleFunction(isCtor = true, container = constructorDescriptor)
     }
 
-    override fun visitScriptDescriptor(scriptDescriptor: ScriptDescriptor, data: Boolean) = reportUnexpectedDescriptor(scriptDescriptor)
+    override fun visitScriptDescriptor(scriptDescriptor: ScriptDescriptor, data: Boolean) {
+        scriptDescriptor.mangleSimpleDeclaration(scriptDescriptor.name.asString())
+    }
 
     override fun visitPropertyDescriptor(descriptor: PropertyDescriptor, data: Boolean) {
         val extensionReceiver = descriptor.extensionReceiverParameter

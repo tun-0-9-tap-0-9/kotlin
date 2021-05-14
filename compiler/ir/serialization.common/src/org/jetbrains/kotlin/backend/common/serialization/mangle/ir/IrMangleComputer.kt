@@ -194,7 +194,7 @@ abstract class IrMangleComputer(protected val builder: StringBuilder, private va
     override fun visitElement(element: IrElement, data: Boolean) = error("unexpected element ${element.render()}")
 
     override fun visitScript(declaration: IrScript, data: Boolean) {
-        declaration.parent.accept(this, data)
+        declaration.mangleSimpleDeclaration(declaration.name.asString())
     }
 
     override fun visitErrorDeclaration(declaration: IrErrorDeclaration, data: Boolean) {
