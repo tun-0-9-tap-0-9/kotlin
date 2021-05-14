@@ -85,6 +85,11 @@ open class IdSignatureSerializer(val mangler: KotlinMangler.IrMangler) : IdSigna
             setExpected(declaration.isExpect)
         }
 
+        override fun visitScript(declaration: IrScript) {
+            hashId = mangler.run { declaration.signatureMangle }
+            collectFqNames(declaration)
+        }
+
         override fun visitProperty(declaration: IrProperty) {
             hashId = mangler.run { declaration.signatureMangle }
             collectFqNames(declaration)
