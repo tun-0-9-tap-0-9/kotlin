@@ -299,6 +299,12 @@ public class IrSerializeCompileKotlinAgainstInlineKotlinTestGenerated extends Ab
         }
 
         @Test
+        @TestMetadata("kt41174.kt")
+        public void testKt41174() throws Exception {
+            runTest("compiler/testData/codegen/boxInline/anonymousObject/kt41174.kt");
+        }
+
+        @Test
         @TestMetadata("kt42815.kt")
         public void testKt42815() throws Exception {
             runTest("compiler/testData/codegen/boxInline/anonymousObject/kt42815.kt");
@@ -2245,6 +2251,12 @@ public class IrSerializeCompileKotlinAgainstInlineKotlinTestGenerated extends Ab
         }
 
         @Test
+        @TestMetadata("anonymousObject.kt")
+        public void testAnonymousObject() throws Exception {
+            runTest("compiler/testData/codegen/boxInline/inlineClasses/anonymousObject.kt");
+        }
+
+        @Test
         @TestMetadata("inlineClassWithInlineValReturningInlineClass.kt")
         public void testInlineClassWithInlineValReturningInlineClass() throws Exception {
             runTest("compiler/testData/codegen/boxInline/inlineClasses/inlineClassWithInlineValReturningInlineClass.kt");
@@ -2900,6 +2912,12 @@ public class IrSerializeCompileKotlinAgainstInlineKotlinTestGenerated extends Ab
         @TestMetadata("kt8948v2.kt")
         public void testKt8948v2() throws Exception {
             runTest("compiler/testData/codegen/boxInline/nonLocalReturns/kt8948v2.kt");
+        }
+
+        @Test
+        @TestMetadata("kt9304.kt")
+        public void testKt9304() throws Exception {
+            runTest("compiler/testData/codegen/boxInline/nonLocalReturns/kt9304.kt");
         }
 
         @Test
@@ -3661,6 +3679,12 @@ public class IrSerializeCompileKotlinAgainstInlineKotlinTestGenerated extends Ab
         }
 
         @Test
+        @TestMetadata("kt28234.kt")
+        public void testKt28234() throws Exception {
+            runTest("compiler/testData/codegen/boxInline/reified/kt28234.kt");
+        }
+
+        @Test
         @TestMetadata("kt35511.kt")
         public void testKt35511() throws Exception {
             runTest("compiler/testData/codegen/boxInline/reified/kt35511.kt");
@@ -3682,6 +3706,30 @@ public class IrSerializeCompileKotlinAgainstInlineKotlinTestGenerated extends Ab
         @TestMetadata("kt35511_try_values.kt")
         public void testKt35511_try_values() throws Exception {
             runTest("compiler/testData/codegen/boxInline/reified/kt35511_try_values.kt");
+        }
+
+        @Test
+        @TestMetadata("kt44770.kt")
+        public void testKt44770() throws Exception {
+            runTest("compiler/testData/codegen/boxInline/reified/kt44770.kt");
+        }
+
+        @Test
+        @TestMetadata("kt44770_2.kt")
+        public void testKt44770_2() throws Exception {
+            runTest("compiler/testData/codegen/boxInline/reified/kt44770_2.kt");
+        }
+
+        @Test
+        @TestMetadata("kt46584.kt")
+        public void testKt46584() throws Exception {
+            runTest("compiler/testData/codegen/boxInline/reified/kt46584.kt");
+        }
+
+        @Test
+        @TestMetadata("kt46584_2.kt")
+        public void testKt46584_2() throws Exception {
+            runTest("compiler/testData/codegen/boxInline/reified/kt46584_2.kt");
         }
 
         @Test
