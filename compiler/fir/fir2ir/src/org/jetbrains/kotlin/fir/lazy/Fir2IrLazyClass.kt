@@ -187,14 +187,6 @@ class Fir2IrLazyClass(
             result += getFakeOverridesByName(name)
         }
 
-        // TODO: remove this check to save time
-        for (declaration in result) {
-            if (declaration.parent != this) {
-                throw AssertionError(
-                    "Unmatched parent for lazy class ${fir.name} member ${declaration.render()} f/o ${declaration.isFakeOverride}"
-                )
-            }
-        }
         result
     }
 

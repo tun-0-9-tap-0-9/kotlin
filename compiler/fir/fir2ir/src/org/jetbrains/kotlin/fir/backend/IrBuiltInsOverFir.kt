@@ -7,6 +7,8 @@ package org.jetbrains.kotlin.fir.backend
 
 import org.jetbrains.kotlin.backend.common.ir.createImplicitParameterDeclarationWithWrappedDescriptor
 import org.jetbrains.kotlin.builtins.PrimitiveType
+import org.jetbrains.kotlin.builtins.StandardNames
+import org.jetbrains.kotlin.builtins.UnsignedType
 import org.jetbrains.kotlin.config.LanguageVersionSettings
 import org.jetbrains.kotlin.descriptors.ClassKind
 import org.jetbrains.kotlin.descriptors.Modality
@@ -15,24 +17,25 @@ import org.jetbrains.kotlin.fir.resolve.symbolProvider
 import org.jetbrains.kotlin.fir.symbols.impl.FirClassSymbol
 import org.jetbrains.kotlin.ir.BuiltInOperatorNames
 import org.jetbrains.kotlin.ir.IrBuiltIns
-import org.jetbrains.kotlin.ir.builders.declarations.addFunction
-import org.jetbrains.kotlin.ir.builders.declarations.addValueParameter
-import org.jetbrains.kotlin.ir.builders.declarations.buildClass
-import org.jetbrains.kotlin.ir.declarations.IrClass
-import org.jetbrains.kotlin.ir.declarations.IrDeclarationParent
-import org.jetbrains.kotlin.ir.declarations.IrFactory
-import org.jetbrains.kotlin.ir.declarations.IrPackageFragment
+import org.jetbrains.kotlin.ir.UNDEFINED_OFFSET
+import org.jetbrains.kotlin.ir.builders.declarations.*
+import org.jetbrains.kotlin.ir.declarations.*
 import org.jetbrains.kotlin.ir.declarations.impl.IrExternalPackageFragmentImpl
 import org.jetbrains.kotlin.ir.symbols.IrClassSymbol
 import org.jetbrains.kotlin.ir.symbols.IrClassifierSymbol
 import org.jetbrains.kotlin.ir.symbols.IrSimpleFunctionSymbol
+import org.jetbrains.kotlin.ir.symbols.impl.IrClassPublicSymbolImpl
+import org.jetbrains.kotlin.ir.symbols.impl.IrSimpleFunctionPublicSymbolImpl
+import org.jetbrains.kotlin.ir.symbols.impl.IrTypeParameterSymbolImpl
 import org.jetbrains.kotlin.ir.types.*
+import org.jetbrains.kotlin.ir.types.impl.IrSimpleTypeImpl
+import org.jetbrains.kotlin.ir.util.IdSignature
 import org.jetbrains.kotlin.ir.util.SymbolTable
 import org.jetbrains.kotlin.ir.util.classId
 import org.jetbrains.kotlin.name.ClassId
 import org.jetbrains.kotlin.name.FqName
-import org.jetbrains.kotlin.name.FqNameUnsafe
 import org.jetbrains.kotlin.name.Name
+import org.jetbrains.kotlin.types.Variance
 
 class IrBuiltInsOverFir(
     private val components: Fir2IrComponents,
@@ -42,18 +45,34 @@ class IrBuiltInsOverFir(
 
     override val irFactory: IrFactory = components.symbolTable.irFactory
 
-    private val kotlinPackage = FqName("kotlin")
-    private val javaLangPackage = FqName("java.lang")
-    private val kotlinCollectionsPackage = FqName("kotlin.collections")
+    private val kotlinPackage = StandardNames.BUILT_INS_PACKAGE_FQ_NAME
+    private val kotlinReflectPackage = StandardNames.KOTLIN_REFLECT_FQ_NAME
+
+    //    private val javaLangPackage = FqName("java.lang")
+    private val kotlinCollectionsPackage = StandardNames.COLLECTIONS_PACKAGE_FQ_NAME
 
     private val internalIrPackage = createPackage(KOTLIN_INTERNAL_IR_FQN)
+    private val kotlinIrPackage = createPackage(kotlinPackage)
+    private val kotlinCollectionsIrPackage = createPackage(kotlinCollectionsPackage)
 
     override val anyClass: IrClassSymbol = referenceClassByFqname(kotlinPackage, "Any")!!
     override val anyType: IrType = anyClass.defaultType
     override val anyNType = anyType.withHasQuestionMark(true)
 
+    override lateinit var booleanNotSymbol: IrSimpleFunctionSymbol private set
+
     override val booleanType: IrType get() = booleanClass.defaultType
-    override val booleanClass: IrClassSymbol = referenceClassByFqname(javaLangPackage, "Boolean")!!
+    override val booleanClass: IrClassSymbol = //referenceClassByFqname(kotlinPackage, "Boolean")!!
+        createClass(StandardNames.getPrimitiveFqName(PrimitiveType.BOOLEAN), kotlinIrPackage).also { boolClass ->
+            booleanNotSymbol = createFunction(kotlinPackage, "not", boolClass.defaultType, emptyArray(), boolClass.owner).also { fn ->
+                boolClass.owner.declarations.add(fn)
+                fn.addDispatchReceiver {
+                    type = boolClass.defaultType
+                    origin = boolClass.owner.origin
+                }
+            }.symbol
+        }
+
     override val charType: IrType get() = charClass.defaultType
     override val charClass: IrClassSymbol = referenceClassByFqname(kotlinPackage, "Char")!!
 
@@ -61,17 +80,17 @@ class IrBuiltInsOverFir(
     override val numberType: IrType get() = numberClass.defaultType
 
     override val byteType: IrType get() = byteClass.defaultType
-    override val byteClass: IrClassSymbol = referenceClassByFqname(javaLangPackage, "Byte")!!
+    override val byteClass: IrClassSymbol = referenceClassByFqname(kotlinPackage, "Byte")!!
     override val shortType: IrType get() = shortClass.defaultType
-    override val shortClass: IrClassSymbol = referenceClassByFqname(javaLangPackage, "Short")!!
+    override val shortClass: IrClassSymbol = referenceClassByFqname(kotlinPackage, "Short")!!
     override val intType: IrType get() = intClass.defaultType
-    override val intClass: IrClassSymbol = referenceClassByFqname(javaLangPackage, "Integer")!!
+    override val intClass: IrClassSymbol = referenceClassByFqname(kotlinPackage, "Int")!!
     override val longType: IrType get() = longClass.defaultType
-    override val longClass: IrClassSymbol = referenceClassByFqname(javaLangPackage, "Long")!!
+    override val longClass: IrClassSymbol = referenceClassByFqname(kotlinPackage, "Long")!!
     override val floatType: IrType get() = floatClass.defaultType
-    override val floatClass: IrClassSymbol = referenceClassByFqname(javaLangPackage, "Float")!!
+    override val floatClass: IrClassSymbol = referenceClassByFqname(kotlinPackage, "Float")!!
     override val doubleType: IrType get() = doubleClass.defaultType
-    override val doubleClass: IrClassSymbol = referenceClassByFqname(javaLangPackage, "Double")!!
+    override val doubleClass: IrClassSymbol = referenceClassByFqname(kotlinPackage, "Double")!!
     override val nothingType: IrType get() = nothingClass.defaultType
     override val nothingClass: IrClassSymbol = referenceClassByFqname(kotlinPackage, "Nothing")!!
     override val nothingNType: IrType = nothingType.withHasQuestionMark(true)
@@ -79,7 +98,8 @@ class IrBuiltInsOverFir(
     override val unitType: IrType get() = unitClass.defaultType
     override val unitClass: IrClassSymbol = referenceClassByFqname(kotlinPackage, "Unit")!!
     override val stringType: IrType get() = stringClass.defaultType
-    override val stringClass: IrClassSymbol = referenceClassByFqname(javaLangPackage, "String")!!
+    override val stringClass: IrClassSymbol = //referenceClassByFqname(kotlinPackage, "String")!!
+        createClass(kotlinPackage.child(Name.identifier("String")), kotlinIrPackage)
 
     override val charSequenceClass: IrClassSymbol = referenceClassByFqname(kotlinPackage, "CharSequence")!!
 
@@ -88,15 +108,7 @@ class IrBuiltInsOverFir(
     override val setClass: IrClassSymbol by lazy { referenceClassByFqname(kotlinCollectionsPackage, "Set")!! }
     override val listClass: IrClassSymbol by lazy { referenceClassByFqname(kotlinCollectionsPackage, "List")!! }
     override val mapClass: IrClassSymbol by lazy { referenceClassByFqname(kotlinCollectionsPackage, "Map")!! }
-    override val mapEntryClass: IrClassSymbol by lazy {
-        referenceClassByFqname(
-            mapClass.owner.classId!!.createNestedClassId(
-                Name.identifier(
-                    "MapEntry"
-                )
-            )
-        )!!
-    }
+    override val mapEntryClass: IrClassSymbol by lazy { referenceNestedClass(mapClass, "Entry")!! }
 
 //    override val iterableClass: IrClassSymbol = referenceClassByFqname(ClassId(kotlinCollectionsPackageFqName, Name.identifier("Iterable")))!!
 //    override val listIteratorClass: IrClassSymbol = referenceClassByFqname(ClassId(kotlinPackageFqName, Name.identifier("ListIterator")))!!
@@ -109,54 +121,32 @@ class IrBuiltInsOverFir(
 //    override val mutableIteratorClass: IrClassSymbol = referenceClassByFqname(ClassId(kotlinPackageFqName, Name.identifier("mutableIterator")))!!
 //    override val mutableListIteratorClass: IrClassSymbol = referenceClassByFqname(ClassId(kotlinPackageFqName, Name.identifier("mutableListIterator")))!!
 
-    override val iterableClass: IrClassSymbol
-        get() = TODO("Not yet implemented")
-    override val listIteratorClass: IrClassSymbol
-        get() = TODO("Not yet implemented")
-    override val mutableCollectionClass: IrClassSymbol
-        get() = TODO("Not yet implemented")
-    override val mutableSetClass: IrClassSymbol
-        get() = TODO("Not yet implemented")
-    override val mutableListClass: IrClassSymbol
-        get() = TODO("Not yet implemented")
-    override val mutableMapClass: IrClassSymbol
-        get() = TODO("Not yet implemented")
-    override val mutableMapEntryClass: IrClassSymbol
-        get() = TODO("Not yet implemented")
-    override val mutableIterableClass: IrClassSymbol
-        get() = TODO("Not yet implemented")
-    override val mutableIteratorClass: IrClassSymbol
-        get() = TODO("Not yet implemented")
-    override val mutableListIteratorClass: IrClassSymbol
-        get() = TODO("Not yet implemented")
-    override val comparableClass: IrClassSymbol
-        get() = TODO("Not yet implemented")
-    override val throwableType: IrType
-        get() = TODO("Not yet implemented")
-    override val throwableClass: IrClassSymbol
-        get() = TODO("Not yet implemented")
-    override val kCallableClass: IrClassSymbol
-        get() = TODO("Not yet implemented")
-    override val kPropertyClass: IrClassSymbol
-        get() = TODO("Not yet implemented")
-    override val kClassClass: IrClassSymbol
-        get() = TODO("Not yet implemented")
-    override val kProperty0Class: IrClassSymbol
-        get() = TODO("Not yet implemented")
-    override val kProperty1Class: IrClassSymbol
-        get() = TODO("Not yet implemented")
-    override val kProperty2Class: IrClassSymbol
-        get() = TODO("Not yet implemented")
-    override val kMutableProperty0Class: IrClassSymbol
-        get() = TODO("Not yet implemented")
-    override val kMutableProperty1Class: IrClassSymbol
-        get() = TODO("Not yet implemented")
-    override val kMutableProperty2Class: IrClassSymbol
-        get() = TODO("Not yet implemented")
-    override val functionClass: IrClassSymbol
-        get() = TODO("Not yet implemented")
-    override val kFunctionClass: IrClassSymbol
-        get() = TODO("Not yet implemented")
+    override val iterableClass: IrClassSymbol by lazy { referenceClassByFqname(StandardNames.FqNames.iterable)!! }
+    override val listIteratorClass: IrClassSymbol by lazy { referenceClassByFqname(StandardNames.FqNames.listIterator)!! }
+    override val mutableCollectionClass: IrClassSymbol by lazy { referenceClassByFqname(StandardNames.FqNames.mutableCollection)!! }
+    override val mutableSetClass: IrClassSymbol by lazy { referenceClassByFqname(StandardNames.FqNames.mutableSet)!! }
+    override val mutableListClass: IrClassSymbol by lazy { referenceClassByFqname(StandardNames.FqNames.mutableList)!! }
+    override val mutableMapClass: IrClassSymbol by lazy { referenceClassByFqname(StandardNames.FqNames.mutableMap)!! }
+    override val mutableMapEntryClass: IrClassSymbol by lazy { referenceNestedClass(StandardNames.FqNames.mutableMapEntry)!! }
+    override val mutableIterableClass: IrClassSymbol by lazy { referenceClassByFqname(StandardNames.FqNames.mutableIterable)!! }
+    override val mutableIteratorClass: IrClassSymbol by lazy { referenceClassByFqname(StandardNames.FqNames.mutableIterator)!! }
+    override val mutableListIteratorClass: IrClassSymbol by lazy { referenceClassByFqname(StandardNames.FqNames.mutableListIterator)!! }
+    override val comparableClass: IrClassSymbol by lazy { referenceClassByFqname(StandardNames.FqNames.comparable)!! }
+    override val throwableType: IrType by lazy { throwableClass.defaultType }
+    override val throwableClass: IrClassSymbol by lazy { referenceClassByFqname(StandardNames.FqNames.throwable)!! }
+
+    override val kCallableClass: IrClassSymbol by lazy { referenceClassByFqname(StandardNames.FqNames.kCallable.toSafe())!! }
+    override val kPropertyClass: IrClassSymbol by lazy { referenceClassByFqname(StandardNames.FqNames.kPropertyFqName.toSafe())!! }
+    override val kClassClass: IrClassSymbol by lazy { referenceClassByFqname(StandardNames.FqNames.kClass.toSafe())!! }
+    override val kProperty0Class: IrClassSymbol by lazy { referenceClassByFqname(StandardNames.FqNames.kProperty0.toSafe())!! }
+    override val kProperty1Class: IrClassSymbol by lazy { referenceClassByFqname(StandardNames.FqNames.kProperty1.toSafe())!! }
+    override val kProperty2Class: IrClassSymbol by lazy { referenceClassByFqname(StandardNames.FqNames.kProperty2.toSafe())!! }
+    override val kMutableProperty0Class: IrClassSymbol by lazy { referenceClassByFqname(StandardNames.FqNames.kMutableProperty0.toSafe())!! }
+    override val kMutableProperty1Class: IrClassSymbol by lazy { referenceClassByFqname(StandardNames.FqNames.kMutableProperty1.toSafe())!! }
+    override val kMutableProperty2Class: IrClassSymbol by lazy { referenceClassByFqname(StandardNames.FqNames.kMutableProperty2.toSafe())!! }
+
+    override val functionClass: IrClassSymbol by lazy { referenceClassByFqname(kotlinPackage, "Function")!! }
+    override val kFunctionClass: IrClassSymbol by lazy { referenceClassByFqname(kotlinReflectPackage, "KFunction")!! }
 
     override val primitiveTypeToIrType = mapOf(
         PrimitiveType.BOOLEAN to booleanType,
@@ -201,7 +191,6 @@ class IrBuiltInsOverFir(
     override val ieee754equalsFunByOperandType: MutableMap<IrClassifierSymbol, IrSimpleFunctionSymbol>
         get() = _ieee754equalsFunByOperandType
 
-    override lateinit var booleanNotSymbol: IrSimpleFunctionSymbol private set
     override lateinit var eqeqeqSymbol: IrSimpleFunctionSymbol private set
     override lateinit var eqeqSymbol: IrSimpleFunctionSymbol private set
     override lateinit var throwCceSymbol: IrSimpleFunctionSymbol private set
@@ -213,51 +202,79 @@ class IrBuiltInsOverFir(
     override lateinit var dataClassArrayMemberHashCodeSymbol: IrSimpleFunctionSymbol private set
     override lateinit var dataClassArrayMemberToStringSymbol: IrSimpleFunctionSymbol private set
 
+    override lateinit var checkNotNullSymbol: IrSimpleFunctionSymbol private set
+
+    override lateinit var lessFunByOperandType: Map<IrClassifierSymbol, IrSimpleFunctionSymbol> private set
+    override lateinit var lessOrEqualFunByOperandType: Map<IrClassifierSymbol, IrSimpleFunctionSymbol> private set
+    override lateinit var greaterOrEqualFunByOperandType: Map<IrClassifierSymbol, IrSimpleFunctionSymbol> private set
+    override lateinit var greaterFunByOperandType: Map<IrClassifierSymbol, IrSimpleFunctionSymbol> private set
+
     private val internalIrPackageFragment: IrClassSymbol =
         createClass(KOTLIN_INTERNAL_IR_FQN.child(Name.identifier("InternalKt")), internalIrPackage) { klass ->
 
-            fun addBuiltinFunction(name: String, returnType: IrType, vararg valueParameterTypes: IrType) =
-                klass.addFunction(name, returnType, isStatic = true).also { fn ->
-                    valueParameterTypes.forEachIndexed { index, irType ->
-                        fn.addValueParameter(Name.identifier("arg$index"), irType)
-                    }
+            fun addBuiltinFunctionSymbol(name: String, returnType: IrType, vararg valueParameterTypes: IrType) =
+                createFunction(KOTLIN_INTERNAL_IR_FQN, name, returnType, valueParameterTypes, klass).also {
+                    klass.declarations.add(it)
                 }.symbol
 
             primitiveFloatingPointIrTypes.forEach { fpType ->
                 _ieee754equalsFunByOperandType.put(
                     fpType.classifierOrFail,
-                    addBuiltinFunction(BuiltInOperatorNames.IEEE754_EQUALS, booleanType, fpType.makeNullable(), fpType.makeNullable())
+                    addBuiltinFunctionSymbol(BuiltInOperatorNames.IEEE754_EQUALS, booleanType, fpType.makeNullable(), fpType.makeNullable())
                 )
             }
-            booleanNotSymbol = addBuiltinFunction(BuiltInOperatorNames.EQEQEQ, booleanType, anyNType, anyNType)
-            eqeqeqSymbol = addBuiltinFunction(BuiltInOperatorNames.EQEQEQ, booleanType, anyNType, anyNType)
-            eqeqSymbol = addBuiltinFunction(BuiltInOperatorNames.EQEQ, booleanType, anyNType, anyNType)
-            throwCceSymbol = addBuiltinFunction(BuiltInOperatorNames.THROW_CCE, nothingType)
-            throwIseSymbol = addBuiltinFunction(BuiltInOperatorNames.THROW_ISE, nothingType)
-            andandSymbol = addBuiltinFunction(BuiltInOperatorNames.ANDAND, booleanType, booleanType, booleanType)
-            ororSymbol = addBuiltinFunction(BuiltInOperatorNames.OROR, booleanType, booleanType, booleanType)
-            noWhenBranchMatchedExceptionSymbol = addBuiltinFunction(BuiltInOperatorNames.NO_WHEN_BRANCH_MATCHED_EXCEPTION, nothingType)
-            illegalArgumentExceptionSymbol = addBuiltinFunction(BuiltInOperatorNames.ILLEGAL_ARGUMENT_EXCEPTION, nothingType, stringType)
-            dataClassArrayMemberHashCodeSymbol = addBuiltinFunction("dataClassArrayMemberHashCode", intType, anyType)
-            dataClassArrayMemberToStringSymbol = addBuiltinFunction("dataClassArrayMemberToString", stringType, anyNType)
+            eqeqeqSymbol = addBuiltinFunctionSymbol(BuiltInOperatorNames.EQEQEQ, booleanType, anyNType, anyNType)
+            eqeqSymbol = addBuiltinFunctionSymbol(BuiltInOperatorNames.EQEQ, booleanType, anyNType, anyNType)
+            throwCceSymbol = addBuiltinFunctionSymbol(BuiltInOperatorNames.THROW_CCE, nothingType)
+            throwIseSymbol = addBuiltinFunctionSymbol(BuiltInOperatorNames.THROW_ISE, nothingType)
+            andandSymbol = addBuiltinFunctionSymbol(BuiltInOperatorNames.ANDAND, booleanType, booleanType, booleanType)
+            ororSymbol = addBuiltinFunctionSymbol(BuiltInOperatorNames.OROR, booleanType, booleanType, booleanType)
+            noWhenBranchMatchedExceptionSymbol =
+                addBuiltinFunctionSymbol(BuiltInOperatorNames.NO_WHEN_BRANCH_MATCHED_EXCEPTION, nothingType)
+            illegalArgumentExceptionSymbol =
+                addBuiltinFunctionSymbol(BuiltInOperatorNames.ILLEGAL_ARGUMENT_EXCEPTION, nothingType, stringType)
+            dataClassArrayMemberHashCodeSymbol = addBuiltinFunctionSymbol("dataClassArrayMemberHashCode", intType, anyType)
+            dataClassArrayMemberToStringSymbol = addBuiltinFunctionSymbol("dataClassArrayMemberToString", stringType, anyNType)
+
+            checkNotNullSymbol = run {
+                val typeParameter: IrTypeParameter = irFactory.createTypeParameter(
+                    UNDEFINED_OFFSET, UNDEFINED_OFFSET, BUILTIN_OPERATOR, IrTypeParameterSymbolImpl(), Name.identifier("T0"), 0, true,
+                    Variance.INVARIANT
+                ).apply {
+                    superTypes += anyType
+                }
+
+                createFunction(
+                    KOTLIN_INTERNAL_IR_FQN, "CHECK_NOT_NULL",
+                    IrSimpleTypeImpl(typeParameter.symbol, hasQuestionMark = false, emptyList(), emptyList()),
+                    arrayOf(IrSimpleTypeImpl(typeParameter.symbol, hasQuestionMark = true, emptyList(), emptyList())),
+                    klass
+                ).also {
+                    it.typeParameters = listOf(typeParameter)
+                    klass.declarations.add(it)
+                }.symbol
+            }
+
+            fun List<IrType>.defineComparisonOperatorForEachIrType(name: String) =
+                associate { it.classifierOrFail to addBuiltinFunctionSymbol(name, booleanType, it, it) }
+
+            lessFunByOperandType = primitiveIrTypesWithComparisons.defineComparisonOperatorForEachIrType(BuiltInOperatorNames.LESS)
+            lessOrEqualFunByOperandType =
+                primitiveIrTypesWithComparisons.defineComparisonOperatorForEachIrType(BuiltInOperatorNames.LESS_OR_EQUAL)
+            greaterOrEqualFunByOperandType =
+                primitiveIrTypesWithComparisons.defineComparisonOperatorForEachIrType(BuiltInOperatorNames.GREATER_OR_EQUAL)
+            greaterFunByOperandType = primitiveIrTypesWithComparisons.defineComparisonOperatorForEachIrType(BuiltInOperatorNames.GREATER)
         }
 
-    override val unsignedArrays: Set<IrClassSymbol>
-        get() = TODO("Not yet implemented")
-    override val lessFunByOperandType: Map<IrClassifierSymbol, IrSimpleFunctionSymbol>
-        get() = TODO("Not yet implemented")
-    override val lessOrEqualFunByOperandType: Map<IrClassifierSymbol, IrSimpleFunctionSymbol>
-        get() = TODO("Not yet implemented")
-    override val greaterOrEqualFunByOperandType: Map<IrClassifierSymbol, IrSimpleFunctionSymbol>
-        get() = TODO("Not yet implemented")
-    override val greaterFunByOperandType: Map<IrClassifierSymbol, IrSimpleFunctionSymbol>
-        get() = TODO("Not yet implemented")
+    override val unsignedArrays: Set<IrClassSymbol> = UnsignedType.values().mapNotNullTo(mutableSetOf()) { unsignedType ->
+        referenceClassByClassId(unsignedType.arrayClassId)
+    }
 
-    override val checkNotNullSymbol: IrSimpleFunctionSymbol
-        get() = TODO("Not yet implemented")
-
-    override fun getKPropertyClass(mutable: Boolean, n: Int): IrClassSymbol {
-        TODO("Not yet implemented")
+    override fun getKPropertyClass(mutable: Boolean, n: Int): IrClassSymbol = when (n) {
+        0 -> if (mutable) kMutableProperty0Class else kProperty0Class
+        1 -> if (mutable) kMutableProperty1Class else kProperty1Class
+        2 -> if (mutable) kMutableProperty2Class else kProperty2Class
+        else -> error("No KProperty for n=$n mutable=$mutable")
     }
 
     override val enumClass: IrClassSymbol
@@ -272,8 +289,26 @@ class IrBuiltInsOverFir(
         get() = TODO("Not yet implemented")
     override val arrayOf: IrSimpleFunctionSymbol
         get() = TODO("Not yet implemented")
-    override val arrayOfNulls: IrSimpleFunctionSymbol
-        get() = TODO("Not yet implemented")
+
+    private class KotlinPackageFuns(val arrayOfNulls: IrSimpleFunctionSymbol)
+
+    private val kotlinPackageFragment by lazy {
+        val fragment = createClass(kotlinPackage.child(Name.identifier("LibraryKt")), kotlinIrPackage)
+        KotlinPackageFuns(
+            arrayOfNulls = createFunction(
+                kotlinPackage,
+                "arrayOfNulls",
+                arrayClass.defaultType,
+                arrayOf(intType),
+                fragment.owner
+            ).also {
+                it.addTypeParameter("T", anyNType)
+            }.symbol
+        )
+    }
+
+    override val arrayOfNulls: IrSimpleFunctionSymbol get() = kotlinPackageFragment.arrayOfNulls
+
     override val toUIntByExtensionReceiver: Map<IrClassifierSymbol, IrSimpleFunctionSymbol>
         get() = TODO("Not yet implemented")
     override val toULongByExtensionReceiver: Map<IrClassifierSymbol, IrSimpleFunctionSymbol>
@@ -311,13 +346,11 @@ class IrBuiltInsOverFir(
         TODO("Not yet implemented")
     }
 
-    override fun findFunctions(name: Name, vararg packageNameSegments: String): Iterable<IrSimpleFunctionSymbol> {
-        TODO("Not yet implemented")
-    }
+    override fun findFunctions(name: Name, vararg packageNameSegments: String): Iterable<IrSimpleFunctionSymbol> =
+        findFunctions(FqName.fromSegments(packageNameSegments.asList()), name)
 
-    override fun findClass(name: Name, vararg packageNameSegments: String): IrClassSymbol? {
-        TODO("Not yet implemented")
-    }
+    override fun findClass(name: Name, vararg packageNameSegments: String): IrClassSymbol? =
+        referenceClassByFqname(FqName.fromSegments(packageNameSegments.asList()), name)
 
     override fun getBinaryOperator(name: Name, lhsType: IrType, rhsType: IrType): IrSimpleFunctionSymbol {
         TODO("Not yet implemented")
@@ -330,17 +363,26 @@ class IrBuiltInsOverFir(
     override val getProgressionLastElementByReturnType: Map<IrClassifierSymbol?, IrSimpleFunctionSymbol>
         get() = TODO("Not yet implemented")
 
+    private fun referenceClassByFqname(topLevelFqName: FqName) =
+        referenceClassByClassId(ClassId.topLevel(topLevelFqName))
+
     private fun referenceClassByFqname(packageName: FqName, identifier: Name) =
-        referenceClassByFqname(ClassId(packageName, identifier))
+        referenceClassByClassId(ClassId(packageName, identifier))
 
     private fun referenceClassByFqname(packageName: FqName, identifier: String) =
-        referenceClassByFqname(ClassId(packageName, Name.identifier(identifier)))
+        referenceClassByClassId(ClassId(packageName, Name.identifier(identifier)))
 
-    private fun referenceClassByFqname(classId: ClassId): IrClassSymbol? {
+    private fun referenceClassByClassId(classId: ClassId): IrClassSymbol? {
         val firSymbol = components.session.symbolProvider.getClassLikeSymbolByFqName(classId) ?: return null
         val firClassSymbol = firSymbol as? FirClassSymbol ?: return null
         return components.classifierStorage.getIrClassSymbol(firClassSymbol)
     }
+
+    private fun referenceNestedClass(klass: IrClassSymbol, identifier: String): IrClassSymbol? =
+        referenceClassByClassId(klass.owner.classId!!.createNestedClassId(Name.identifier(identifier)))
+
+    private fun referenceNestedClass(fqName: FqName): IrClassSymbol? =
+        referenceClassByClassId(ClassId(fqName.parent().parent(), fqName.parent().shortName()).createNestedClassId(fqName.shortName()))
 
     private fun createPackage(fqName: FqName): IrPackageFragment =
         IrExternalPackageFragmentImpl.createEmptyExternalPackageFragment(moduleDescriptor, fqName)
@@ -353,30 +395,74 @@ class IrBuiltInsOverFir(
         classIsInline: Boolean = false,
         block: (IrClass) -> Unit = {}
     ): IrClassSymbol =
-        irFactory.buildClass {
+        IrClassBuilder().run {
             name = fqName.shortName()
             kind = classKind
             modality = classModality
             isInline = classIsInline
+            irFactory.createClass(
+                startOffset, endOffset, origin,
+                IrClassPublicSymbolImpl(IdSignature.PublicSignature(fqName.parent().asString(), fqName.shortName().asString(), null, 0)),
+                name, kind, visibility, modality,
+                isCompanion, isInner, isData, isExternal, isInline, isExpect, isFun
+            )
         }.also {
             it.parent = parent
+            it.createImplicitParameterDeclarationWithWrappedDescriptor()
             block(it)
         }.symbol
 
-
-    private fun findOperator(packageName: FqName, name: String, returnType: IrType, valueParameterTypes: List<IrType>): IrSimpleFunctionSymbol {
-        for (firOpSymbol in components.session.symbolProvider.getTopLevelFunctionSymbols(packageName, Name.identifier(name))) {
-            val irSymbol = components.declarationStorage.getIrFunctionSymbol(firOpSymbol) as? IrSimpleFunctionSymbol ?: continue
-            if (irSymbol.owner.let {
-                    it.returnType == returnType && it.valueParameters.size == valueParameterTypes.size &&
-                            it.valueParameters.zip(valueParameterTypes).all { it.first.type == it.second }
-                }
-            ) {
-                return irSymbol
+    private fun createFunction(
+        signature: IdSignature,
+        name: String,
+        returnType: IrType,
+        valueParameterTypes: Array<out IrType>,
+        parent: IrDeclarationParent,
+        origin: IrDeclarationOrigin = BUILTIN_OPERATOR
+    ) = IrFunctionBuilder().run {
+        this.name = Name.identifier(name)
+        this.returnType = returnType
+        this.origin = origin
+        irFactory.createFunction(
+            startOffset, endOffset, origin, IrSimpleFunctionPublicSymbolImpl(signature), this.name, visibility, modality, this.returnType,
+            isInline, isExternal, isTailrec, isSuspend, isOperator, isInfix, isExpect, isFakeOverride, containerSource,
+        ).also { fn ->
+            valueParameterTypes.forEachIndexed { index, irType ->
+                fn.addValueParameter(Name.identifier("arg$index"), irType, origin)
             }
+            fn.parent = parent
         }
-        error("no op $name found in $packageName")
     }
+
+    private fun createFunction(
+        packageFqName: FqName,
+        name: String,
+        returnType: IrType,
+        valueParameterTypes: Array<out IrType>,
+        parent: IrDeclarationParent
+    ) = createFunction(
+        IdSignature.PublicSignature(packageFqName.asString(), name, null, 0),
+        name, returnType, valueParameterTypes, parent
+    )
+
+    private fun findFunctions(packageName: FqName, name: Name) =
+        components.session.symbolProvider.getTopLevelFunctionSymbols(packageName, name).mapNotNull { firOpSymbol ->
+            components.declarationStorage.getIrFunctionSymbol(firOpSymbol) as? IrSimpleFunctionSymbol
+        }
+
+    private fun findFunction(
+        packageName: FqName,
+        name: Name,
+        returnType: IrType,
+        vararg valueParameterTypes: IrType
+    ): IrSimpleFunctionSymbol =
+        findFunctions(packageName, name).firstOrNull { irSymbol ->
+            irSymbol.owner.let {
+                it.returnType == returnType && it.valueParameters.size == valueParameterTypes.size &&
+                        it.valueParameters.zip(valueParameterTypes).all { it.first.type == it.second }
+            }
+        } ?: error("no fun $name found in $packageName")
+
 //    private fun defineOperator(name: String, returnType: IrType, valueParameterTypes: List<IrType>): IrSimpleFunctionSymbol {
 //        val operatorDescriptor =
 //            IrSimpleBuiltinOperatorDescriptorImpl(packageFragmentDescriptor, Name.identifier(name), returnType.originalKotlinType!!)
