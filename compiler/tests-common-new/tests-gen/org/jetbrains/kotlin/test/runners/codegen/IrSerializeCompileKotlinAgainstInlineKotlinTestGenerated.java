@@ -1989,6 +1989,12 @@ public class IrSerializeCompileKotlinAgainstInlineKotlinTestGenerated extends Ab
                 public void testPropertyReferenceFromObject() throws Exception {
                     runTest("compiler/testData/codegen/boxInline/defaultValues/lambdaInlining/callableReferences/propertyReferenceFromObject.kt");
                 }
+
+                @Test
+                @TestMetadata("withInlineClassParameter.kt")
+                public void testWithInlineClassParameter() throws Exception {
+                    runTest("compiler/testData/codegen/boxInline/defaultValues/lambdaInlining/callableReferences/withInlineClassParameter.kt");
+                }
             }
         }
 
@@ -4933,6 +4939,18 @@ public class IrSerializeCompileKotlinAgainstInlineKotlinTestGenerated extends Ab
             @Test
             public void testAllFilesPresentInDefaultParameter() throws Exception {
                 KtTestUtil.assertAllTestsPresentByMetadataWithExcluded(this.getClass(), new File("compiler/testData/codegen/boxInline/suspend/defaultParameter"), Pattern.compile("^(.+)\\.kt$"), null, TargetBackend.JVM_IR, true);
+            }
+
+            @Test
+            @TestMetadata("defaultInlineLambda.kt")
+            public void testDefaultInlineLambda() throws Exception {
+                runTest("compiler/testData/codegen/boxInline/suspend/defaultParameter/defaultInlineLambda.kt");
+            }
+
+            @Test
+            @TestMetadata("defaultInlineReference.kt")
+            public void testDefaultInlineReference() throws Exception {
+                runTest("compiler/testData/codegen/boxInline/suspend/defaultParameter/defaultInlineReference.kt");
             }
 
             @Test
