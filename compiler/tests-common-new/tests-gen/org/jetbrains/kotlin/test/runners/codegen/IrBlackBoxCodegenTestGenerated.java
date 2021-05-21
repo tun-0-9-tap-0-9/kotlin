@@ -37150,6 +37150,18 @@ public class IrBlackBoxCodegenTestGenerated extends AbstractIrBlackBoxCodegenTes
             }
 
             @Test
+            @TestMetadata("mutableCollections_1_5.kt")
+            public void testMutableCollections_1_5() throws Exception {
+                runTest("compiler/testData/codegen/box/reflection/typeOf/mutableCollections_1_5.kt");
+            }
+
+            @Test
+            @TestMetadata("mutableCollections_1_6.kt")
+            public void testMutableCollections_1_6() throws Exception {
+                runTest("compiler/testData/codegen/box/reflection/typeOf/mutableCollections_1_6.kt");
+            }
+
+            @Test
             @TestMetadata("typeOfCapturedStar.kt")
             public void testTypeOfCapturedStar() throws Exception {
                 runTest("compiler/testData/codegen/box/reflection/typeOf/typeOfCapturedStar.kt");
@@ -37196,6 +37208,18 @@ public class IrBlackBoxCodegenTestGenerated extends AbstractIrBlackBoxCodegenTes
                 @TestMetadata("inlineClasses.kt")
                 public void testInlineClasses() throws Exception {
                     runTest("compiler/testData/codegen/box/reflection/typeOf/noReflect/inlineClasses.kt");
+                }
+
+                @Test
+                @TestMetadata("mutableCollections_1_5.kt")
+                public void testMutableCollections_1_5() throws Exception {
+                    runTest("compiler/testData/codegen/box/reflection/typeOf/noReflect/mutableCollections_1_5.kt");
+                }
+
+                @Test
+                @TestMetadata("mutableCollections_1_6.kt")
+                public void testMutableCollections_1_6() throws Exception {
+                    runTest("compiler/testData/codegen/box/reflection/typeOf/noReflect/mutableCollections_1_6.kt");
                 }
 
                 @Test
