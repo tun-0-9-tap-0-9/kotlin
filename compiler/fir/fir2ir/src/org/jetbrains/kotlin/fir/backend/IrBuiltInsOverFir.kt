@@ -32,6 +32,7 @@ import org.jetbrains.kotlin.ir.types.impl.IrSimpleTypeImpl
 import org.jetbrains.kotlin.ir.util.IdSignature
 import org.jetbrains.kotlin.ir.util.SymbolTable
 import org.jetbrains.kotlin.ir.util.classId
+import org.jetbrains.kotlin.ir.util.isVararg
 import org.jetbrains.kotlin.name.ClassId
 import org.jetbrains.kotlin.name.FqName
 import org.jetbrains.kotlin.name.Name
@@ -277,8 +278,8 @@ class IrBuiltInsOverFir(
         else -> error("No KProperty for n=$n mutable=$mutable")
     }
 
-    override val enumClass: IrClassSymbol
-        get() = TODO("Not yet implemented")
+    override val enumClass: IrClassSymbol by lazy { referenceClassByFqname(kotlinPackage, "Enum")!! }
+
     override val intPlusSymbol: IrSimpleFunctionSymbol
         get() = TODO("Not yet implemented")
     override val intTimesSymbol: IrSimpleFunctionSymbol
@@ -287,32 +288,52 @@ class IrBuiltInsOverFir(
         get() = TODO("Not yet implemented")
     override val stringPlus: IrSimpleFunctionSymbol
         get() = TODO("Not yet implemented")
-    override val arrayOf: IrSimpleFunctionSymbol
-        get() = TODO("Not yet implemented")
 
-    private class KotlinPackageFuns(val arrayOfNulls: IrSimpleFunctionSymbol)
+    private class KotlinPackageFuns(
+        val arrayOfNulls: IrSimpleFunctionSymbol,
+        val arrayOf: IrSimpleFunctionSymbol,
+    )
 
     private val kotlinPackageFragment by lazy {
         val fragment = createClass(kotlinPackage.child(Name.identifier("LibraryKt")), kotlinIrPackage)
-        KotlinPackageFuns(
-            arrayOfNulls = createFunction(
-                kotlinPackage,
-                "arrayOfNulls",
-                arrayClass.defaultType,
-                arrayOf(intType),
-                fragment.owner
-            ).also {
-                it.addTypeParameter("T", anyNType)
+        fun addPackageFun(name: String, returnType: IrType, vararg argumentTypes: IrType, builder: IrSimpleFunction.() -> Unit) =
+            createFunction(kotlinPackage, name, returnType, argumentTypes, fragment.owner).also {
+                it.builder()
+                fragment.owner.declarations.add(it)
             }.symbol
+        KotlinPackageFuns(
+            arrayOfNulls = addPackageFun("arrayOfNulls", arrayClass.defaultType, intType) {
+                addTypeParameter("T", anyNType)
+            },
+            arrayOf = addPackageFun("arrayOf", arrayClass.defaultType) {
+                addTypeParameter("T", anyNType)
+                addValueParameter {
+                    this.name = Name.identifier("elements")
+                    this.varargElementType = arrayClass.defaultType
+                    this.origin = origin
+                }
+            }
         )
     }
 
+    override val arrayOf: IrSimpleFunctionSymbol get() = kotlinPackageFragment.arrayOf
     override val arrayOfNulls: IrSimpleFunctionSymbol get() = kotlinPackageFragment.arrayOfNulls
 
-    override val toUIntByExtensionReceiver: Map<IrClassifierSymbol, IrSimpleFunctionSymbol>
-        get() = TODO("Not yet implemented")
-    override val toULongByExtensionReceiver: Map<IrClassifierSymbol, IrSimpleFunctionSymbol>
-        get() = TODO("Not yet implemented")
+    override val toUIntByExtensionReceiver: Map<IrClassifierSymbol, IrSimpleFunctionSymbol> by lazy {
+        findFunctions(kotlinPackage, Name.identifier("toUInt")).mapNotNull { fn ->
+            fn.owner.extensionReceiverParameter?.varargElementType?.classifierOrNull?.let { klass ->
+                klass to fn
+            }
+        }.toMap()
+    }
+
+    override val toULongByExtensionReceiver: Map<IrClassifierSymbol, IrSimpleFunctionSymbol> by lazy {
+        findFunctions(kotlinPackage, Name.identifier("toULong")).mapNotNull { fn ->
+            fn.owner.extensionReceiverParameter?.varargElementType?.classifierOrNull?.let { klass ->
+                klass to fn
+            }
+        }.toMap()
+    }
 
     override fun functionN(arity: Int, declarator: SymbolTable.((IrClassSymbol) -> IrClass) -> IrClass): IrClass {
         TODO("Not yet implemented")
