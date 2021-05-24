@@ -7,8 +7,10 @@ package org.jetbrains.kotlin.fir.analysis.diagnostics
 
 import org.jetbrains.kotlin.descriptors.Visibility
 import org.jetbrains.kotlin.diagnostics.WhenMissingCase
+import org.jetbrains.kotlin.diagnostics.rendering.ContextIndependentParameterRenderer
 import org.jetbrains.kotlin.diagnostics.rendering.Renderer
 import org.jetbrains.kotlin.fir.FirElement
+import org.jetbrains.kotlin.fir.FirModuleData
 import org.jetbrains.kotlin.fir.FirRenderer
 import org.jetbrains.kotlin.fir.declarations.*
 import org.jetbrains.kotlin.fir.render
@@ -32,11 +34,7 @@ object FirDiagnosticRenderers {
         }
     }
 
-    val SYMBOLS = Renderer { symbols: Collection<AbstractFirBasedSymbol<*>> ->
-        symbols.joinToString(prefix = "[", postfix = "]", separator = ", ", limit = 3, truncated = "...") { symbol ->
-            SYMBOL.render(symbol)
-        }
-    }
+    val SYMBOLS = COLLECTION(SYMBOL)
 
     val TO_STRING = Renderer { element: Any? ->
         element.toString()
@@ -111,5 +109,18 @@ object FirDiagnosticRenderers {
 
     val NOT_RENDERED = Renderer<Any?> {
         ""
+    }
+
+    val MODULE_DATA = Renderer<FirModuleData> {
+        "Module ${it.name}"
+    }
+
+    @Suppress("FunctionName")
+    fun <T> COLLECTION(renderer: ContextIndependentParameterRenderer<T>): ContextIndependentParameterRenderer<Collection<T>> {
+        return Renderer { list ->
+            list.joinToString(prefix = "[", postfix = "]", separator = ", ", limit = 3, truncated = "...") {
+                renderer.render(it)
+            }
+        }
     }
 }

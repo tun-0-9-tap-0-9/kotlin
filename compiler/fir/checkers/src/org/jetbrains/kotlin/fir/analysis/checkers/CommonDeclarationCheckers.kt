@@ -35,6 +35,7 @@ object CommonDeclarationCheckers : DeclarationCheckers() {
             FirTypeAliasChecker,
             FirCyclicTypeBoundsChecker,
             FirInlineDeclarationChecker,
+            FirExpectActualDeclarationChecker,
         )
 
     override val functionCheckers: Set<FirFunctionChecker>
