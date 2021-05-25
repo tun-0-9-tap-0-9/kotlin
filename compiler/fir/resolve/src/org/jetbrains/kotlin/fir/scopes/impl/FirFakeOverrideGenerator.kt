@@ -7,14 +7,11 @@ package org.jetbrains.kotlin.fir.scopes.impl
 
 import org.jetbrains.kotlin.descriptors.Modality
 import org.jetbrains.kotlin.descriptors.Visibility
-import org.jetbrains.kotlin.fir.FirSession
-import org.jetbrains.kotlin.fir.copy
+import org.jetbrains.kotlin.fir.*
 import org.jetbrains.kotlin.fir.declarations.*
 import org.jetbrains.kotlin.fir.declarations.builder.*
 import org.jetbrains.kotlin.fir.declarations.synthetic.FirSyntheticProperty
 import org.jetbrains.kotlin.fir.declarations.synthetic.buildSyntheticProperty
-import org.jetbrains.kotlin.fir.moduleData
-import org.jetbrains.kotlin.fir.originalForSubstitutionOverrideAttr
 import org.jetbrains.kotlin.fir.resolve.substitution.ChainedSubstitutor
 import org.jetbrains.kotlin.fir.resolve.substitution.ConeSubstitutor
 import org.jetbrains.kotlin.fir.resolve.substitution.substitutorByMap
@@ -102,7 +99,7 @@ object FirFakeOverrideGenerator {
     ): FirSimpleFunction {
         return buildSimpleFunction {
             source = baseFunction.source
-            moduleData = session.moduleData
+            moduleData = session.nullableModuleData ?: baseFunction.moduleData
             this.origin = origin
             name = baseFunction.name
             status = baseFunction.status.copy(isExpect, newModality, newVisibility)
