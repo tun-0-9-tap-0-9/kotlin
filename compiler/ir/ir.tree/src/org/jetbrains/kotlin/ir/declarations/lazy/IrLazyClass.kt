@@ -112,7 +112,7 @@ class IrLazyClass(
         get() = null
         set(_) = error("We should never need to store metadata of external declarations.")
 
-    var irLoaded: Boolean? = null
+    private var irLoaded: Boolean? = null
 
     override fun loadIr(): Boolean {
         assert(parent is IrPackageFragment)
