@@ -191,6 +191,10 @@ class FirStatusResolver(
             )
         }
 
+        if (containingClass is FirRegularClass && containingClass.isExpect) {
+            status.isExpect = true
+        }
+
         return status.resolved(visibility, modality, effectiveVisibility)
     }
 
