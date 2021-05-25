@@ -7,6 +7,7 @@ package org.jetbrains.kotlin.backend.jvm
 
 import org.jetbrains.kotlin.backend.common.ir.createImplicitParameterDeclarationWithWrappedDescriptor
 import org.jetbrains.kotlin.backend.common.ir.createParameterDeclarations
+import org.jetbrains.kotlin.backend.common.serialization.signature.IdSignatureSerializer
 import org.jetbrains.kotlin.backend.jvm.lower.SingletonObjectJvmStaticTransformer
 import org.jetbrains.kotlin.backend.jvm.serialization.deserializeClassFromByteArray
 import org.jetbrains.kotlin.backend.jvm.serialization.deserializeIrFileFromByteArray
@@ -15,6 +16,7 @@ import org.jetbrains.kotlin.descriptors.*
 import org.jetbrains.kotlin.descriptors.annotations.FilteredAnnotations
 import org.jetbrains.kotlin.incremental.components.NoLookupLocation
 import org.jetbrains.kotlin.ir.ObsoleteDescriptorBasedAPI
+import org.jetbrains.kotlin.ir.backend.jvm.serialization.JvmManglerIr
 import org.jetbrains.kotlin.ir.builders.declarations.addConstructor
 import org.jetbrains.kotlin.ir.builders.declarations.buildClass
 import org.jetbrains.kotlin.ir.declarations.*
@@ -215,6 +217,19 @@ open class JvmGeneratorExtensionsImpl(private val generateFacades: Boolean = tru
             context.irBuiltIns.unitType,
             context.symbolTable.referenceConstructor(recordConstructor)
         )
+    }
+
+    override fun registerDeclarations(symbolTable: SymbolTable) {
+        val signatureComputer = IdSignatureSerializer(JvmManglerIr)
+        listOf(flexibleNullabilityAnnotationConstructor, enhancedNullabilityAnnotationConstructor, rawTypeAnnotationConstructor)
+            .forEach { constructor ->
+                symbolTable.declareConstructor(
+                    signatureComputer.composePublicIdSignature(constructor),
+                    { constructor.symbol },
+                    { constructor }
+                )
+            }
+        super.registerDeclarations(symbolTable)
     }
 
     override val shouldPreventDeprecatedIntegerValueTypeLiteralConversion: Boolean
