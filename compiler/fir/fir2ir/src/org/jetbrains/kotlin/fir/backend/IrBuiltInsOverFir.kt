@@ -198,7 +198,13 @@ class IrBuiltInsOverFir(
             createMemberFunction(OperatorNameConventions.INC.asString(), charType)
             createMemberFunction(OperatorNameConventions.DEC.asString(), charType)
         }
-//        charClass::class.java.methods.joinToString("\n")
+
+        with (stringClass.owner) {
+            createMemberFunction(OperatorNameConventions.COMPARE_TO.asString(), intType, defaultType)
+            createProperty("length", intType)
+            createMemberFunction(OperatorNameConventions.PLUS.asString(), defaultType, anyNType)
+            createMemberFunction(OperatorNameConventions.GET.asString(), charType, intType)
+        }
     }
 
     override val booleanArray: IrClassSymbol = kotlinIrPackage.createClass(PrimitiveType.BOOLEAN.arrayTypeName) { addArrayMembers(booleanType) }
@@ -564,13 +570,19 @@ class IrBuiltInsOverFir(
         createMemberFunction("set", unitType, intType, elementType) {
             isOperator = true
         }
-        addProperty { name = Name.identifier("size") }.also {
+        createProperty("size", intType)
+    }
+
+    private fun IrClass.createProperty(propertyName: String, returnType: IrType, builder: IrProperty.() -> Unit = {}) {
+        addProperty { name = Name.identifier(propertyName) }.also {
             it.getter = irFactory.buildFun {
-                name = Name.special("<get-size>")
-                returnType = intType
+                name = Name.special("<get-$propertyName>")
+                this.returnType = returnType
             }.also {
-                it.parent = this@addArrayMembers
+                it.addDispatchReceiver { type = this@createProperty.defaultType }
+                it.parent = this
             }
+            it.builder()
         }
     }
 
