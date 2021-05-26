@@ -57,8 +57,10 @@ open class DeclarationTable(globalTable: GlobalDeclarationTable) {
     // TODO: we need to disentangle signature construction with declaration tables.
     open val signaturer: IdSignatureSerializer = IdSignatureSerializer(globalTable.publicIdSignatureComputer, this)
 
-    private fun IrDeclaration.isLocalDeclaration(): Boolean {
-        return !isExportedDeclaration(this)
+    fun inFile(file: IrFile?, block: () -> Unit) {
+        signaturer.reset()
+        signaturer.table = this
+        signaturer.inFile(file?.symbol, block)
     }
 
     fun isExportedDeclaration(declaration: IrDeclaration) = globalDeclarationTable.isExportedDeclaration(declaration)
