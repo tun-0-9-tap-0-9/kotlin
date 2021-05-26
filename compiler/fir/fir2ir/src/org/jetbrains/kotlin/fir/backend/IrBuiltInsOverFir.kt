@@ -154,9 +154,52 @@ class IrBuiltInsOverFir(
         PrimitiveType.DOUBLE to doubleType
     )
 
-    override val primitiveIrTypes = listOf(booleanType, charType, byteType, shortType, intType, longType, floatType, doubleType)
-    override val primitiveIrTypesWithComparisons = listOf(charType, byteType, shortType, intType, longType, floatType, doubleType)
+    private val primitiveIntegralIrTypes = listOf(byteType, shortType, intType, longType)
     override val primitiveFloatingPointIrTypes = listOf(floatType, doubleType)
+    private val primitiveNumericIrTypes = primitiveIntegralIrTypes + primitiveFloatingPointIrTypes
+    override val primitiveIrTypesWithComparisons = listOf(charType) + primitiveNumericIrTypes
+    override val primitiveIrTypes = listOf(booleanType) + primitiveIrTypesWithComparisons
+
+    private val primitiveArithmeticOperatorResultTypes = mapOf(
+        charType to intType, byteType to intType, shortType to intType, intType to intType,
+        longType to longType, floatType to floatType, doubleType to doubleType
+    )
+
+    init {
+        for (primitive in primitiveNumericIrTypes) {
+            with(primitive.getClass()!!) {
+                for (targetPrimitive in primitiveIrTypesWithComparisons) {
+                    createMemberFunction("to${targetPrimitive.classFqName!!.shortName().asString()}", targetPrimitive)
+                }
+                for (targetPrimitive in primitiveNumericIrTypes) {
+                    createMemberFunction(OperatorNameConventions.COMPARE_TO.asString(), intType, targetPrimitive)
+                    val targetArithmeticReturnType = primitiveArithmeticOperatorResultTypes[targetPrimitive]!!
+                    createMemberFunction(OperatorNameConventions.PLUS.asString(), targetArithmeticReturnType, targetPrimitive)
+                    createMemberFunction(OperatorNameConventions.MINUS.asString(), targetArithmeticReturnType, targetPrimitive)
+                    createMemberFunction(OperatorNameConventions.TIMES.asString(), targetArithmeticReturnType, targetPrimitive)
+                    createMemberFunction(OperatorNameConventions.DIV.asString(), targetArithmeticReturnType, targetPrimitive)
+                    createMemberFunction(OperatorNameConventions.REM.asString(), targetArithmeticReturnType, targetPrimitive)
+                }
+                val arithmeticReturnType = primitiveArithmeticOperatorResultTypes[primitive]!!
+                createMemberFunction(OperatorNameConventions.UNARY_PLUS.asString(), arithmeticReturnType)
+                createMemberFunction(OperatorNameConventions.UNARY_MINUS.asString(), arithmeticReturnType)
+                createMemberFunction(OperatorNameConventions.INC.asString(), primitive)
+                createMemberFunction(OperatorNameConventions.DEC.asString(), primitive)
+            }
+        }
+        with (charClass.owner) {
+            for (targetPrimitive in primitiveIrTypesWithComparisons) {
+                createMemberFunction("to${targetPrimitive.classFqName!!.shortName().asString()}", targetPrimitive)
+            }
+            createMemberFunction(OperatorNameConventions.COMPARE_TO.asString(), intType, charType)
+            createMemberFunction(OperatorNameConventions.PLUS.asString(), charType, intType)
+            createMemberFunction(OperatorNameConventions.MINUS.asString(), charType, intType)
+            createMemberFunction(OperatorNameConventions.MINUS.asString(), intType, charType)
+            createMemberFunction(OperatorNameConventions.INC.asString(), charType)
+            createMemberFunction(OperatorNameConventions.DEC.asString(), charType)
+        }
+//        charClass::class.java.methods.joinToString("\n")
+    }
 
     override val booleanArray: IrClassSymbol = kotlinIrPackage.createClass(PrimitiveType.BOOLEAN.arrayTypeName) { addArrayMembers(booleanType) }
     override val charArray: IrClassSymbol = kotlinIrPackage.createClass(PrimitiveType.CHAR.arrayTypeName) { addArrayMembers(charType) }
@@ -515,7 +558,7 @@ class IrBuiltInsOverFir(
         }.also {
             it.addValueParameter("size", intType, BUILTIN_CLASS_CONSTRUCTOR)
         }
-        createMemberFunction("get", intType, elementType) {
+        createMemberFunction("get", elementType, intType) {
             isOperator = true
         }
         createMemberFunction("set", unitType, intType, elementType) {
@@ -533,7 +576,6 @@ class IrBuiltInsOverFir(
 
     private fun IrPackageFragment.createNumberClass(name: String, builder: IrClass.() -> Unit = {}): IrClassSymbol =
         createClass(name) {
-            createMemberFunction(OperatorNameConventions.PLUS.asString(), this.defaultType, this.defaultType)
             builder()
         }
 
