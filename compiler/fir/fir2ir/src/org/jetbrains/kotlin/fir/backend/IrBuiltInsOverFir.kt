@@ -418,36 +418,33 @@ class IrBuiltInsOverFir(
         }.toMap()
     }
 
-    override fun functionN(arity: Int, declarator: SymbolTable.((IrClassSymbol) -> IrClass) -> IrClass): IrClass {
-        TODO("Not yet implemented")
+    private val functionNMap = mutableMapOf<Int, IrClass>()
+    private val kFunctionNMap = mutableMapOf<Int, IrClass>()
+    private val suspendFunctionNMap = mutableMapOf<Int, IrClass>()
+    private val kSuspendFunctionNMap = mutableMapOf<Int, IrClass>()
+
+    override fun functionN(arity: Int, declarator: SymbolTable.((IrClassSymbol) -> IrClass) -> IrClass): IrClass = functionN(arity)
+
+    override fun kFunctionN(arity: Int, declarator: SymbolTable.((IrClassSymbol) -> IrClass) -> IrClass): IrClass = kFunctionN(arity)
+
+    override fun suspendFunctionN(arity: Int, declarator: SymbolTable.((IrClassSymbol) -> IrClass) -> IrClass): IrClass = suspendFunctionN(arity)
+
+    override fun kSuspendFunctionN(arity: Int, declarator: SymbolTable.((IrClassSymbol) -> IrClass) -> IrClass): IrClass = kSuspendFunctionN(arity)
+
+    override fun functionN(arity: Int): IrClass = functionNMap.getOrPut(arity) {
+        referenceClassByClassId(StandardNames.getFunctionClassId(arity))!!.owner
     }
 
-    override fun kFunctionN(arity: Int, declarator: SymbolTable.((IrClassSymbol) -> IrClass) -> IrClass): IrClass {
-        TODO("Not yet implemented")
+    override fun kFunctionN(arity: Int): IrClass = kFunctionNMap.getOrPut(arity) {
+        referenceClassByClassId(StandardNames.getKFunctionClassId(arity))!!.owner
     }
 
-    override fun suspendFunctionN(arity: Int, declarator: SymbolTable.((IrClassSymbol) -> IrClass) -> IrClass): IrClass {
-        TODO("Not yet implemented")
+    override fun suspendFunctionN(arity: Int): IrClass = suspendFunctionNMap.getOrPut(arity) {
+        referenceClassByClassId(StandardNames.getSuspendFunctionClassId(arity))!!.owner
     }
 
-    override fun kSuspendFunctionN(arity: Int, declarator: SymbolTable.((IrClassSymbol) -> IrClass) -> IrClass): IrClass {
-        TODO("Not yet implemented")
-    }
-
-    override fun functionN(arity: Int): IrClass {
-        TODO("Not yet implemented")
-    }
-
-    override fun kFunctionN(arity: Int): IrClass {
-        TODO("Not yet implemented")
-    }
-
-    override fun suspendFunctionN(arity: Int): IrClass {
-        TODO("Not yet implemented")
-    }
-
-    override fun kSuspendFunctionN(arity: Int): IrClass {
-        TODO("Not yet implemented")
+    override fun kSuspendFunctionN(arity: Int): IrClass = kSuspendFunctionNMap.getOrPut(arity) {
+        referenceClassByClassId(StandardNames.getKSuspendFunctionClassId(arity))!!.owner
     }
 
     override fun findFunctions(name: Name, vararg packageNameSegments: String): Iterable<IrSimpleFunctionSymbol> =
