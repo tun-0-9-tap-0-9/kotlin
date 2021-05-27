@@ -5,12 +5,15 @@
 
 package org.jetbrains.kotlin.fir.backend
 
+import org.intellij.lang.annotations.Language
 import org.jetbrains.kotlin.backend.common.ir.createImplicitParameterDeclarationWithWrappedDescriptor
 import org.jetbrains.kotlin.builtins.PrimitiveType
 import org.jetbrains.kotlin.builtins.StandardNames
 import org.jetbrains.kotlin.builtins.UnsignedType
 import org.jetbrains.kotlin.config.LanguageVersionSettings
 import org.jetbrains.kotlin.descriptors.ClassKind
+import org.jetbrains.kotlin.descriptors.DescriptorVisibilities
+import org.jetbrains.kotlin.descriptors.DescriptorVisibility
 import org.jetbrains.kotlin.descriptors.Modality
 import org.jetbrains.kotlin.fir.descriptors.FirModuleDescriptor
 import org.jetbrains.kotlin.fir.resolve.symbolProvider
@@ -23,8 +26,10 @@ import org.jetbrains.kotlin.ir.declarations.*
 import org.jetbrains.kotlin.ir.declarations.impl.IrExternalPackageFragmentImpl
 import org.jetbrains.kotlin.ir.symbols.IrClassSymbol
 import org.jetbrains.kotlin.ir.symbols.IrClassifierSymbol
+import org.jetbrains.kotlin.ir.symbols.IrConstructorSymbol
 import org.jetbrains.kotlin.ir.symbols.IrSimpleFunctionSymbol
 import org.jetbrains.kotlin.ir.symbols.impl.IrClassPublicSymbolImpl
+import org.jetbrains.kotlin.ir.symbols.impl.IrConstructorPublicSymbolImpl
 import org.jetbrains.kotlin.ir.symbols.impl.IrSimpleFunctionPublicSymbolImpl
 import org.jetbrains.kotlin.ir.symbols.impl.IrTypeParameterSymbolImpl
 import org.jetbrains.kotlin.ir.types.*
@@ -88,6 +93,9 @@ class IrBuiltInsOverFir(
     override val stringType: IrType get() = stringClass.defaultType
 
     override val anyClass: IrClassSymbol = kotlinIrPackage.createClass("Any") {
+        createConstructor()
+        createMemberFunction("equals", booleanType, defaultType.withHasQuestionMark(true))
+        createMemberFunction("hashCode", intType)
         createMemberFunction("toString", stringType)
     }
     override val anyType: IrType = anyClass.defaultType
@@ -159,6 +167,7 @@ class IrBuiltInsOverFir(
     private val primitiveNumericIrTypes = primitiveIntegralIrTypes + primitiveFloatingPointIrTypes
     override val primitiveIrTypesWithComparisons = listOf(charType) + primitiveNumericIrTypes
     override val primitiveIrTypes = listOf(booleanType) + primitiveIrTypesWithComparisons
+    private val baseIrTypes = primitiveIrTypes + stringType
 
     private val primitiveArithmeticOperatorResultTypes = mapOf(
         charType to intType, byteType to intType, shortType to intType, intType to intType,
@@ -174,17 +183,26 @@ class IrBuiltInsOverFir(
                 for (targetPrimitive in primitiveNumericIrTypes) {
                     createMemberFunction(OperatorNameConventions.COMPARE_TO.asString(), intType, targetPrimitive)
                     val targetArithmeticReturnType = primitiveArithmeticOperatorResultTypes[targetPrimitive]!!
-                    createMemberFunction(OperatorNameConventions.PLUS.asString(), targetArithmeticReturnType, targetPrimitive)
-                    createMemberFunction(OperatorNameConventions.MINUS.asString(), targetArithmeticReturnType, targetPrimitive)
-                    createMemberFunction(OperatorNameConventions.TIMES.asString(), targetArithmeticReturnType, targetPrimitive)
-                    createMemberFunction(OperatorNameConventions.DIV.asString(), targetArithmeticReturnType, targetPrimitive)
-                    createMemberFunction(OperatorNameConventions.REM.asString(), targetArithmeticReturnType, targetPrimitive)
+                    for (op in arrayOf(OperatorNameConventions.PLUS, OperatorNameConventions.MINUS, OperatorNameConventions.TIMES, OperatorNameConventions.DIV, OperatorNameConventions.REM)) {
+                        createMemberFunction(op.asString(), targetArithmeticReturnType, targetPrimitive)
+                    }
                 }
                 val arithmeticReturnType = primitiveArithmeticOperatorResultTypes[primitive]!!
                 createMemberFunction(OperatorNameConventions.UNARY_PLUS.asString(), arithmeticReturnType)
                 createMemberFunction(OperatorNameConventions.UNARY_MINUS.asString(), arithmeticReturnType)
                 createMemberFunction(OperatorNameConventions.INC.asString(), primitive)
                 createMemberFunction(OperatorNameConventions.DEC.asString(), primitive)
+            }
+        }
+        for (typeWithBitwiseOps in arrayOf(intType, longType)) {
+            with (typeWithBitwiseOps.getClass()!!) {
+                for (op in arrayOf(OperatorNameConventions.AND, OperatorNameConventions.OR, OperatorNameConventions.XOR)) {
+                    createMemberFunction(op.asString(), typeWithBitwiseOps, typeWithBitwiseOps)
+                }
+                for (op in arrayOf(OperatorNameConventions.SHL, OperatorNameConventions.SHR, OperatorNameConventions.USHR)) {
+                    createMemberFunction(op.asString(), typeWithBitwiseOps, intType)
+                }
+                createMemberFunction(OperatorNameConventions.INV.asString(), typeWithBitwiseOps)
             }
         }
         with (charClass.owner) {
@@ -422,11 +440,17 @@ class IrBuiltInsOverFir(
         referenceClassByFqname(FqName.fromSegments(packageNameSegments.asList()), name)
 
     override fun getBinaryOperator(name: Name, lhsType: IrType, rhsType: IrType): IrSimpleFunctionSymbol {
-        TODO("Not yet implemented")
+        val definingClass = lhsType.getMaybeBuiltinClass() ?: error("Defining class not found: $lhsType")
+        return definingClass.functions.single { function ->
+            function.name == name && function.valueParameters.size == 1 && function.valueParameters[0].type == rhsType
+        }.symbol
     }
 
     override fun getUnaryOperator(name: Name, receiverType: IrType): IrSimpleFunctionSymbol {
-        TODO("Not yet implemented")
+        val definingClass = receiverType.getMaybeBuiltinClass() ?: error("Defining class not found: $receiverType")
+        return definingClass.functions.single { function ->
+            function.name == name && function.valueParameters.isEmpty()
+        }.symbol
     }
 
     override val getProgressionLastElementByReturnType: Map<IrClassifierSymbol?, IrSimpleFunctionSymbol>
@@ -452,6 +476,12 @@ class IrBuiltInsOverFir(
 
     private fun referenceNestedClass(fqName: FqName): IrClassSymbol? =
         referenceClassByClassId(ClassId(fqName.parent().parent(), fqName.parent().shortName()).createNestedClassId(fqName.shortName()))
+
+    private fun IrType.getMaybeBuiltinClass(): IrClass? {
+        val lhsClassFqName = classFqName!!
+        return baseIrTypes.find { it.classFqName == lhsClassFqName }?.getClass()
+            ?: referenceClassByFqname(lhsClassFqName)?.owner
+    }
 
     private fun createPackage(fqName: FqName): IrPackageFragment =
         IrExternalPackageFragmentImpl.createEmptyExternalPackageFragment(moduleDescriptor, fqName)
@@ -507,6 +537,24 @@ class IrBuiltInsOverFir(
         block: IrClass.() -> Unit = {}
     ): IrClassSymbol =
         createClass(fqName.child(name), this, classKind, classModality, classIsInline, block)
+
+    private fun IrClass.createConstructor(
+        origin: IrDeclarationOrigin = BUILTIN_CLASS_CONSTRUCTOR,
+        isPrimary: Boolean = true,
+        visibility: DescriptorVisibility = DescriptorVisibilities.PUBLIC,
+        build: IrConstructor.() -> Unit = {}
+    ): IrConstructorSymbol {
+        val name = Name.special("<init>")
+        val signature = IdSignature.PublicSignature(this.packageFqName!!.asString(), classId!!.relativeClassName.child(name).asString(), null, 0)
+        val ctor = irFactory.createConstructor(
+            UNDEFINED_OFFSET,UNDEFINED_OFFSET, origin, IrConstructorPublicSymbolImpl(signature), name, visibility, defaultType,
+            isInline = false, isExternal = false, isPrimary = isPrimary, isExpect = false
+        )
+        ctor.parent = this
+        ctor.build()
+        declarations.add(ctor)
+        return ctor.symbol
+    }
 
     private fun IrClass.createMemberFunction(
         name: String, returnType: IrType, vararg valueParameterTypes: IrType,
