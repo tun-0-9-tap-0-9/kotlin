@@ -5,7 +5,6 @@
 
 package org.jetbrains.kotlin.fir.backend
 
-import org.intellij.lang.annotations.Language
 import org.jetbrains.kotlin.backend.common.ir.createImplicitParameterDeclarationWithWrappedDescriptor
 import org.jetbrains.kotlin.builtins.PrimitiveType
 import org.jetbrains.kotlin.builtins.StandardNames
@@ -39,6 +38,7 @@ import org.jetbrains.kotlin.name.ClassId
 import org.jetbrains.kotlin.name.FqName
 import org.jetbrains.kotlin.name.Name
 import org.jetbrains.kotlin.types.Variance
+import org.jetbrains.kotlin.types.checker.KotlinTypeChecker
 import org.jetbrains.kotlin.util.OperatorNameConventions
 
 class IrBuiltInsOverFir(
@@ -350,13 +350,30 @@ class IrBuiltInsOverFir(
     override val enumClass: IrClassSymbol by lazy { referenceClassByFqname(kotlinPackage, "Enum")!! }
 
     override val intPlusSymbol: IrSimpleFunctionSymbol
-        get() = TODO("Not yet implemented")
+        get() = intClass.functions.single {
+            it.owner.name == OperatorNameConventions.PLUS &&
+                    KotlinTypeChecker.DEFAULT.equalTypes(it.owner.valueParameters[0].type.toKotlinType(), intType.toKotlinType())
+        }
+
     override val intTimesSymbol: IrSimpleFunctionSymbol
-        get() = TODO("Not yet implemented")
-    override val extensionToString: IrSimpleFunctionSymbol
-        get() = TODO("Not yet implemented")
+        get() = intClass.functions.single {
+            it.owner.name == OperatorNameConventions.TIMES &&
+                    KotlinTypeChecker.DEFAULT.equalTypes(it.owner.valueParameters[0].type.toKotlinType(), intType.toKotlinType())
+        }
+
+    override val extensionToString: IrSimpleFunctionSymbol by lazy {
+        findFunctions(kotlinPackage, Name.identifier("toString")).first { function ->
+            function.owner.extensionReceiverParameter?.let { receiver ->
+                KotlinTypeChecker.DEFAULT.equalTypes(receiver.type.toKotlinType(), anyNType.toKotlinType())
+            } ?: false
+        }
+    }
+
     override val stringPlus: IrSimpleFunctionSymbol
-        get() = TODO("Not yet implemented")
+        get() = intClass.functions.single {
+            it.owner.name == OperatorNameConventions.PLUS &&
+                    KotlinTypeChecker.DEFAULT.equalTypes(it.owner.valueParameters[0].type.toKotlinType(), stringType.toKotlinType())
+        }
 
     private class KotlinPackageFuns(
         val arrayOf: IrSimpleFunctionSymbol,
@@ -453,8 +470,11 @@ class IrBuiltInsOverFir(
         }.symbol
     }
 
-    override val getProgressionLastElementByReturnType: Map<IrClassifierSymbol?, IrSimpleFunctionSymbol>
-        get() = TODO("Not yet implemented")
+    override val getProgressionLastElementByReturnType: Map<IrClassifierSymbol?, IrSimpleFunctionSymbol> by lazy {
+        findFunctions(kotlinPackage.child(Name.identifier("internal")), Name.identifier("getProgressionLastElement")).mapNotNull { fn ->
+            fn.owner.returnType.classOrNull?.let { it to fn }
+        }.toMap()
+    }
 
     private fun referenceClassByFqname(topLevelFqName: FqName) =
         referenceClassByClassId(ClassId.topLevel(topLevelFqName))
