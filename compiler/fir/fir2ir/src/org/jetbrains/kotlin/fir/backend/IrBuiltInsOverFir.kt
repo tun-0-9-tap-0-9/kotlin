@@ -66,7 +66,7 @@ class IrBuiltInsOverFir(
 
     override val booleanType: IrType get() = booleanClass.defaultType
     override val booleanClass: IrClassSymbol = //referenceClassByFqname(kotlinPackage, "Boolean")!!
-        createClass(StandardNames.getPrimitiveFqName(PrimitiveType.BOOLEAN), kotlinIrPackage).also { boolClass ->
+        kotlinIrPackage.createClass(IdSignatureValues._boolean).also { boolClass ->
             booleanNotSymbol = createFunction(kotlinPackage, "not", boolClass.defaultType, emptyArray(), boolClass.owner).also { fn ->
                 boolClass.owner.declarations.add(fn)
                 fn.addDispatchReceiver {
@@ -77,25 +77,25 @@ class IrBuiltInsOverFir(
         }
 
     override val charType: IrType get() = charClass.defaultType
-    override val charClass: IrClassSymbol = kotlinIrPackage.createClass("Char")
+    override val charClass: IrClassSymbol = kotlinIrPackage.createClass(IdSignatureValues._char)
 
     override val byteType: IrType get() = byteClass.defaultType
-    override val byteClass: IrClassSymbol = kotlinIrPackage.createNumberClass("Byte")
+    override val byteClass: IrClassSymbol = kotlinIrPackage.createNumberClass(IdSignatureValues._byte)
     override val shortType: IrType get() = shortClass.defaultType
-    override val shortClass: IrClassSymbol = kotlinIrPackage.createNumberClass("Short")
+    override val shortClass: IrClassSymbol = kotlinIrPackage.createNumberClass(IdSignatureValues._short)
     override val intType: IrType get() = intClass.defaultType
-    override val intClass: IrClassSymbol = kotlinIrPackage.createNumberClass("Int")
+    override val intClass: IrClassSymbol = kotlinIrPackage.createNumberClass(IdSignatureValues._int)
     override val longType: IrType get() = longClass.defaultType
-    override val longClass: IrClassSymbol = kotlinIrPackage.createNumberClass("Long")
+    override val longClass: IrClassSymbol = kotlinIrPackage.createNumberClass(IdSignatureValues._long)
     override val floatType: IrType get() = floatClass.defaultType
-    override val floatClass: IrClassSymbol = kotlinIrPackage.createNumberClass("Float")
+    override val floatClass: IrClassSymbol = kotlinIrPackage.createNumberClass(IdSignatureValues._float)
     override val doubleType: IrType get() = doubleClass.defaultType
-    override val doubleClass: IrClassSymbol = kotlinIrPackage.createNumberClass("Double")
+    override val doubleClass: IrClassSymbol = kotlinIrPackage.createNumberClass(IdSignatureValues._double)
 
-    override val stringClass: IrClassSymbol = kotlinIrPackage.createClass("String")
+    override val stringClass: IrClassSymbol = kotlinIrPackage.createClass(IdSignatureValues.string)
     override val stringType: IrType get() = stringClass.defaultType
 
-    override val anyClass: IrClassSymbol = kotlinIrPackage.createClass("Any") {
+    override val anyClass: IrClassSymbol = kotlinIrPackage.createClass(IdSignatureValues.any) {
         createConstructor()
         createMemberFunction("equals", booleanType, defaultType.withHasQuestionMark(true))
         createMemberFunction("hashCode", intType)
@@ -104,18 +104,18 @@ class IrBuiltInsOverFir(
     override val anyType: IrType = anyClass.defaultType
     override val anyNType = anyType.withHasQuestionMark(true)
 
-    override val unitClass: IrClassSymbol = kotlinIrPackage.createClass("Unit")
+    override val unitClass: IrClassSymbol = kotlinIrPackage.createClass(IdSignatureValues.unit)
     override val unitType: IrType get() = unitClass.defaultType
 
-    override val arrayClass: IrClassSymbol = kotlinIrPackage.createClass("Array") klass@ {
+    override val arrayClass: IrClassSymbol = kotlinIrPackage.createClass(IdSignatureValues.array) klass@{
         val typeParameter = addTypeParameter("T", anyNType)
         addArrayMembers(typeParameter.defaultType)
     }
 
-    override val numberClass: IrClassSymbol = kotlinIrPackage.createClass("Number")
+    override val numberClass: IrClassSymbol = kotlinIrPackage.createClass(IdSignatureValues.number)
     override val numberType: IrType get() = numberClass.defaultType
 
-    override val nothingClass: IrClassSymbol = kotlinIrPackage.createClass("Nothing")
+    override val nothingClass: IrClassSymbol = kotlinIrPackage.createClass(IdSignatureValues.nothing)
     override val nothingType: IrType get() = nothingClass.defaultType
     override val nothingNType: IrType = nothingType.withHasQuestionMark(true)
 
@@ -206,7 +206,13 @@ class IrBuiltInsOverFir(
                 for (argument in primitiveNumericIrTypes) {
                     createMemberFunction(OperatorNameConventions.COMPARE_TO.asString(), intType, argument)
                     val targetArithmeticReturnType = getPrimitiveArithmeticOperatorResultType(numeric, argument)
-                    for (op in arrayOf(OperatorNameConventions.PLUS, OperatorNameConventions.MINUS, OperatorNameConventions.TIMES, OperatorNameConventions.DIV, OperatorNameConventions.REM)) {
+                    for (op in arrayOf(
+                        OperatorNameConventions.PLUS,
+                        OperatorNameConventions.MINUS,
+                        OperatorNameConventions.TIMES,
+                        OperatorNameConventions.DIV,
+                        OperatorNameConventions.REM
+                    )) {
                         createMemberFunction(op.asString(), targetArithmeticReturnType, argument)
                     }
                 }
@@ -223,7 +229,7 @@ class IrBuiltInsOverFir(
             }
         }
         for (typeWithBitwiseOps in arrayOf(intType, longType)) {
-            with (typeWithBitwiseOps.getClass()!!) {
+            with(typeWithBitwiseOps.getClass()!!) {
                 for (op in arrayOf(OperatorNameConventions.AND, OperatorNameConventions.OR, OperatorNameConventions.XOR)) {
                     createMemberFunction(op.asString(), typeWithBitwiseOps, typeWithBitwiseOps)
                 }
@@ -233,14 +239,14 @@ class IrBuiltInsOverFir(
                 createMemberFunction(OperatorNameConventions.INV.asString(), typeWithBitwiseOps)
             }
         }
-        with (charClass.owner) {
+        with(charClass.owner) {
             createMemberFunction(OperatorNameConventions.COMPARE_TO.asString(), intType, charType)
             createMemberFunction(OperatorNameConventions.PLUS.asString(), charType, intType)
             createMemberFunction(OperatorNameConventions.MINUS.asString(), charType, intType)
             createMemberFunction(OperatorNameConventions.MINUS.asString(), intType, charType)
-            createMemberFunction("rangeTo", charRange , charType)
+            createMemberFunction("rangeTo", charRange, charType)
         }
-        with (stringClass.owner) {
+        with(stringClass.owner) {
             createMemberFunction(OperatorNameConventions.COMPARE_TO.asString(), intType, defaultType)
             createProperty("length", intType)
             createMemberFunction(OperatorNameConventions.PLUS.asString(), defaultType, anyNType)
@@ -248,14 +254,16 @@ class IrBuiltInsOverFir(
         }
     }
 
-    override val booleanArray: IrClassSymbol = kotlinIrPackage.createClass(PrimitiveType.BOOLEAN.arrayTypeName) { addArrayMembers(booleanType) }
+    override val booleanArray: IrClassSymbol =
+        kotlinIrPackage.createClass(PrimitiveType.BOOLEAN.arrayTypeName) { addArrayMembers(booleanType) }
     override val charArray: IrClassSymbol = kotlinIrPackage.createClass(PrimitiveType.CHAR.arrayTypeName) { addArrayMembers(charType) }
     override val byteArray: IrClassSymbol = kotlinIrPackage.createClass(PrimitiveType.BYTE.arrayTypeName) { addArrayMembers(byteType) }
     override val shortArray: IrClassSymbol = kotlinIrPackage.createClass(PrimitiveType.SHORT.arrayTypeName) { addArrayMembers(shortType) }
     override val intArray: IrClassSymbol = kotlinIrPackage.createClass(PrimitiveType.INT.arrayTypeName) { addArrayMembers(intType) }
     override val longArray: IrClassSymbol = kotlinIrPackage.createClass(PrimitiveType.LONG.arrayTypeName) { addArrayMembers(longType) }
     override val floatArray: IrClassSymbol = kotlinIrPackage.createClass(PrimitiveType.FLOAT.arrayTypeName) { addArrayMembers(floatType) }
-    override val doubleArray: IrClassSymbol = kotlinIrPackage.createClass(PrimitiveType.DOUBLE.arrayTypeName) { addArrayMembers(doubleType) }
+    override val doubleArray: IrClassSymbol =
+        kotlinIrPackage.createClass(PrimitiveType.DOUBLE.arrayTypeName) { addArrayMembers(doubleType) }
 
     override val primitiveArraysToPrimitiveTypes: Map<IrClassSymbol, PrimitiveType> = mapOf(
         booleanArray to PrimitiveType.BOOLEAN,
@@ -296,9 +304,14 @@ class IrBuiltInsOverFir(
     override lateinit var greaterFunByOperandType: Map<IrClassifierSymbol, IrSimpleFunctionSymbol> private set
 
     private val internalIrPackageFragment: IrClassSymbol =
-        createClass(StandardNames.BUILT_INS_PACKAGE_FQ_NAME.child(Name.identifier("InternalKt")), internalIrPackage) {
+        internalIrPackage.createClass(StandardNames.BUILT_INS_PACKAGE_FQ_NAME.child(Name.identifier("InternalKt"))) {
 
-            fun addBuiltinFunctionSymbol(name: String, returnType: IrType, vararg valueParameterTypes: IrType, builder: IrSimpleFunction.() -> Unit = {}) =
+            fun addBuiltinFunctionSymbol(
+                name: String,
+                returnType: IrType,
+                vararg valueParameterTypes: IrType,
+                builder: IrSimpleFunction.() -> Unit = {}
+            ) =
                 createFunction(KOTLIN_INTERNAL_IR_FQN, name, returnType, valueParameterTypes, this).also {
                     declarations.add(it)
                     it.builder()
@@ -403,13 +416,18 @@ class IrBuiltInsOverFir(
     )
 
     private val kotlinBuiltinFunctions by lazy {
-        fun IrClassSymbol.addPackageFun(name: String, returnType: IrType, vararg argumentTypes: IrType, builder: IrSimpleFunction.() -> Unit) =
+        fun IrClassSymbol.addPackageFun(
+            name: String,
+            returnType: IrType,
+            vararg argumentTypes: IrType,
+            builder: IrSimpleFunction.() -> Unit
+        ) =
             createFunction(kotlinPackage, name, returnType, argumentTypes, owner).also {
                 it.builder()
                 this.owner.declarations.add(it)
             }.symbol
 
-        val kotlinKt = createClass(kotlinPackage.child(Name.identifier("KotlinKt")), kotlinIrPackage)
+        val kotlinKt = kotlinIrPackage.createClass(kotlinPackage.child(Name.identifier("KotlinKt")))
         KotlinPackageFuns(
             arrayOf = kotlinKt.addPackageFun("arrayOf", arrayClass.defaultType) {
                 addTypeParameter("T", anyNType)
@@ -450,9 +468,11 @@ class IrBuiltInsOverFir(
 
     override fun kFunctionN(arity: Int, declarator: SymbolTable.((IrClassSymbol) -> IrClass) -> IrClass): IrClass = kFunctionN(arity)
 
-    override fun suspendFunctionN(arity: Int, declarator: SymbolTable.((IrClassSymbol) -> IrClass) -> IrClass): IrClass = suspendFunctionN(arity)
+    override fun suspendFunctionN(arity: Int, declarator: SymbolTable.((IrClassSymbol) -> IrClass) -> IrClass): IrClass =
+        suspendFunctionN(arity)
 
-    override fun kSuspendFunctionN(arity: Int, declarator: SymbolTable.((IrClassSymbol) -> IrClass) -> IrClass): IrClass = kSuspendFunctionN(arity)
+    override fun kSuspendFunctionN(arity: Int, declarator: SymbolTable.((IrClassSymbol) -> IrClass) -> IrClass): IrClass =
+        kSuspendFunctionN(arity)
 
     override fun functionN(arity: Int): IrClass = functionNMap.getOrPut(arity) {
         referenceClassByClassId(StandardNames.getFunctionClassId(arity))!!.owner
@@ -526,41 +546,48 @@ class IrBuiltInsOverFir(
     private fun createPackage(fqName: FqName): IrPackageFragment =
         IrExternalPackageFragmentImpl.createEmptyExternalPackageFragment(moduleDescriptor, fqName)
 
-    private fun createClass(
+    private fun IrDeclarationParent.createClass(
         fqName: FqName,
-        parent: IrDeclarationParent,
         classKind: ClassKind = ClassKind.CLASS,
         classModality: Modality = Modality.FINAL,
         classIsInline: Boolean = false,
         builderBlock: IrClassBuilder.() -> Unit = {},
         block: IrClass.() -> Unit = {}
-    ): IrClassSymbol
-    {
+    ): IrClassSymbol {
         val signature = IdSignature.PublicSignature(fqName.parent().asString(), fqName.shortName().asString(), null, 0)
 
-        return components.symbolTable.declareClass(
-            signature,
-            { IrClassPublicSymbolImpl(signature) },
-            { symbol ->
-                IrClassBuilder().run {
-                    name = fqName.shortName()
-                    kind = classKind
-                    modality = classModality
-                    isInline = classIsInline
-                    origin = BUILTIN_CLASS
-                    builderBlock()
-                    irFactory.createClass(
-                        startOffset, endOffset, origin, symbol, name, kind, visibility, modality,
-                        isCompanion, isInner, isData, isExternal, isInline, isExpect, isFun
-                    )
-                }.also {
-                    it.parent = parent
-                    it.createImplicitParameterDeclarationWithWrappedDescriptor()
-                    it.block()
-                }
-            }
-        ).symbol
+        return this.createClass(signature, classKind, classModality, classIsInline, builderBlock, block)
     }
+
+    private fun IrDeclarationParent.createClass(
+        signature: IdSignature.PublicSignature,
+        classKind: ClassKind = ClassKind.CLASS,
+        classModality: Modality = Modality.FINAL,
+        classIsInline: Boolean = false,
+        builderBlock: IrClassBuilder.() -> Unit = {},
+        block: IrClass.() -> Unit = {}
+    ): IrClassSymbol = components.symbolTable.declareClass(
+        signature,
+        { IrClassPublicSymbolImpl(signature) },
+        { symbol ->
+            IrClassBuilder().run {
+                name = Name.identifier(signature.shortName)
+                kind = classKind
+                modality = classModality
+                isInline = classIsInline
+                origin = BUILTIN_CLASS
+                builderBlock()
+                irFactory.createClass(
+                    startOffset, endOffset, origin, symbol, name, kind, visibility, modality,
+                    isCompanion, isInner, isData, isExternal, isInline, isExpect, isFun
+                )
+            }.also {
+                it.parent = this
+                it.createImplicitParameterDeclarationWithWrappedDescriptor()
+                it.block()
+            }
+        }
+    ).symbol
 
     private fun IrPackageFragment.createClass(
         name: String,
@@ -580,7 +607,7 @@ class IrBuiltInsOverFir(
         builderBlock: IrClassBuilder.() -> Unit = {},
         block: IrClass.() -> Unit = {}
     ): IrClassSymbol =
-        createClass(fqName.child(name), this, classKind, classModality, classIsInline, builderBlock, block)
+        this.createClass(fqName.child(name), classKind, classModality, classIsInline, builderBlock, block)
 
     private fun IrClass.createConstructor(
         origin: IrDeclarationOrigin = BUILTIN_CLASS_CONSTRUCTOR,
@@ -589,9 +616,10 @@ class IrBuiltInsOverFir(
         build: IrConstructor.() -> Unit = {}
     ): IrConstructorSymbol {
         val name = Name.special("<init>")
-        val signature = IdSignature.PublicSignature(this.packageFqName!!.asString(), classId!!.relativeClassName.child(name).asString(), null, 0)
+        val signature =
+            IdSignature.PublicSignature(this.packageFqName!!.asString(), classId!!.relativeClassName.child(name).asString(), null, 0)
         val ctor = irFactory.createConstructor(
-            UNDEFINED_OFFSET,UNDEFINED_OFFSET, origin, IrConstructorPublicSymbolImpl(signature), name, visibility, defaultType,
+            UNDEFINED_OFFSET, UNDEFINED_OFFSET, origin, IrConstructorPublicSymbolImpl(signature), name, visibility, defaultType,
             isInline = false, isExternal = false, isPrimary = isPrimary, isExpect = false
         )
         ctor.parent = this
@@ -605,7 +633,12 @@ class IrBuiltInsOverFir(
         origin: IrDeclarationOrigin = BUILTIN_OPERATOR,
         build: IrFunctionBuilder.() -> Unit = {}
     ) = createFunction(
-        IdSignature.PublicSignature(this.packageFqName!!.asString(), classId!!.relativeClassName.child(Name.identifier(name)).asString(), null, 0),
+        IdSignature.PublicSignature(
+            this.packageFqName!!.asString(),
+            classId!!.relativeClassName.child(Name.identifier(name)).asString(),
+            null,
+            0
+        ),
         name, returnType, valueParameterTypes, parent, origin, build
     ).also {
         it.addDispatchReceiver { type = this@createMemberFunction.defaultType }
@@ -699,7 +732,12 @@ class IrBuiltInsOverFir(
         }
     }
 
-    private class NumericConstantsExpressions<T>(val min: IrConst<T>, val max: IrConst<T>, val sizeBytes: IrConst<Int>, val sizeBits: IrConst<Int>)
+    private class NumericConstantsExpressions<T>(
+        val min: IrConst<T>,
+        val max: IrConst<T>,
+        val sizeBytes: IrConst<Int>,
+        val sizeBits: IrConst<Int>
+    )
 
     private fun getNumericConstantsExpressions(type: IrType): NumericConstantsExpressions<*> {
         val so = UNDEFINED_OFFSET
@@ -737,15 +775,14 @@ class IrBuiltInsOverFir(
         }
     }
 
-    private fun IrPackageFragment.createNumberClass(name: String, builder: IrClass.() -> Unit = {}): IrClassSymbol =
-        createClass(name) {
+    private fun IrPackageFragment.createNumberClass(signature: IdSignature.PublicSignature, builder: IrClass.() -> Unit = {}): IrClassSymbol =
+        createClass(signature) {
             builder()
         }
 
     private fun IrClass.createCompanionObject(block: IrClass.() -> Unit = {}): IrClassSymbol =
-        createClass(
-            kotlinFqName.child(Name.identifier("Companion")), this, ClassKind.OBJECT,
-            builderBlock = {
+        this.createClass(
+            kotlinFqName.child(Name.identifier("Companion")), ClassKind.OBJECT, builderBlock = {
                 isCompanion = true
             }
         ).also {
