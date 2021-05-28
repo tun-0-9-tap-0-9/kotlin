@@ -23,6 +23,9 @@ import org.jetbrains.kotlin.ir.UNDEFINED_OFFSET
 import org.jetbrains.kotlin.ir.builders.declarations.*
 import org.jetbrains.kotlin.ir.declarations.*
 import org.jetbrains.kotlin.ir.declarations.impl.IrExternalPackageFragmentImpl
+import org.jetbrains.kotlin.ir.expressions.IrConst
+import org.jetbrains.kotlin.ir.expressions.IrExpression
+import org.jetbrains.kotlin.ir.expressions.impl.IrConstImpl
 import org.jetbrains.kotlin.ir.symbols.IrClassSymbol
 import org.jetbrains.kotlin.ir.symbols.IrClassifierSymbol
 import org.jetbrains.kotlin.ir.symbols.IrConstructorSymbol
@@ -192,6 +195,13 @@ class IrBuiltInsOverFir(
                 createMemberFunction(OperatorNameConventions.UNARY_MINUS.asString(), arithmeticReturnType)
                 createMemberFunction(OperatorNameConventions.INC.asString(), primitive)
                 createMemberFunction(OperatorNameConventions.DEC.asString(), primitive)
+                createCompanionObject() {
+                    val constExprs = getNumericConstantsExpressions(primitive)
+                    createProperty("MIN_VALUE", primitive, isConst = true, withGetter = false, fieldInit = constExprs.min)
+                    createProperty("MAX_VALUE", primitive, isConst = true, withGetter = false, fieldInit = constExprs.max)
+                    createProperty("SIZE_BYTES", intType, isConst = true, withGetter = false, fieldInit = constExprs.sizeBytes)
+                    createProperty("SIZE_BITS", intType, isConst = true, withGetter = false, fieldInit = constExprs.sizeBits)
+                }
             }
         }
         for (typeWithBitwiseOps in arrayOf(intType, longType)) {
@@ -509,6 +519,7 @@ class IrBuiltInsOverFir(
         classKind: ClassKind = ClassKind.CLASS,
         classModality: Modality = Modality.FINAL,
         classIsInline: Boolean = false,
+        builderBlock: IrClassBuilder.() -> Unit = {},
         block: IrClass.() -> Unit = {}
     ): IrClassSymbol
     {
@@ -524,6 +535,7 @@ class IrBuiltInsOverFir(
                     modality = classModality
                     isInline = classIsInline
                     origin = BUILTIN_CLASS
+                    builderBlock()
                     irFactory.createClass(
                         startOffset, endOffset, origin, symbol, name, kind, visibility, modality,
                         isCompanion, isInner, isData, isExternal, isInline, isExpect, isFun
@@ -542,18 +554,20 @@ class IrBuiltInsOverFir(
         classKind: ClassKind = ClassKind.CLASS,
         classModality: Modality = Modality.FINAL,
         classIsInline: Boolean = false,
+        builderBlock: IrClassBuilder.() -> Unit = {},
         block: IrClass.() -> Unit = {}
     ): IrClassSymbol =
-        createClass(Name.identifier(name), classKind, classModality, classIsInline, block)
+        createClass(Name.identifier(name), classKind, classModality, classIsInline, builderBlock, block)
 
     private fun IrPackageFragment.createClass(
         name: Name,
         classKind: ClassKind = ClassKind.CLASS,
         classModality: Modality = Modality.FINAL,
         classIsInline: Boolean = false,
+        builderBlock: IrClassBuilder.() -> Unit = {},
         block: IrClass.() -> Unit = {}
     ): IrClassSymbol =
-        createClass(fqName.child(name), this, classKind, classModality, classIsInline, block)
+        createClass(fqName.child(name), this, classKind, classModality, classIsInline, builderBlock, block)
 
     private fun IrClass.createConstructor(
         origin: IrDeclarationOrigin = BUILTIN_CLASS_CONSTRUCTOR,
@@ -638,22 +652,92 @@ class IrBuiltInsOverFir(
         createProperty("size", intType)
     }
 
-    private fun IrClass.createProperty(propertyName: String, returnType: IrType, builder: IrProperty.() -> Unit = {}) {
-        addProperty { name = Name.identifier(propertyName) }.also {
-            it.getter = irFactory.buildFun {
-                name = Name.special("<get-$propertyName>")
-                this.returnType = returnType
-            }.also {
-                it.addDispatchReceiver { type = this@createProperty.defaultType }
-                it.parent = this
+    private fun IrClass.createProperty(
+        propertyName: String, returnType: IrType,
+        isConst: Boolean = false, withGetter: Boolean = true, withField: Boolean = false, fieldInit: IrExpression? = null,
+        builder: IrProperty.() -> Unit = {}
+    ) {
+        addProperty {
+            this.name = Name.identifier(propertyName)
+            this.isConst = isConst
+        }.also { property ->
+            if (withGetter) {
+                property.getter = irFactory.buildFun {
+                    this.name = Name.special("<get-$propertyName>")
+                    this.returnType = returnType
+                }.also {
+                    it.addDispatchReceiver { type = this@createProperty.defaultType }
+                    it.parent = this
+                }
             }
-            it.builder()
+            if (withField || fieldInit != null) {
+                property.backingField = irFactory.buildField {
+                    this.name = property.name
+                    this.type = defaultType
+                }.also {
+                    if (fieldInit != null) {
+                        it.initializer = irFactory.createExpressionBody(0, 0) {
+                            expression = fieldInit
+                        }
+                    }
+                }
+            }
+            property.builder()
+        }
+    }
+
+    private class NumericConstantsExpressions<T>(val min: IrConst<T>, val max: IrConst<T>, val sizeBytes: IrConst<Int>, val sizeBits: IrConst<Int>)
+
+    private fun getNumericConstantsExpressions(type: IrType): NumericConstantsExpressions<*> {
+        val so = UNDEFINED_OFFSET
+        val eo = UNDEFINED_OFFSET
+        return when (type.getPrimitiveType()) {
+            PrimitiveType.CHAR -> NumericConstantsExpressions(
+                IrConstImpl.char(so, eo, type, Char.MIN_VALUE), IrConstImpl.char(so, eo, type, Char.MAX_VALUE),
+                IrConstImpl.int(so, eo, intType, Char.SIZE_BYTES), IrConstImpl.int(so, eo, intType, Char.SIZE_BITS)
+            )
+            PrimitiveType.BYTE -> NumericConstantsExpressions(
+                IrConstImpl.byte(so, eo, type, Byte.MIN_VALUE), IrConstImpl.byte(so, eo, type, Byte.MAX_VALUE),
+                IrConstImpl.int(so, eo, intType, Byte.SIZE_BYTES), IrConstImpl.int(so, eo, intType, Byte.SIZE_BITS)
+            )
+            PrimitiveType.SHORT -> NumericConstantsExpressions(
+                IrConstImpl.short(so, eo, type, Short.MIN_VALUE), IrConstImpl.short(so, eo, type, Short.MAX_VALUE),
+                IrConstImpl.int(so, eo, intType, Short.SIZE_BYTES), IrConstImpl.int(so, eo, intType, Short.SIZE_BITS)
+            )
+            PrimitiveType.INT -> NumericConstantsExpressions(
+                IrConstImpl.int(so, eo, type, Int.MIN_VALUE), IrConstImpl.int(so, eo, type, Int.MAX_VALUE),
+                IrConstImpl.int(so, eo, intType, Int.SIZE_BYTES), IrConstImpl.int(so, eo, intType, Int.SIZE_BITS)
+            )
+            PrimitiveType.LONG -> NumericConstantsExpressions(
+                IrConstImpl.long(so, eo, type, Long.MIN_VALUE), IrConstImpl.long(so, eo, type, Long.MAX_VALUE),
+                IrConstImpl.int(so, eo, intType, Long.SIZE_BYTES), IrConstImpl.int(so, eo, intType, Long.SIZE_BITS)
+            )
+            PrimitiveType.FLOAT -> NumericConstantsExpressions(
+                IrConstImpl.float(so, eo, type, Float.MIN_VALUE), IrConstImpl.float(so, eo, type, Float.MAX_VALUE),
+                IrConstImpl.int(so, eo, intType, Float.SIZE_BYTES), IrConstImpl.int(so, eo, intType, Float.SIZE_BITS)
+            )
+            PrimitiveType.DOUBLE -> NumericConstantsExpressions(
+                IrConstImpl.double(so, eo, type, Double.MIN_VALUE), IrConstImpl.double(so, eo, type, Double.MAX_VALUE),
+                IrConstImpl.int(so, eo, intType, Double.SIZE_BYTES), IrConstImpl.int(so, eo, intType, Double.SIZE_BITS)
+            )
+            else -> error("unsupported type")
         }
     }
 
     private fun IrPackageFragment.createNumberClass(name: String, builder: IrClass.() -> Unit = {}): IrClassSymbol =
         createClass(name) {
             builder()
+        }
+
+    private fun IrClass.createCompanionObject(block: IrClass.() -> Unit = {}): IrClassSymbol =
+        createClass(
+            kotlinFqName.child(Name.identifier("Companion")), this, ClassKind.OBJECT,
+            builderBlock = {
+                isCompanion = true
+            }
+        ).also {
+            it.owner.block()
+            declarations.add(it.owner)
         }
 
     private fun findFunctions(packageName: FqName, name: Name) =
@@ -673,42 +757,4 @@ class IrBuiltInsOverFir(
                         it.valueParameters.zip(valueParameterTypes).all { it.first.type == it.second }
             }
         } ?: error("no fun $name found in $packageName")
-
-//    private fun defineOperator(name: String, returnType: IrType, valueParameterTypes: List<IrType>): IrSimpleFunctionSymbol {
-//        val operatorDescriptor =
-//            IrSimpleBuiltinOperatorDescriptorImpl(packageFragmentDescriptor, Name.identifier(name), returnType.originalKotlinType!!)
-//
-//        for ((i, valueParameterType) in valueParameterTypes.withIndex()) {
-//            operatorDescriptor.addValueParameter(
-//                IrBuiltinValueParameterDescriptorImpl(
-//                    operatorDescriptor, Name.identifier("arg$i"), i, valueParameterType.originalKotlinType!!
-//                )
-//            )
-//        }
-//
-//        val symbol = symbolTable.declareSimpleFunctionIfNotExists(operatorDescriptor) {
-//            val operator = irFactory.createFunction(
-//                UNDEFINED_OFFSET, UNDEFINED_OFFSET, BUILTIN_OPERATOR, it, Name.identifier(name), DescriptorVisibilities.PUBLIC, Modality.FINAL,
-//                returnType, isInline = false, isExternal = false, isTailrec = false, isSuspend = false,
-//                isOperator = false, isInfix = false, isExpect = false, isFakeOverride = false
-//            )
-//            operator.parent = packageFragment
-//            packageFragment.declarations += operator
-//
-//            operator.valueParameters = valueParameterTypes.withIndex().map { (i, valueParameterType) ->
-//                val valueParameterDescriptor = operatorDescriptor.valueParameters[i]
-//                val valueParameterSymbol = IrValueParameterSymbolImpl(valueParameterDescriptor)
-//                irFactory.createValueParameter(
-//                    UNDEFINED_OFFSET, UNDEFINED_OFFSET, BUILTIN_OPERATOR, valueParameterSymbol, Name.identifier("arg$i"), i,
-//                    valueParameterType, null, isCrossinline = false, isNoinline = false, isHidden = false, isAssignable = false
-//                ).apply {
-//                    parent = operator
-//                }
-//            }
-//
-//            operator
-//        }
-//
-//        return symbol.symbol
-//    }
 }
