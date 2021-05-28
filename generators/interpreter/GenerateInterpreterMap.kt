@@ -14,8 +14,12 @@ import org.jetbrains.kotlin.config.LanguageVersionSettingsImpl
 import org.jetbrains.kotlin.descriptors.*
 import org.jetbrains.kotlin.descriptors.impl.ModuleDescriptorImpl
 import org.jetbrains.kotlin.generators.util.GeneratorsFileUtil
+import org.jetbrains.kotlin.ir.BuiltInOperatorNames
+import org.jetbrains.kotlin.ir.declarations.IrFunction
 import org.jetbrains.kotlin.ir.declarations.impl.IrFactoryImpl
 import org.jetbrains.kotlin.ir.IrBuiltIns
+import org.jetbrains.kotlin.ir.ObsoleteDescriptorBasedAPI
+import org.jetbrains.kotlin.ir.descriptors.IrBuiltInsOverDescriptors
 import org.jetbrains.kotlin.ir.types.impl.originalKotlinType
 import org.jetbrains.kotlin.ir.util.*
 import org.jetbrains.kotlin.name.Name
@@ -243,19 +247,20 @@ private fun getBinaryIrOperationMap(irBuiltIns: IrBuiltIns): List<Operation> {
 
 private fun getIrMethodSymbolByName(methodName: String): String {
     return when (methodName) {
-        IrBuiltIns.OperatorNames.LESS -> "<"
-        IrBuiltIns.OperatorNames.LESS_OR_EQUAL -> "<="
-        IrBuiltIns.OperatorNames.GREATER -> ">"
-        IrBuiltIns.OperatorNames.GREATER_OR_EQUAL -> ">="
-        IrBuiltIns.OperatorNames.EQEQ -> "=="
-        IrBuiltIns.OperatorNames.EQEQEQ -> "==="
-        IrBuiltIns.OperatorNames.IEEE754_EQUALS -> "=="
-        IrBuiltIns.OperatorNames.ANDAND -> "&&"
-        IrBuiltIns.OperatorNames.OROR -> "||"
+        BuiltInOperatorNames.LESS -> "<"
+        BuiltInOperatorNames.LESS_OR_EQUAL -> "<="
+        BuiltInOperatorNames.GREATER -> ">"
+        BuiltInOperatorNames.GREATER_OR_EQUAL -> ">="
+        BuiltInOperatorNames.EQEQ -> "=="
+        BuiltInOperatorNames.EQEQEQ -> "==="
+        BuiltInOperatorNames.IEEE754_EQUALS -> "=="
+        BuiltInOperatorNames.ANDAND -> "&&"
+        BuiltInOperatorNames.OROR -> "||"
         else -> throw UnsupportedOperationException("Unknown ir operation \"$methodName\"")
     }
 }
 
+@OptIn(ObsoleteDescriptorBasedAPI::class)
 private fun getIrBuiltIns(): IrBuiltIns {
     val languageSettings = LanguageVersionSettingsImpl(LanguageVersion.KOTLIN_1_3, ApiVersion.KOTLIN_1_3)
 
@@ -267,5 +272,5 @@ private fun getIrBuiltIns(): IrBuiltIns {
     }
     val symbolTable = SymbolTable(signaturer, IrFactoryImpl)
     val typeTranslator = TypeTranslatorImpl(symbolTable, languageSettings, moduleDescriptor)
-    return IrBuiltIns(moduleDescriptor.builtIns, typeTranslator, symbolTable)
+    return IrBuiltInsOverDescriptors(moduleDescriptor.builtIns, typeTranslator, symbolTable)
 }
