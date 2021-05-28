@@ -12,6 +12,8 @@ import org.jetbrains.kotlin.test.backend.handlers.IrInterpreterBackendHandler
 import org.jetbrains.kotlin.test.backend.ir.JvmIrBackendFacade
 import org.jetbrains.kotlin.test.builders.TestConfigurationBuilder
 import org.jetbrains.kotlin.test.directives.JvmEnvironmentConfigurationDirectives
+import org.jetbrains.kotlin.test.frontend.classic.ClassicFrontend2IrConverter
+import org.jetbrains.kotlin.test.frontend.classic.ClassicFrontendFacade
 import org.jetbrains.kotlin.test.directives.LanguageSettingsDirectives
 import org.jetbrains.kotlin.test.frontend.fir.Fir2IrResultsConverter
 import org.jetbrains.kotlin.test.frontend.fir.FirFrontendFacade
@@ -22,10 +24,12 @@ import org.jetbrains.kotlin.test.services.configuration.CommonEnvironmentConfigu
 import org.jetbrains.kotlin.test.services.configuration.JvmEnvironmentConfigurator
 import org.jetbrains.kotlin.test.services.sourceProviders.IrInterpreterHelpersSourceFilesProvider
 
-open class AbstractIrInterpreterAfterFir2IrTest : AbstractKotlinCompilerWithTargetBackendTest(TargetBackend.JVM_IR) {
+open class AbstractIrInterpreterTest(
+    private val frontendKind: FrontendKind<*>
+) : AbstractKotlinCompilerWithTargetBackendTest(TargetBackend.JVM_IR) {
     override fun TestConfigurationBuilder.configuration() {
         globalDefaults {
-            frontend = FrontendKinds.FIR
+            frontend = frontendKind
             targetPlatform = JvmPlatforms.defaultJvmPlatform
             artifactKind = BinaryKind.NoArtifact
             targetBackend = TargetBackend.JVM_IR
@@ -46,8 +50,14 @@ open class AbstractIrInterpreterAfterFir2IrTest : AbstractKotlinCompilerWithTarg
         useAdditionalSourceProviders(::IrInterpreterHelpersSourceFilesProvider)
         useSourcePreprocessor(::IrInterpreterImplicitKotlinImports)
 
-        useFrontendFacades(::FirFrontendFacade)
-        useFrontend2BackendConverters(::Fir2IrResultsConverter)
+        useFrontendFacades(
+            ::FirFrontendFacade,
+            ::ClassicFrontendFacade,
+        )
+        useFrontend2BackendConverters(
+            ::Fir2IrResultsConverter,
+            ::ClassicFrontend2IrConverter,
+        )
         useBackendFacades(::JvmIrBackendFacade)
         useAfterAnalysisCheckers(::BlackBoxCodegenSuppressor)
 
@@ -56,3 +66,5 @@ open class AbstractIrInterpreterAfterFir2IrTest : AbstractKotlinCompilerWithTarg
     }
 }
 
+open class AbstractIrInterpreterAfterFir2IrTest : AbstractIrInterpreterTest(FrontendKinds.FIR)
+open class AbstractIrInterpreterAfterPsi2IrTest : AbstractIrInterpreterTest(FrontendKinds.ClassicFrontend)
