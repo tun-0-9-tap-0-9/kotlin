@@ -43,4 +43,4 @@ internal actual fun <T : Throwable> checkResultIsFailure(exceptionClass: KClass<
 /**
  * Provides the JS implementation of asserter
  */
-internal actual fun lookupAsserter(): Asserter = DefaultJsAsserter
+internal actual fun lookupAsserter(): Asserter = DefaultAsserter
