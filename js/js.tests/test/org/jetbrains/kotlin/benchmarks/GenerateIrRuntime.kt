@@ -31,6 +31,8 @@ import org.jetbrains.kotlin.incremental.EmptyICReporter
 import org.jetbrains.kotlin.incremental.IncrementalJsCompilerRunner
 import org.jetbrains.kotlin.incremental.multiproject.EmptyModulesApiHistory
 import org.jetbrains.kotlin.incremental.withJsIC
+import org.jetbrains.kotlin.ir.IrBuiltIns
+import org.jetbrains.kotlin.ir.ObsoleteDescriptorBasedAPI
 import org.jetbrains.kotlin.ir.backend.js.*
 import org.jetbrains.kotlin.ir.backend.js.lower.serialization.ir.JsIrLinker
 import org.jetbrains.kotlin.ir.backend.js.lower.serialization.ir.JsIrModuleSerializer
@@ -38,8 +40,7 @@ import org.jetbrains.kotlin.ir.backend.js.lower.serialization.ir.JsManglerDesc
 import org.jetbrains.kotlin.ir.backend.js.transformers.irToJs.IrModuleToJsTransformer
 import org.jetbrains.kotlin.ir.declarations.IrModuleFragment
 import org.jetbrains.kotlin.ir.declarations.persistent.PersistentIrFactory
-import org.jetbrains.kotlin.ir.IrBuiltIns
-import org.jetbrains.kotlin.ir.descriptors.IrDescriptorBasedFunctionFactory
+import org.jetbrains.kotlin.ir.descriptors.IrBuiltInsOverDescriptors
 import org.jetbrains.kotlin.ir.util.ExternalDependenciesGenerator
 import org.jetbrains.kotlin.ir.util.IrMessageLogger
 import org.jetbrains.kotlin.ir.util.SymbolTable
@@ -456,16 +457,11 @@ class GenerateIrRuntime {
         val symbolTable = SymbolTable(IdSignatureDescriptor(JsManglerDesc), PersistentIrFactory())
         val psi2IrContext = psi2Ir.createGeneratorContext(analysisResult.moduleDescriptor, analysisResult.bindingContext, symbolTable)
 
-        val irBuiltIns = psi2IrContext.irBuiltIns
-        val functionFactory = IrDescriptorBasedFunctionFactory(irBuiltIns, psi2IrContext.symbolTable)
-        irBuiltIns.functionFactory = functionFactory
-
         val irLinker = JsIrLinker(
             psi2IrContext.moduleDescriptor,
             IrMessageLogger.None,
             psi2IrContext.irBuiltIns,
             psi2IrContext.symbolTable,
-            functionFactory,
             null
         )
 
@@ -514,17 +510,15 @@ class GenerateIrRuntime {
         writer.writeIr(serializedIrModule)
     }
 
+    @OptIn(ObsoleteDescriptorBasedAPI::class)
     private fun doDeserializeIrModule(moduleDescriptor: ModuleDescriptorImpl): DeserializedModuleInfo {
         val mangler = JsManglerDesc
         val signaturer = IdSignatureDescriptor(mangler)
         val symbolTable = SymbolTable(signaturer, PersistentIrFactory())
         val typeTranslator = TypeTranslatorImpl(symbolTable, languageVersionSettings, moduleDescriptor)
+        val irBuiltIns = IrBuiltInsOverDescriptors(moduleDescriptor.builtIns, typeTranslator, symbolTable)
 
-        val irBuiltIns = IrBuiltIns(moduleDescriptor.builtIns, typeTranslator, symbolTable)
-        val functionFactory = IrDescriptorBasedFunctionFactory(irBuiltIns, symbolTable)
-        irBuiltIns.functionFactory = functionFactory
-
-        val jsLinker = JsIrLinker(moduleDescriptor, IrMessageLogger.None, irBuiltIns, symbolTable, functionFactory, null)
+        val jsLinker = JsIrLinker(moduleDescriptor, IrMessageLogger.None, irBuiltIns, symbolTable, null)
 
         val moduleFragment = jsLinker.deserializeFullModule(moduleDescriptor, moduleDescriptor.kotlinLibrary)
         jsLinker.init(null, emptyList())
@@ -539,6 +533,7 @@ class GenerateIrRuntime {
         return DeserializedModuleInfo(moduleFragment, symbolTable, irBuiltIns, jsLinker)
     }
 
+    @OptIn(ObsoleteDescriptorBasedAPI::class)
     private fun doDeserializeModule(modulePath: String): DeserializedModuleInfo {
         val moduleRef = loadKlib(modulePath, false)
         val moduleDescriptor = doDeserializeModuleMetadata(moduleRef)
@@ -546,12 +541,9 @@ class GenerateIrRuntime {
         val signaturer = IdSignatureDescriptor(mangler)
         val symbolTable = SymbolTable(signaturer, PersistentIrFactory())
         val typeTranslator = TypeTranslatorImpl(symbolTable, languageVersionSettings, moduleDescriptor)
-        val irBuiltIns = IrBuiltIns(moduleDescriptor.builtIns, typeTranslator, symbolTable)
+        val irBuiltIns = IrBuiltInsOverDescriptors(moduleDescriptor.builtIns, typeTranslator, symbolTable)
 
-        val functionFactory = IrDescriptorBasedFunctionFactory(irBuiltIns, symbolTable)
-        irBuiltIns.functionFactory = functionFactory
-
-        val jsLinker = JsIrLinker(moduleDescriptor, IrMessageLogger.None, irBuiltIns, symbolTable, functionFactory, null)
+        val jsLinker = JsIrLinker(moduleDescriptor, IrMessageLogger.None, irBuiltIns, symbolTable, null)
 
         val moduleFragment = jsLinker.deserializeFullModule(moduleDescriptor, moduleDescriptor.kotlinLibrary)
         // Create stubs
