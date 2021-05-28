@@ -776,7 +776,7 @@ internal class SyntheticAccessorLowering(val context: JvmBackendContext) : IrEle
 
         return this.overriddenSymbols
             .map { it.owner }
-            .collectAndFilterRealOverrides(getOverriddenPropertySymbols = IrProperty::overriddenSymbols)
+            .collectAndFilterRealOverrides()
             .firstOrNull() as? IrProperty
             ?: throw AssertionError("No real override for ${this.render()}")
     }

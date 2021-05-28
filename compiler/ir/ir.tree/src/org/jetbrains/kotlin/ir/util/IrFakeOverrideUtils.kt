@@ -7,7 +7,6 @@ package org.jetbrains.kotlin.ir.util
 
 import org.jetbrains.kotlin.descriptors.Modality
 import org.jetbrains.kotlin.ir.declarations.*
-import org.jetbrains.kotlin.ir.symbols.IrPropertySymbol
 import org.jetbrains.kotlin.utils.addToStdlib.safeAs
 
 val IrDeclaration.isReal: Boolean get() = !isFakeOverride
@@ -52,11 +51,6 @@ fun IrSimpleFunction.collectRealOverrides(
 fun Collection<IrOverridableMember>.collectAndFilterRealOverrides(
     toSkip: (IrOverridableMember) -> Boolean = { false },
     filter: (IrOverridableMember) -> Boolean = { false },
-    getOverriddenPropertySymbols: IrProperty.() -> List<IrPropertySymbol> = {
-        // TODO: use IrProperty.overriddenSymbols instead: KT-47019
-        //  (at the moment it breaks K/N in at least :kotlin-native:backend.native:tests:coroutines_functionReference_eqeq_name)
-        (getter ?: setter)?.overriddenSymbols?.mapNotNull { it.owner.correspondingPropertySymbol }.orEmpty()
-    },
 ): Set<IrOverridableMember> {
 
     val visited = mutableSetOf<IrOverridableMember>()
@@ -69,7 +63,7 @@ fun Collection<IrOverridableMember>.collectAndFilterRealOverrides(
 
     fun overriddenSymbols(declaration: IrOverridableMember) = when (declaration) {
         is IrSimpleFunction -> declaration.overriddenSymbols
-        is IrProperty -> declaration.getOverriddenPropertySymbols()
+        is IrProperty -> declaration.overriddenSymbols
         else -> error("Unexpected overridable member: ${declaration.render()}")
     }
 

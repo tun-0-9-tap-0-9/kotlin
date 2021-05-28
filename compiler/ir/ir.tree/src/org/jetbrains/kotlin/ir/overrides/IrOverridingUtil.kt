@@ -152,11 +152,8 @@ class IrOverridingUtil(
         val overriddenMembers = (clazz.declarations.filterIsInstance<IrOverridableMember>() + implementedMembers)
             .flatMap {
                 when (it) {
-                    is IrSimpleFunction -> it.overriddenSymbols.map { it.owner }
-                    // TODO: use IrProperty.overriddenSymbols instead: KT-47019
-                    is IrProperty -> (it.getter ?: it.setter)?.overriddenSymbols
-                        ?.map { it.owner.correspondingPropertySymbol!!.owner }
-                        ?: emptyList()
+                    is IrSimpleFunction -> it.overriddenSymbols
+                    is IrProperty -> it.overriddenSymbols
                     else -> error("Unexpected IrOverridableMember: $it")
                 }
             }
@@ -167,7 +164,7 @@ class IrOverridingUtil(
             superClass.declarations
                 .filterIsInstance<IrOverridableMember>()
                 .filterNot {
-                    it in overriddenMembers || it.isStaticMember || DescriptorVisibilities.isPrivate(it.visibility)
+                    it.symbol in overriddenMembers || it.isStaticMember || DescriptorVisibilities.isPrivate(it.visibility)
                 }
                 .map { overriddenMember ->
                     val fakeOverride = fakeOverrideBuilder.fakeOverrideMember(superType, overriddenMember, clazz)
