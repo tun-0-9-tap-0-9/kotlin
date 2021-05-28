@@ -172,35 +172,53 @@ class IrBuiltInsOverFir(
     override val primitiveIrTypes = listOf(booleanType) + primitiveIrTypesWithComparisons
     private val baseIrTypes = primitiveIrTypes + stringType
 
-    private val primitiveArithmeticOperatorResultTypes = mapOf(
-        charType to intType, byteType to intType, shortType to intType, intType to intType,
-        longType to longType, floatType to floatType, doubleType to doubleType
-    )
+    private fun getPrimitiveArithmeticOperatorResultType(target: IrType, arg: IrType) =
+        when {
+            arg in primitiveFloatingPointIrTypes -> arg
+            target == longType -> target
+            arg == longType -> arg
+            else -> intType
+        }
 
     init {
-        for (primitive in primitiveNumericIrTypes) {
-            with(primitive.getClass()!!) {
+        val intRange = referenceClassByFqname(StandardNames.RANGES_PACKAGE_FQ_NAME, "IntRange")!!.owner.defaultType
+        val longRange = referenceClassByFqname(StandardNames.RANGES_PACKAGE_FQ_NAME, "LongRange")!!.owner.defaultType
+        val charRange = referenceClassByFqname(StandardNames.RANGES_PACKAGE_FQ_NAME, "CharRange")!!.owner.defaultType
+
+        for (numericOrChar in primitiveIntegralIrTypes + charType) {
+            with(numericOrChar.getClass()!!) {
+                createCompanionObject() {
+                    val constExprs = getNumericConstantsExpressions(numericOrChar)
+                    createProperty("MIN_VALUE", numericOrChar, isConst = true, withGetter = false, fieldInit = constExprs.min)
+                    createProperty("MAX_VALUE", numericOrChar, isConst = true, withGetter = false, fieldInit = constExprs.max)
+                    createProperty("SIZE_BYTES", intType, isConst = true, withGetter = false, fieldInit = constExprs.sizeBytes)
+                    createProperty("SIZE_BITS", intType, isConst = true, withGetter = false, fieldInit = constExprs.sizeBits)
+                }
                 for (targetPrimitive in primitiveIrTypesWithComparisons) {
                     createMemberFunction("to${targetPrimitive.classFqName!!.shortName().asString()}", targetPrimitive)
                 }
-                for (targetPrimitive in primitiveNumericIrTypes) {
-                    createMemberFunction(OperatorNameConventions.COMPARE_TO.asString(), intType, targetPrimitive)
-                    val targetArithmeticReturnType = primitiveArithmeticOperatorResultTypes[targetPrimitive]!!
+                createMemberFunction(OperatorNameConventions.INC.asString(), numericOrChar)
+                createMemberFunction(OperatorNameConventions.DEC.asString(), numericOrChar)
+            }
+        }
+        for (numeric in primitiveNumericIrTypes) {
+            with(numeric.getClass()!!) {
+                for (argument in primitiveNumericIrTypes) {
+                    createMemberFunction(OperatorNameConventions.COMPARE_TO.asString(), intType, argument)
+                    val targetArithmeticReturnType = getPrimitiveArithmeticOperatorResultType(numeric, argument)
                     for (op in arrayOf(OperatorNameConventions.PLUS, OperatorNameConventions.MINUS, OperatorNameConventions.TIMES, OperatorNameConventions.DIV, OperatorNameConventions.REM)) {
-                        createMemberFunction(op.asString(), targetArithmeticReturnType, targetPrimitive)
+                        createMemberFunction(op.asString(), targetArithmeticReturnType, argument)
                     }
                 }
-                val arithmeticReturnType = primitiveArithmeticOperatorResultTypes[primitive]!!
+                val arithmeticReturnType = getPrimitiveArithmeticOperatorResultType(numeric, numeric)
                 createMemberFunction(OperatorNameConventions.UNARY_PLUS.asString(), arithmeticReturnType)
                 createMemberFunction(OperatorNameConventions.UNARY_MINUS.asString(), arithmeticReturnType)
-                createMemberFunction(OperatorNameConventions.INC.asString(), primitive)
-                createMemberFunction(OperatorNameConventions.DEC.asString(), primitive)
-                createCompanionObject() {
-                    val constExprs = getNumericConstantsExpressions(primitive)
-                    createProperty("MIN_VALUE", primitive, isConst = true, withGetter = false, fieldInit = constExprs.min)
-                    createProperty("MAX_VALUE", primitive, isConst = true, withGetter = false, fieldInit = constExprs.max)
-                    createProperty("SIZE_BYTES", intType, isConst = true, withGetter = false, fieldInit = constExprs.sizeBytes)
-                    createProperty("SIZE_BITS", intType, isConst = true, withGetter = false, fieldInit = constExprs.sizeBits)
+            }
+        }
+        for (integral in primitiveIntegralIrTypes) {
+            with(integral.getClass()!!) {
+                for (argType in primitiveIntegralIrTypes) {
+                    createMemberFunction("rangeTo", if (integral == longType || argType == longType) longRange else intRange, argType)
                 }
             }
         }
@@ -216,17 +234,12 @@ class IrBuiltInsOverFir(
             }
         }
         with (charClass.owner) {
-            for (targetPrimitive in primitiveIrTypesWithComparisons) {
-                createMemberFunction("to${targetPrimitive.classFqName!!.shortName().asString()}", targetPrimitive)
-            }
             createMemberFunction(OperatorNameConventions.COMPARE_TO.asString(), intType, charType)
             createMemberFunction(OperatorNameConventions.PLUS.asString(), charType, intType)
             createMemberFunction(OperatorNameConventions.MINUS.asString(), charType, intType)
             createMemberFunction(OperatorNameConventions.MINUS.asString(), intType, charType)
-            createMemberFunction(OperatorNameConventions.INC.asString(), charType)
-            createMemberFunction(OperatorNameConventions.DEC.asString(), charType)
+            createMemberFunction("rangeTo", charRange , charType)
         }
-
         with (stringClass.owner) {
             createMemberFunction(OperatorNameConventions.COMPARE_TO.asString(), intType, defaultType)
             createProperty("length", intType)
