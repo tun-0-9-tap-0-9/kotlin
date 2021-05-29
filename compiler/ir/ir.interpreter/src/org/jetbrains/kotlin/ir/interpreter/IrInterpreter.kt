@@ -129,6 +129,7 @@ class IrInterpreter private constructor(
             is IrFunctionReference -> interpretFunctionReference(element)
             is IrPropertyReference -> interpretPropertyReference(element)
             is IrClassReference -> interpretClassReference(element)
+            is IrGetClass -> interpretGetClass(element)
             else -> TODO("${element.javaClass} not supported for interpretation")
         }
     }
@@ -612,5 +613,10 @@ class IrInterpreter private constructor(
             }
             else -> callStack.pushState(KClassState(classReference))
         }
+    }
+
+    private fun interpretGetClass(expression: IrGetClass) {
+        val irClass = callStack.popState().irClass
+        callStack.pushState(KClassState(irClass, expression.type.classOrNull!!.owner))
     }
 }
