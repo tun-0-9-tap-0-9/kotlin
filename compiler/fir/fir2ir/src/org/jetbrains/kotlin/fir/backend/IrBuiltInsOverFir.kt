@@ -54,7 +54,6 @@ class IrBuiltInsOverFir(
     private val kotlinPackage = StandardNames.BUILT_INS_PACKAGE_FQ_NAME
     private val kotlinReflectPackage = StandardNames.KOTLIN_REFLECT_FQ_NAME
 
-    //    private val javaLangPackage = FqName("java.lang")
     private val kotlinCollectionsPackage = StandardNames.COLLECTIONS_PACKAGE_FQ_NAME
 
     private val internalIrPackage = createPackage(KOTLIN_INTERNAL_IR_FQN)
@@ -64,15 +63,12 @@ class IrBuiltInsOverFir(
     override lateinit var booleanNotSymbol: IrSimpleFunctionSymbol private set
 
     override val booleanType: IrType get() = booleanClass.defaultType
-    override val booleanClass: IrClassSymbol = //referenceClassByFqname(kotlinPackage, "Boolean")!!
-        kotlinIrPackage.createClass(IdSignatureValues._boolean).also { boolClass ->
-            booleanNotSymbol = createFunction(kotlinPackage, "not", boolClass.defaultType, emptyArray(), boolClass.owner).also { fn ->
-                boolClass.owner.declarations.add(fn)
-                fn.addDispatchReceiver {
-                    type = boolClass.defaultType
-                    origin = boolClass.owner.origin
-                }
-            }.symbol
+    override val booleanClass: IrClassSymbol =
+        kotlinIrPackage.createClass(IdSignatureValues._boolean) {
+            booleanNotSymbol = createMemberFunction(OperatorNameConventions.NOT, defaultType, isOperator = true).symbol
+            createMemberFunction(OperatorNameConventions.AND, defaultType, "other" to defaultType) { isInfix = true }
+            createMemberFunction(OperatorNameConventions.OR, defaultType, "other" to defaultType) { isInfix = true }
+            createMemberFunction(OperatorNameConventions.XOR, defaultType, "other" to defaultType) { isInfix = true }
         }
 
     override val charType: IrType get() = charClass.defaultType
@@ -91,19 +87,23 @@ class IrBuiltInsOverFir(
     override val doubleType: IrType get() = doubleClass.defaultType
     override val doubleClass: IrClassSymbol = kotlinIrPackage.createNumberClass(IdSignatureValues._double)
 
-    override val stringClass: IrClassSymbol = kotlinIrPackage.createClass(IdSignatureValues.string)
+    override val charSequenceClass: IrClassSymbol = kotlinIrPackage.createClass(IdSignatureValues.charSequence)
+
+    override val stringClass: IrClassSymbol = kotlinIrPackage.createClass(IdSignatureValues.string) {
+        superTypes += charSequenceClass.owner.defaultType
+    }
     override val stringType: IrType get() = stringClass.defaultType
 
     override val anyClass: IrClassSymbol = kotlinIrPackage.createClass(IdSignatureValues.any) {
         createConstructor()
-        createMemberFunction("equals", booleanType, defaultType.withHasQuestionMark(true))
-        createMemberFunction("hashCode", intType)
-        createMemberFunction("toString", stringType)
+        createMemberFunction(OperatorNameConventions.EQUALS, booleanType, "other" to defaultType.withHasQuestionMark(true), modality = Modality.OPEN, isOperator = true)
+        createMemberFunction("hashCode", intType, modality = Modality.OPEN)
+        createMemberFunction("toString", stringType, modality = Modality.OPEN)
     }
     override val anyType: IrType = anyClass.defaultType
     override val anyNType = anyType.withHasQuestionMark(true)
 
-    override val unitClass: IrClassSymbol = kotlinIrPackage.createClass(IdSignatureValues.unit)
+    override val unitClass: IrClassSymbol = kotlinIrPackage.createClass(IdSignatureValues.unit, ClassKind.OBJECT, classModality = Modality.FINAL)
     override val unitType: IrType get() = unitClass.defaultType
 
     override val arrayClass: IrClassSymbol = kotlinIrPackage.createClass(IdSignatureValues.array) klass@{
@@ -117,8 +117,6 @@ class IrBuiltInsOverFir(
     override val nothingClass: IrClassSymbol = kotlinIrPackage.createClass(IdSignatureValues.nothing)
     override val nothingType: IrType get() = nothingClass.defaultType
     override val nothingNType: IrType = nothingType.withHasQuestionMark(true)
-
-    override val charSequenceClass: IrClassSymbol = referenceClassByFqname(kotlinPackage, "CharSequence")!!
 
     override val collectionClass: IrClassSymbol by lazy { referenceClassByFqname(kotlinCollectionsPackage, "Collection")!! }
     override val setClass: IrClassSymbol by lazy { referenceClassByFqname(kotlinCollectionsPackage, "Set")!! }
@@ -184,6 +182,10 @@ class IrBuiltInsOverFir(
         val longRange = referenceClassByFqname(StandardNames.RANGES_PACKAGE_FQ_NAME, "LongRange")!!.owner.defaultType
         val charRange = referenceClassByFqname(StandardNames.RANGES_PACKAGE_FQ_NAME, "CharRange")!!.owner.defaultType
 
+        with (booleanClass.owner) {
+            createMemberFunction(OperatorNameConventions.COMPARE_TO, intType, "other" to booleanType, modality = Modality.OPEN, isOperator = true)
+        }
+
         for (numericOrChar in primitiveNumericIrTypes + charType) {
             with(numericOrChar.getClass()!!) {
                 createCompanionObject() {
@@ -194,16 +196,20 @@ class IrBuiltInsOverFir(
                     createProperty("SIZE_BITS", intType, isConst = true, withGetter = false, fieldInit = constExprs.sizeBits)
                 }
                 for (targetPrimitive in primitiveIrTypesWithComparisons) {
-                    createMemberFunction("to${targetPrimitive.classFqName!!.shortName().asString()}", targetPrimitive)
+                    createMemberFunction("to${targetPrimitive.classFqName!!.shortName().asString()}", targetPrimitive, modality = Modality.OPEN)
                 }
-                createMemberFunction(OperatorNameConventions.INC.asString(), numericOrChar)
-                createMemberFunction(OperatorNameConventions.DEC.asString(), numericOrChar)
+                createMemberFunction(OperatorNameConventions.INC, numericOrChar, isOperator = true)
+                createMemberFunction(OperatorNameConventions.DEC, numericOrChar, isOperator = true)
             }
         }
         for (numeric in primitiveNumericIrTypes) {
             with(numeric.getClass()!!) {
                 for (argument in primitiveNumericIrTypes) {
-                    createMemberFunction(OperatorNameConventions.COMPARE_TO.asString(), intType, argument)
+                    createMemberFunction(
+                        OperatorNameConventions.COMPARE_TO, intType, "other" to argument,
+                        modality = if (argument == numeric) Modality.OPEN else Modality.FINAL,
+                        isOperator = true
+                    )
                     val targetArithmeticReturnType = getPrimitiveArithmeticOperatorResultType(numeric, argument)
                     for (op in arrayOf(
                         OperatorNameConventions.PLUS,
@@ -212,44 +218,54 @@ class IrBuiltInsOverFir(
                         OperatorNameConventions.DIV,
                         OperatorNameConventions.REM
                     )) {
-                        createMemberFunction(op.asString(), targetArithmeticReturnType, argument)
+                        createMemberFunction(op, targetArithmeticReturnType, "other" to argument, isOperator = true)
                     }
                 }
                 val arithmeticReturnType = getPrimitiveArithmeticOperatorResultType(numeric, numeric)
-                createMemberFunction(OperatorNameConventions.UNARY_PLUS.asString(), arithmeticReturnType)
-                createMemberFunction(OperatorNameConventions.UNARY_MINUS.asString(), arithmeticReturnType)
+                createMemberFunction(OperatorNameConventions.UNARY_PLUS, arithmeticReturnType, isOperator = true)
+                createMemberFunction(OperatorNameConventions.UNARY_MINUS, arithmeticReturnType, isOperator = true)
             }
         }
         for (integral in primitiveIntegralIrTypes) {
             with(integral.getClass()!!) {
                 for (argType in primitiveIntegralIrTypes) {
-                    createMemberFunction("rangeTo", if (integral == longType || argType == longType) longRange else intRange, argType)
+                    createMemberFunction(
+                        OperatorNameConventions.RANGE_TO,
+                        if (integral == longType || argType == longType) longRange else intRange,
+                        "other" to argType, isOperator = true
+                    )
                 }
             }
         }
         for (typeWithBitwiseOps in arrayOf(intType, longType)) {
             with(typeWithBitwiseOps.getClass()!!) {
                 for (op in arrayOf(OperatorNameConventions.AND, OperatorNameConventions.OR, OperatorNameConventions.XOR)) {
-                    createMemberFunction(op.asString(), typeWithBitwiseOps, typeWithBitwiseOps)
+                    createMemberFunction(op, typeWithBitwiseOps, "other" to typeWithBitwiseOps, isOperator = true)
                 }
                 for (op in arrayOf(OperatorNameConventions.SHL, OperatorNameConventions.SHR, OperatorNameConventions.USHR)) {
-                    createMemberFunction(op.asString(), typeWithBitwiseOps, intType)
+                    createMemberFunction(op, typeWithBitwiseOps, "bitCount" to intType, isOperator = true)
                 }
-                createMemberFunction(OperatorNameConventions.INV.asString(), typeWithBitwiseOps)
+                createMemberFunction(OperatorNameConventions.INV, typeWithBitwiseOps, isOperator = true)
             }
         }
         with(charClass.owner) {
-            createMemberFunction(OperatorNameConventions.COMPARE_TO.asString(), intType, charType)
-            createMemberFunction(OperatorNameConventions.PLUS.asString(), charType, intType)
-            createMemberFunction(OperatorNameConventions.MINUS.asString(), charType, intType)
-            createMemberFunction(OperatorNameConventions.MINUS.asString(), intType, charType)
-            createMemberFunction("rangeTo", charRange, charType)
+            createMemberFunction(OperatorNameConventions.COMPARE_TO, intType, "other" to charType, modality = Modality.OPEN, isOperator = true)
+            createMemberFunction(OperatorNameConventions.PLUS, charType, "other" to intType, isOperator = true)
+            createMemberFunction(OperatorNameConventions.MINUS, charType, "other" to intType, isOperator = true)
+            createMemberFunction(OperatorNameConventions.MINUS, intType, "other" to charType, isOperator = true)
+            createMemberFunction(OperatorNameConventions.RANGE_TO, charRange, "other" to charType)
+        }
+        with(charSequenceClass.owner) {
+            createProperty("length", intType, modality = Modality.OPEN)
+            createMemberFunction(OperatorNameConventions.GET, charType, "index" to intType, modality = Modality.OPEN, isOperator = true)
+            createMemberFunction("subSequence", defaultType, "startIndex" to intType, "endIndex" to intType, modality = Modality.OPEN)
         }
         with(stringClass.owner) {
-            createMemberFunction(OperatorNameConventions.COMPARE_TO.asString(), intType, defaultType)
-            createProperty("length", intType)
-            createMemberFunction(OperatorNameConventions.PLUS.asString(), defaultType, anyNType)
-            createMemberFunction(OperatorNameConventions.GET.asString(), charType, intType)
+            createProperty("length", intType, modality = Modality.OPEN)
+            createMemberFunction(OperatorNameConventions.GET, charType, "index" to intType, isOperator = true)
+            createMemberFunction("subSequence", defaultType, "startIndex" to intType, "endIndex" to intType)
+            createMemberFunction(OperatorNameConventions.COMPARE_TO, intType, "other" to defaultType, modality = Modality.OPEN, isOperator = true)
+            createMemberFunction(OperatorNameConventions.PLUS, defaultType, "other" to anyNType, isOperator = true)
         }
     }
 
@@ -302,16 +318,16 @@ class IrBuiltInsOverFir(
     override lateinit var greaterOrEqualFunByOperandType: Map<IrClassifierSymbol, IrSimpleFunctionSymbol> private set
     override lateinit var greaterFunByOperandType: Map<IrClassifierSymbol, IrSimpleFunctionSymbol> private set
 
-    private val internalIrPackageFragment: IrClassSymbol =
-        internalIrPackage.createClass(StandardNames.BUILT_INS_PACKAGE_FQ_NAME.child(Name.identifier("InternalKt"))) {
+    init {
+        with(internalIrPackage) {
 
             fun addBuiltinFunctionSymbol(
                 name: String,
                 returnType: IrType,
-                vararg valueParameterTypes: IrType,
+                vararg valueParameterTypes: Pair<String, IrType>,
                 builder: IrSimpleFunction.() -> Unit = {}
             ) =
-                createFunction(KOTLIN_INTERNAL_IR_FQN, name, returnType, valueParameterTypes, this).also {
+                createFunction(fqName, name, returnType, valueParameterTypes).also {
                     declarations.add(it)
                     it.builder()
                 }.symbol
@@ -319,21 +335,21 @@ class IrBuiltInsOverFir(
             primitiveFloatingPointIrTypes.forEach { fpType ->
                 _ieee754equalsFunByOperandType.put(
                     fpType.classifierOrFail,
-                    addBuiltinFunctionSymbol(BuiltInOperatorNames.IEEE754_EQUALS, booleanType, fpType.makeNullable(), fpType.makeNullable())
+                    addBuiltinFunctionSymbol(BuiltInOperatorNames.IEEE754_EQUALS, booleanType, "arg0" to fpType.makeNullable(), "arg1" to fpType.makeNullable())
                 )
             }
-            eqeqeqSymbol = addBuiltinFunctionSymbol(BuiltInOperatorNames.EQEQEQ, booleanType, anyNType, anyNType)
-            eqeqSymbol = addBuiltinFunctionSymbol(BuiltInOperatorNames.EQEQ, booleanType, anyNType, anyNType)
+            eqeqeqSymbol = addBuiltinFunctionSymbol(BuiltInOperatorNames.EQEQEQ, booleanType, "" to anyNType, "" to anyNType)
+            eqeqSymbol = addBuiltinFunctionSymbol(BuiltInOperatorNames.EQEQ, booleanType, "" to anyNType, "" to anyNType)
             throwCceSymbol = addBuiltinFunctionSymbol(BuiltInOperatorNames.THROW_CCE, nothingType)
             throwIseSymbol = addBuiltinFunctionSymbol(BuiltInOperatorNames.THROW_ISE, nothingType)
-            andandSymbol = addBuiltinFunctionSymbol(BuiltInOperatorNames.ANDAND, booleanType, booleanType, booleanType)
-            ororSymbol = addBuiltinFunctionSymbol(BuiltInOperatorNames.OROR, booleanType, booleanType, booleanType)
+            andandSymbol = addBuiltinFunctionSymbol(BuiltInOperatorNames.ANDAND, booleanType, "" to booleanType, "" to booleanType)
+            ororSymbol = addBuiltinFunctionSymbol(BuiltInOperatorNames.OROR, booleanType, "" to booleanType, "" to booleanType)
             noWhenBranchMatchedExceptionSymbol =
                 addBuiltinFunctionSymbol(BuiltInOperatorNames.NO_WHEN_BRANCH_MATCHED_EXCEPTION, nothingType)
             illegalArgumentExceptionSymbol =
-                addBuiltinFunctionSymbol(BuiltInOperatorNames.ILLEGAL_ARGUMENT_EXCEPTION, nothingType, stringType)
-            dataClassArrayMemberHashCodeSymbol = addBuiltinFunctionSymbol("dataClassArrayMemberHashCode", intType, anyType)
-            dataClassArrayMemberToStringSymbol = addBuiltinFunctionSymbol("dataClassArrayMemberToString", stringType, anyNType)
+                addBuiltinFunctionSymbol(BuiltInOperatorNames.ILLEGAL_ARGUMENT_EXCEPTION, nothingType, "" to stringType)
+            dataClassArrayMemberHashCodeSymbol = addBuiltinFunctionSymbol("dataClassArrayMemberHashCode", intType, "" to anyType)
+            dataClassArrayMemberToStringSymbol = addBuiltinFunctionSymbol("dataClassArrayMemberToString", stringType, "" to anyNType)
 
             checkNotNullSymbol = run {
                 val typeParameter: IrTypeParameter = irFactory.createTypeParameter(
@@ -344,18 +360,18 @@ class IrBuiltInsOverFir(
                 }
 
                 createFunction(
-                    KOTLIN_INTERNAL_IR_FQN, "CHECK_NOT_NULL",
+                    fqName, "CHECK_NOT_NULL",
                     IrSimpleTypeImpl(typeParameter.symbol, hasQuestionMark = false, emptyList(), emptyList()),
-                    arrayOf(IrSimpleTypeImpl(typeParameter.symbol, hasQuestionMark = true, emptyList(), emptyList())),
-                    this
+                    arrayOf("" to IrSimpleTypeImpl(typeParameter.symbol, hasQuestionMark = true, emptyList(), emptyList()))
                 ).also {
                     it.typeParameters = listOf(typeParameter)
+                    typeParameter.parent = it
                     declarations.add(it)
                 }.symbol
             }
 
             fun List<IrType>.defineComparisonOperatorForEachIrType(name: String) =
-                associate { it.classifierOrFail to addBuiltinFunctionSymbol(name, booleanType, it, it) }
+                associate { it.classifierOrFail to addBuiltinFunctionSymbol(name, booleanType, "" to it, "" to it) }
 
             lessFunByOperandType = primitiveIrTypesWithComparisons.defineComparisonOperatorForEachIrType(BuiltInOperatorNames.LESS)
             lessOrEqualFunByOperandType =
@@ -364,12 +380,14 @@ class IrBuiltInsOverFir(
                 primitiveIrTypesWithComparisons.defineComparisonOperatorForEachIrType(BuiltInOperatorNames.GREATER_OR_EQUAL)
             greaterFunByOperandType = primitiveIrTypesWithComparisons.defineComparisonOperatorForEachIrType(BuiltInOperatorNames.GREATER)
 
-            arrayOfNulls =
-                createFunction(kotlinPackage, "arrayOfNulls", arrayClass.defaultType, arrayOf(intType), kotlinIrPackage).also {
-                    val typeParameter = it.addTypeParameter("T", anyNType)
-                    it.returnType = arrayClass.typeWithArguments(listOf(typeParameter.defaultType as IrTypeArgument))
-                }.symbol
         }
+
+        arrayOfNulls =
+            kotlinIrPackage.createFunction(kotlinPackage, "arrayOfNulls", arrayClass.defaultType, arrayOf("noOfElements" to intType)).also {
+                val typeParameter = it.addTypeParameter("T", anyNType)
+                it.returnType = arrayClass.typeWithArguments(listOf(typeParameter.defaultType as IrTypeArgument))
+            }.symbol
+    }
 
     override val unsignedArrays: Set<IrClassSymbol> = UnsignedType.values().mapNotNullTo(mutableSetOf()) { unsignedType ->
         referenceClassByClassId(unsignedType.arrayClassId)
@@ -413,23 +431,23 @@ class IrBuiltInsOverFir(
         fun IrClassSymbol.addPackageFun(
             name: String,
             returnType: IrType,
-            vararg argumentTypes: IrType,
+            vararg argumentTypes: Pair<String, IrType>,
             builder: IrSimpleFunction.() -> Unit
         ) =
-            createFunction(kotlinPackage, name, returnType, argumentTypes, owner).also {
+            owner.createFunction(kotlinPackage, name, returnType, argumentTypes).also {
                 it.builder()
                 this.owner.declarations.add(it)
             }.symbol
 
         val kotlinKt = kotlinIrPackage.createClass(kotlinPackage.child(Name.identifier("KotlinKt")))
         KotlinPackageFuns(
-            arrayOf = kotlinKt.addPackageFun("arrayOf", arrayClass.defaultType) {
+            arrayOf = kotlinKt.addPackageFun("arrayOf", arrayClass.defaultType) arrayOf@ {
                 addTypeParameter("T", anyNType)
                 addValueParameter {
                     this.name = Name.identifier("elements")
                     this.type = arrayClass.defaultType
                     this.varargElementType = typeParameters[0].defaultType
-                    this.origin = origin
+                    this.origin = this@arrayOf.origin
                 }
             }
         )
@@ -584,16 +602,6 @@ class IrBuiltInsOverFir(
     ).symbol
 
     private fun IrPackageFragment.createClass(
-        name: String,
-        classKind: ClassKind = ClassKind.CLASS,
-        classModality: Modality = Modality.OPEN,
-        classIsInline: Boolean = false,
-        builderBlock: IrClassBuilder.() -> Unit = {},
-        block: IrClass.() -> Unit = {}
-    ): IrClassSymbol =
-        createClass(Name.identifier(name), classKind, classModality, classIsInline, builderBlock, block)
-
-    private fun IrPackageFragment.createClass(
         name: Name,
         classKind: ClassKind = ClassKind.CLASS,
         classModality: Modality = Modality.OPEN,
@@ -623,61 +631,74 @@ class IrBuiltInsOverFir(
     }
 
     private fun IrClass.createMemberFunction(
-        name: String, returnType: IrType, vararg valueParameterTypes: IrType,
+        name: String, returnType: IrType, vararg valueParameterTypes: Pair<String, IrType>,
         origin: IrDeclarationOrigin = BUILTIN_OPERATOR,
-        modality: Modality = Modality.OPEN,
+        modality: Modality = Modality.FINAL,
+        isOperator: Boolean = false,
         build: IrFunctionBuilder.() -> Unit = {}
-    ) = createFunction(
+    ) = parent.createFunction(
         IdSignature.PublicSignature(
             this.packageFqName!!.asString(),
             classId!!.relativeClassName.child(Name.identifier(name)).asString(),
             null,
             0
         ),
-        name, returnType, valueParameterTypes, parent, origin, modality, build
+        name, returnType, valueParameterTypes, origin, modality, isOperator, build
     ).also {
         it.addDispatchReceiver { type = this@createMemberFunction.defaultType }
         declarations.add(it)
         it.parent = this@createMemberFunction
     }
 
-    private fun createFunction(
+    private fun IrClass.createMemberFunction(
+        name: Name, returnType: IrType, vararg valueParameterTypes: Pair<String, IrType>,
+        origin: IrDeclarationOrigin = BUILTIN_OPERATOR,
+        modality: Modality = Modality.FINAL,
+        isOperator: Boolean = false,
+        build: IrFunctionBuilder.() -> Unit = {}
+    ) =
+        createMemberFunction(
+            name.asString(), returnType, *valueParameterTypes, origin = origin, modality = modality, isOperator = isOperator, build = build
+        )
+
+    private fun IrDeclarationParent.createFunction(
         signature: IdSignature,
         name: String,
         returnType: IrType,
-        valueParameterTypes: Array<out IrType>,
-        parent: IrDeclarationParent,
+        valueParameterTypes: Array<out Pair<String, IrType>>,
         origin: IrDeclarationOrigin = BUILTIN_OPERATOR,
-        modality: Modality = Modality.OPEN,
+        modality: Modality = Modality.FINAL,
+        isOperator: Boolean = false,
         build: IrFunctionBuilder.() -> Unit = {}
     ) = IrFunctionBuilder().run {
         this.name = Name.identifier(name)
         this.returnType = returnType
         this.origin = origin
         this.modality = modality
+        this.isOperator = isOperator
         build()
         irFactory.createFunction(
             startOffset, endOffset, origin, IrSimpleFunctionPublicSymbolImpl(signature), this.name, visibility, modality, this.returnType,
             isInline, isExternal, isTailrec, isSuspend, isOperator, isInfix, isExpect, isFakeOverride, containerSource,
         ).also { fn ->
-            valueParameterTypes.forEachIndexed { index, irType ->
-                fn.addValueParameter(Name.identifier("arg$index"), irType, origin)
+            valueParameterTypes.forEachIndexed { index, (pName, irType) ->
+                fn.addValueParameter(Name.identifier(if (pName.isBlank()) "arg$index" else pName), irType, origin)
             }
-            fn.parent = parent
+            fn.parent = this@createFunction
         }
     }
 
-    private fun createFunction(
+    private fun IrDeclarationParent.createFunction(
         packageFqName: FqName,
         name: String,
         returnType: IrType,
-        valueParameterTypes: Array<out IrType>,
-        parent: IrDeclarationParent,
+        valueParameterTypes: Array<out Pair<String, IrType>>,
         origin: IrDeclarationOrigin = BUILTIN_OPERATOR,
-        modality: Modality = Modality.OPEN,
+        modality: Modality = Modality.FINAL,
+        isOperator: Boolean = false
     ) = createFunction(
         IdSignature.PublicSignature(packageFqName.asString(), name, null, 0),
-        name, returnType, valueParameterTypes, parent, origin, modality
+        name, returnType, valueParameterTypes, origin, modality, isOperator
     )
 
     private fun IrClass.addArrayMembers(elementType: IrType) {
@@ -688,28 +709,27 @@ class IrBuiltInsOverFir(
         }.also {
             it.addValueParameter("size", intType, BUILTIN_CLASS_CONSTRUCTOR)
         }
-        createMemberFunction("get", elementType, intType) {
-            isOperator = true
-        }
-        createMemberFunction("set", unitType, intType, elementType) {
-            isOperator = true
-        }
+        createMemberFunction(OperatorNameConventions.GET, elementType, "index" to intType, isOperator = true)
+        createMemberFunction(OperatorNameConventions.SET, unitType, "index" to intType, "value" to elementType, isOperator = true)
         createProperty("size", intType)
     }
 
     private fun IrClass.createProperty(
         propertyName: String, returnType: IrType,
+        modality: Modality = Modality.FINAL,
         isConst: Boolean = false, withGetter: Boolean = true, withField: Boolean = false, fieldInit: IrExpression? = null,
         builder: IrProperty.() -> Unit = {}
     ) {
         addProperty {
             this.name = Name.identifier(propertyName)
             this.isConst = isConst
+            this.modality = modality
         }.also { property ->
             if (withGetter) {
                 property.getter = irFactory.buildFun {
                     this.name = Name.special("<get-$propertyName>")
                     this.returnType = returnType
+                    this.modality = modality
                 }.also {
                     it.addDispatchReceiver { type = this@createProperty.defaultType }
                     it.parent = this
