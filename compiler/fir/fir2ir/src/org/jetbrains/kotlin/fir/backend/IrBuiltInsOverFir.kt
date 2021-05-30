@@ -41,7 +41,6 @@ import org.jetbrains.kotlin.name.ClassId
 import org.jetbrains.kotlin.name.FqName
 import org.jetbrains.kotlin.name.Name
 import org.jetbrains.kotlin.types.Variance
-import org.jetbrains.kotlin.types.checker.KotlinTypeChecker
 import org.jetbrains.kotlin.util.OperatorNameConventions
 
 class IrBuiltInsOverFir(
@@ -185,7 +184,7 @@ class IrBuiltInsOverFir(
         val longRange = referenceClassByFqname(StandardNames.RANGES_PACKAGE_FQ_NAME, "LongRange")!!.owner.defaultType
         val charRange = referenceClassByFqname(StandardNames.RANGES_PACKAGE_FQ_NAME, "CharRange")!!.owner.defaultType
 
-        for (numericOrChar in primitiveIntegralIrTypes + charType) {
+        for (numericOrChar in primitiveNumericIrTypes + charType) {
             with(numericOrChar.getClass()!!) {
                 createCompanionObject() {
                     val constExprs = getNumericConstantsExpressions(numericOrChar)
@@ -387,28 +386,23 @@ class IrBuiltInsOverFir(
 
     override val intPlusSymbol: IrSimpleFunctionSymbol
         get() = intClass.functions.single {
-            it.owner.name == OperatorNameConventions.PLUS &&
-                    KotlinTypeChecker.DEFAULT.equalTypes(it.owner.valueParameters[0].type.toKotlinType(), intType.toKotlinType())
+            it.owner.name == OperatorNameConventions.PLUS && it.owner.valueParameters[0].type == intType
         }
 
     override val intTimesSymbol: IrSimpleFunctionSymbol
         get() = intClass.functions.single {
-            it.owner.name == OperatorNameConventions.TIMES &&
-                    KotlinTypeChecker.DEFAULT.equalTypes(it.owner.valueParameters[0].type.toKotlinType(), intType.toKotlinType())
+            it.owner.name == OperatorNameConventions.TIMES && it.owner.valueParameters[0].type == intType
         }
 
     override val extensionToString: IrSimpleFunctionSymbol by lazy {
         findFunctions(kotlinPackage, Name.identifier("toString")).first { function ->
-            function.owner.extensionReceiverParameter?.let { receiver ->
-                KotlinTypeChecker.DEFAULT.equalTypes(receiver.type.toKotlinType(), anyNType.toKotlinType())
-            } ?: false
+            function.owner.extensionReceiverParameter?.let { receiver -> receiver.type == anyNType } ?: false
         }
     }
 
     override val stringPlus: IrSimpleFunctionSymbol
         get() = intClass.functions.single {
-            it.owner.name == OperatorNameConventions.PLUS &&
-                    KotlinTypeChecker.DEFAULT.equalTypes(it.owner.valueParameters[0].type.toKotlinType(), stringType.toKotlinType())
+            it.owner.name == OperatorNameConventions.PLUS && it.owner.valueParameters[0].type == stringType
         }
 
     private class KotlinPackageFuns(
@@ -549,7 +543,7 @@ class IrBuiltInsOverFir(
     private fun IrDeclarationParent.createClass(
         fqName: FqName,
         classKind: ClassKind = ClassKind.CLASS,
-        classModality: Modality = Modality.FINAL,
+        classModality: Modality = Modality.OPEN,
         classIsInline: Boolean = false,
         builderBlock: IrClassBuilder.() -> Unit = {},
         block: IrClass.() -> Unit = {}
@@ -562,7 +556,7 @@ class IrBuiltInsOverFir(
     private fun IrDeclarationParent.createClass(
         signature: IdSignature.PublicSignature,
         classKind: ClassKind = ClassKind.CLASS,
-        classModality: Modality = Modality.FINAL,
+        classModality: Modality = Modality.OPEN,
         classIsInline: Boolean = false,
         builderBlock: IrClassBuilder.() -> Unit = {},
         block: IrClass.() -> Unit = {}
@@ -592,7 +586,7 @@ class IrBuiltInsOverFir(
     private fun IrPackageFragment.createClass(
         name: String,
         classKind: ClassKind = ClassKind.CLASS,
-        classModality: Modality = Modality.FINAL,
+        classModality: Modality = Modality.OPEN,
         classIsInline: Boolean = false,
         builderBlock: IrClassBuilder.() -> Unit = {},
         block: IrClass.() -> Unit = {}
@@ -602,7 +596,7 @@ class IrBuiltInsOverFir(
     private fun IrPackageFragment.createClass(
         name: Name,
         classKind: ClassKind = ClassKind.CLASS,
-        classModality: Modality = Modality.FINAL,
+        classModality: Modality = Modality.OPEN,
         classIsInline: Boolean = false,
         builderBlock: IrClassBuilder.() -> Unit = {},
         block: IrClass.() -> Unit = {}
@@ -631,6 +625,7 @@ class IrBuiltInsOverFir(
     private fun IrClass.createMemberFunction(
         name: String, returnType: IrType, vararg valueParameterTypes: IrType,
         origin: IrDeclarationOrigin = BUILTIN_OPERATOR,
+        modality: Modality = Modality.OPEN,
         build: IrFunctionBuilder.() -> Unit = {}
     ) = createFunction(
         IdSignature.PublicSignature(
@@ -639,7 +634,7 @@ class IrBuiltInsOverFir(
             null,
             0
         ),
-        name, returnType, valueParameterTypes, parent, origin, build
+        name, returnType, valueParameterTypes, parent, origin, modality, build
     ).also {
         it.addDispatchReceiver { type = this@createMemberFunction.defaultType }
         declarations.add(it)
@@ -653,11 +648,13 @@ class IrBuiltInsOverFir(
         valueParameterTypes: Array<out IrType>,
         parent: IrDeclarationParent,
         origin: IrDeclarationOrigin = BUILTIN_OPERATOR,
+        modality: Modality = Modality.OPEN,
         build: IrFunctionBuilder.() -> Unit = {}
     ) = IrFunctionBuilder().run {
         this.name = Name.identifier(name)
         this.returnType = returnType
         this.origin = origin
+        this.modality = modality
         build()
         irFactory.createFunction(
             startOffset, endOffset, origin, IrSimpleFunctionPublicSymbolImpl(signature), this.name, visibility, modality, this.returnType,
@@ -675,10 +672,12 @@ class IrBuiltInsOverFir(
         name: String,
         returnType: IrType,
         valueParameterTypes: Array<out IrType>,
-        parent: IrDeclarationParent
+        parent: IrDeclarationParent,
+        origin: IrDeclarationOrigin = BUILTIN_OPERATOR,
+        modality: Modality = Modality.OPEN,
     ) = createFunction(
         IdSignature.PublicSignature(packageFqName.asString(), name, null, 0),
-        name, returnType, valueParameterTypes, parent
+        name, returnType, valueParameterTypes, parent, origin, modality
     )
 
     private fun IrClass.addArrayMembers(elementType: IrType) {
