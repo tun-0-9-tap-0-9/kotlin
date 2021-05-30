@@ -1099,7 +1099,7 @@ interface IrBuilderExtension {
         val ctorDecl = ctor.owner
         if (needToCopyAnnotations) {
             val classAnnotations = copyAnnotationsFrom(thisIrType.getClass()?.annotations.orEmpty())
-            args = args + createArrayOfExpression(compilerContext.builtIns.annotationType.toIrType(), classAnnotations)
+            args = args + createArrayOfExpression(compilerContext.irBuiltIns.annotationType, classAnnotations)
         }
 
         val typeParameters = ctorDecl.parentAsClass.typeParameters
