@@ -12,11 +12,11 @@ import org.jetbrains.kotlin.descriptors.CallableMemberDescriptor
 import org.jetbrains.kotlin.descriptors.DeclarationDescriptor
 import org.jetbrains.kotlin.descriptors.ModuleDescriptor
 import org.jetbrains.kotlin.ir.IrBuiltIns
+import org.jetbrains.kotlin.ir.ObsoleteDescriptorBasedAPI
 import org.jetbrains.kotlin.ir.builders.TranslationPluginContext
 import org.jetbrains.kotlin.ir.declarations.IrDeclaration
 import org.jetbrains.kotlin.ir.declarations.IrModuleFragment
-import org.jetbrains.kotlin.ir.descriptors.IrAbstractFunctionFactory
-import org.jetbrains.kotlin.ir.descriptors.IrBuiltIns
+import org.jetbrains.kotlin.ir.descriptors.IrBuiltInsOverDescriptors
 import org.jetbrains.kotlin.ir.linkage.IrDeserializer
 import org.jetbrains.kotlin.ir.linkage.KotlinIrLinkerInternalException
 import org.jetbrains.kotlin.ir.symbols.*
@@ -103,6 +103,7 @@ abstract class KotlinIrLinker(
         }
     }
 
+    @OptIn(ObsoleteDescriptorBasedAPI::class)
     private fun findDeserializedDeclarationForSymbol(symbol: IrSymbol): DeclarationDescriptor? {
         assert(symbol.isPublicApi || symbol.descriptor.module === currentModule || platformSpecificSymbol(symbol))
 
@@ -125,6 +126,7 @@ abstract class KotlinIrLinker(
 
     protected open fun platformSpecificSymbol(symbol: IrSymbol): Boolean = false
 
+    @OptIn(ObsoleteDescriptorBasedAPI::class)
     private fun tryResolveCustomDeclaration(symbol: IrSymbol): IrDeclaration? {
         if (!symbol.hasDescriptor) return null
 
@@ -146,6 +148,7 @@ abstract class KotlinIrLinker(
         }
     }
 
+    @OptIn(ObsoleteDescriptorBasedAPI::class)
     override fun getDeclaration(symbol: IrSymbol): IrDeclaration? {
 
         if (!symbol.isPublicApi) {
@@ -299,6 +302,7 @@ abstract class KotlinIrLinker(
         return deserializerForModule.moduleFragment
     }
 
+    @OptIn(ObsoleteDescriptorBasedAPI::class)
     private fun maybeWrapWithBuiltInAndInit(
         moduleDescriptor: ModuleDescriptor,
         moduleDeserializer: IrModuleDeserializer
