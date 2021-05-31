@@ -5,6 +5,7 @@
 
 package org.jetbrains.kotlin.fir.backend
 
+import org.jetbrains.kotlin.backend.common.ir.addFakeOverrides
 import org.jetbrains.kotlin.backend.common.ir.createImplicitParameterDeclarationWithWrappedDescriptor
 import org.jetbrains.kotlin.builtins.PrimitiveType
 import org.jetbrains.kotlin.builtins.StandardNames
@@ -62,14 +63,12 @@ class IrBuiltInsOverFir(
 
     override lateinit var booleanNotSymbol: IrSimpleFunctionSymbol private set
 
+    override val anyClass: IrClassSymbol = kotlinIrPackage.createClass(IdSignatureValues.any)
+    override val anyType: IrType = anyClass.defaultType
+    override val anyNType = anyType.withHasQuestionMark(true)
+
     override val booleanType: IrType get() = booleanClass.defaultType
-    override val booleanClass: IrClassSymbol =
-        kotlinIrPackage.createClass(IdSignatureValues._boolean) {
-            booleanNotSymbol = createMemberFunction(OperatorNameConventions.NOT, defaultType, isOperator = true).symbol
-            createMemberFunction(OperatorNameConventions.AND, defaultType, "other" to defaultType) { isInfix = true }
-            createMemberFunction(OperatorNameConventions.OR, defaultType, "other" to defaultType) { isInfix = true }
-            createMemberFunction(OperatorNameConventions.XOR, defaultType, "other" to defaultType) { isInfix = true }
-        }
+    override val booleanClass: IrClassSymbol = kotlinIrPackage.createClass(IdSignatureValues._boolean)
 
     override val charType: IrType get() = charClass.defaultType
     override val charClass: IrClassSymbol = kotlinIrPackage.createClass(IdSignatureValues._char)
@@ -87,23 +86,12 @@ class IrBuiltInsOverFir(
     override val doubleType: IrType get() = doubleClass.defaultType
     override val doubleClass: IrClassSymbol = kotlinIrPackage.createNumberClass(IdSignatureValues._double)
 
-    override val charSequenceClass: IrClassSymbol = kotlinIrPackage.createClass(IdSignatureValues.charSequence)
+    override val charSequenceClass: IrClassSymbol = kotlinIrPackage.createClass(IdSignatureValues.charSequence, classKind = ClassKind.INTERFACE)
 
-    override val stringClass: IrClassSymbol = kotlinIrPackage.createClass(IdSignatureValues.string) {
-        superTypes += charSequenceClass.owner.defaultType
-    }
+    override val stringClass: IrClassSymbol = kotlinIrPackage.createClass(IdSignatureValues.string, charSequenceClass.defaultType)
     override val stringType: IrType get() = stringClass.defaultType
 
-    override val anyClass: IrClassSymbol = kotlinIrPackage.createClass(IdSignatureValues.any) {
-        createConstructor()
-        createMemberFunction(OperatorNameConventions.EQUALS, booleanType, "other" to defaultType.withHasQuestionMark(true), modality = Modality.OPEN, isOperator = true)
-        createMemberFunction("hashCode", intType, modality = Modality.OPEN)
-        createMemberFunction("toString", stringType, modality = Modality.OPEN)
-    }
-    override val anyType: IrType = anyClass.defaultType
-    override val anyNType = anyType.withHasQuestionMark(true)
-
-    override val unitClass: IrClassSymbol = kotlinIrPackage.createClass(IdSignatureValues.unit, ClassKind.OBJECT, classModality = Modality.FINAL)
+    override val unitClass: IrClassSymbol = kotlinIrPackage.createClass(IdSignatureValues.unit, classKind = ClassKind.OBJECT, classModality = Modality.FINAL)
     override val unitType: IrType get() = unitClass.defaultType
 
     override val arrayClass: IrClassSymbol = kotlinIrPackage.createClass(IdSignatureValues.array) klass@{
@@ -182,7 +170,18 @@ class IrBuiltInsOverFir(
         val longRange = referenceClassByFqname(StandardNames.RANGES_PACKAGE_FQ_NAME, "LongRange")!!.owner.defaultType
         val charRange = referenceClassByFqname(StandardNames.RANGES_PACKAGE_FQ_NAME, "CharRange")!!.owner.defaultType
 
+        with (anyClass.owner) {
+            createConstructor()
+            createMemberFunction(OperatorNameConventions.EQUALS, booleanType, "other" to defaultType.withHasQuestionMark(true), modality = Modality.OPEN, isOperator = true)
+            createMemberFunction("hashCode", intType, modality = Modality.OPEN)
+            createMemberFunction("toString", stringType, modality = Modality.OPEN)
+        }
+
         with (booleanClass.owner) {
+            booleanNotSymbol = createMemberFunction(OperatorNameConventions.NOT, defaultType, isOperator = true).symbol
+            createMemberFunction(OperatorNameConventions.AND, defaultType, "other" to defaultType) { isInfix = true }
+            createMemberFunction(OperatorNameConventions.OR, defaultType, "other" to defaultType) { isInfix = true }
+            createMemberFunction(OperatorNameConventions.XOR, defaultType, "other" to defaultType) { isInfix = true }
             createMemberFunction(OperatorNameConventions.COMPARE_TO, intType, "other" to booleanType, modality = Modality.OPEN, isOperator = true)
         }
 
@@ -266,6 +265,7 @@ class IrBuiltInsOverFir(
             createMemberFunction("subSequence", defaultType, "startIndex" to intType, "endIndex" to intType)
             createMemberFunction(OperatorNameConventions.COMPARE_TO, intType, "other" to defaultType, modality = Modality.OPEN, isOperator = true)
             createMemberFunction(OperatorNameConventions.PLUS, defaultType, "other" to anyNType, isOperator = true)
+            addFakeOverrides(this@IrBuiltInsOverFir)
         }
     }
 
@@ -560,6 +560,7 @@ class IrBuiltInsOverFir(
 
     private fun IrDeclarationParent.createClass(
         fqName: FqName,
+        vararg supertypes: IrType,
         classKind: ClassKind = ClassKind.CLASS,
         classModality: Modality = Modality.OPEN,
         classIsInline: Boolean = false,
@@ -568,11 +569,15 @@ class IrBuiltInsOverFir(
     ): IrClassSymbol {
         val signature = IdSignature.PublicSignature(fqName.parent().asString(), fqName.shortName().asString(), null, 0)
 
-        return this.createClass(signature, classKind, classModality, classIsInline, builderBlock, block)
+        return this.createClass(
+            signature, *supertypes,
+            classKind = classKind, classModality = classModality, classIsInline = classIsInline, builderBlock = builderBlock, block = block
+        )
     }
 
     private fun IrDeclarationParent.createClass(
         signature: IdSignature.PublicSignature,
+        vararg supertypes: IrType,
         classKind: ClassKind = ClassKind.CLASS,
         classModality: Modality = Modality.OPEN,
         classIsInline: Boolean = false,
@@ -597,19 +602,26 @@ class IrBuiltInsOverFir(
                 it.parent = this
                 it.createImplicitParameterDeclarationWithWrappedDescriptor()
                 it.block()
+                if (signature != IdSignatureValues.any) {
+                    it.superTypes = supertypes.asList().ifEmpty { listOf(anyType) }
+                }
             }
         }
     ).symbol
 
     private fun IrPackageFragment.createClass(
         name: Name,
+        vararg supertypes: IrType,
         classKind: ClassKind = ClassKind.CLASS,
         classModality: Modality = Modality.OPEN,
         classIsInline: Boolean = false,
         builderBlock: IrClassBuilder.() -> Unit = {},
         block: IrClass.() -> Unit = {}
     ): IrClassSymbol =
-        this.createClass(fqName.child(name), classKind, classModality, classIsInline, builderBlock, block)
+        this.createClass(
+            fqName.child(name), *supertypes,
+            classKind = classKind, classModality = classModality, classIsInline = classIsInline, builderBlock = builderBlock, block = block
+        )
 
     private fun IrClass.createConstructor(
         origin: IrDeclarationOrigin = BUILTIN_CLASS_CONSTRUCTOR,
@@ -630,6 +642,15 @@ class IrBuiltInsOverFir(
         return ctor.symbol
     }
 
+    private fun IrClass.forEachSuperClass(body: IrClass.() -> Unit) {
+        for (st in superTypes) {
+            st.getClass()?.let {
+                it.body()
+                it.forEachSuperClass(body)
+            }
+        }
+    }
+
     private fun IrClass.createMemberFunction(
         name: String, returnType: IrType, vararg valueParameterTypes: Pair<String, IrType>,
         origin: IrDeclarationOrigin = BUILTIN_OPERATOR,
@@ -644,10 +665,22 @@ class IrBuiltInsOverFir(
             0
         ),
         name, returnType, valueParameterTypes, origin, modality, isOperator, build
-    ).also {
-        it.addDispatchReceiver { type = this@createMemberFunction.defaultType }
-        declarations.add(it)
-        it.parent = this@createMemberFunction
+    ).also { fn ->
+        fn.addDispatchReceiver { type = this@createMemberFunction.defaultType }
+        declarations.add(fn)
+        fn.parent = this@createMemberFunction
+
+        // very simple and fragile logic, but works for all current usages
+        // TODO: replace with correct logic or explicit specification if cases become more complex
+        forEachSuperClass {
+            functions.find {
+                it.name == fn.name && it.typeParameters.count() == fn.typeParameters.count() &&
+                        it.valueParameters.count() == fn.valueParameters.count() &&
+                        it.valueParameters.zip(fn.valueParameters).all { (l,r) -> l.type == r.type }
+            }?.let {
+                fn.overriddenSymbols += it.symbol
+            }
+        }
     }
 
     private fun IrClass.createMemberFunction(
@@ -725,14 +758,26 @@ class IrBuiltInsOverFir(
             this.isConst = isConst
             this.modality = modality
         }.also { property ->
+
+            // very simple and fragile logic, but works for all current usages
+            // TODO: replace with correct logic or explicit specification if cases become more complex
+            forEachSuperClass {
+                properties.find { it.name == property.name }?.let {
+                    property.overriddenSymbols += it.symbol
+                }
+            }
+
             if (withGetter) {
                 property.getter = irFactory.buildFun {
                     this.name = Name.special("<get-$propertyName>")
                     this.returnType = returnType
                     this.modality = modality
+                    this.isOperator = true
                 }.also {
                     it.addDispatchReceiver { type = this@createProperty.defaultType }
                     it.parent = this
+                    it.correspondingPropertySymbol = property.symbol
+                    it.overriddenSymbols = property.overriddenSymbols.mapNotNull { it.owner.getter?.symbol }
                 }
             }
             if (withField || fieldInit != null) {
@@ -745,6 +790,7 @@ class IrBuiltInsOverFir(
                             expression = fieldInit
                         }
                     }
+                    it.correspondingPropertySymbol = property.symbol
                 }
             }
             property.builder()
@@ -801,7 +847,7 @@ class IrBuiltInsOverFir(
 
     private fun IrClass.createCompanionObject(block: IrClass.() -> Unit = {}): IrClassSymbol =
         this.createClass(
-            kotlinFqName.child(Name.identifier("Companion")), ClassKind.OBJECT, builderBlock = {
+            kotlinFqName.child(Name.identifier("Companion")), classKind = ClassKind.OBJECT, builderBlock = {
                 isCompanion = true
             }
         ).also {
