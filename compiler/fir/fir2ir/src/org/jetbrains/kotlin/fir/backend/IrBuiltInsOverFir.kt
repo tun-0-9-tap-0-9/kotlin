@@ -67,6 +67,16 @@ class IrBuiltInsOverFir(
     override val anyType: IrType = anyClass.defaultType
     override val anyNType = anyType.withHasQuestionMark(true)
 
+    override val numberClass: IrClassSymbol = kotlinIrPackage.createClass(IdSignatureValues.number)
+    override val numberType: IrType get() = numberClass.defaultType
+
+    override val nothingClass: IrClassSymbol = kotlinIrPackage.createClass(IdSignatureValues.nothing)
+    override val nothingType: IrType get() = nothingClass.defaultType
+    override val nothingNType: IrType = nothingType.withHasQuestionMark(true)
+
+    override val unitClass: IrClassSymbol = kotlinIrPackage.createClass(IdSignatureValues.unit, classKind = ClassKind.OBJECT, classModality = Modality.FINAL)
+    override val unitType: IrType get() = unitClass.defaultType
+
     override val booleanType: IrType get() = booleanClass.defaultType
     override val booleanClass: IrClassSymbol = kotlinIrPackage.createClass(IdSignatureValues._boolean)
 
@@ -91,20 +101,7 @@ class IrBuiltInsOverFir(
     override val stringClass: IrClassSymbol = kotlinIrPackage.createClass(IdSignatureValues.string, charSequenceClass.defaultType)
     override val stringType: IrType get() = stringClass.defaultType
 
-    override val unitClass: IrClassSymbol = kotlinIrPackage.createClass(IdSignatureValues.unit, classKind = ClassKind.OBJECT, classModality = Modality.FINAL)
-    override val unitType: IrType get() = unitClass.defaultType
-
-    override val arrayClass: IrClassSymbol = kotlinIrPackage.createClass(IdSignatureValues.array) klass@{
-        val typeParameter = addTypeParameter("T", anyNType)
-        addArrayMembers(typeParameter.defaultType)
-    }
-
-    override val numberClass: IrClassSymbol = kotlinIrPackage.createClass(IdSignatureValues.number)
-    override val numberType: IrType get() = numberClass.defaultType
-
-    override val nothingClass: IrClassSymbol = kotlinIrPackage.createClass(IdSignatureValues.nothing)
-    override val nothingType: IrType get() = nothingClass.defaultType
-    override val nothingNType: IrType = nothingType.withHasQuestionMark(true)
+    override val arrayClass: IrClassSymbol = kotlinIrPackage.createClass(IdSignatureValues.array)
 
     override val collectionClass: IrClassSymbol by lazy { referenceClassByFqname(kotlinCollectionsPackage, "Collection")!! }
     override val setClass: IrClassSymbol by lazy { referenceClassByFqname(kotlinCollectionsPackage, "Set")!! }
@@ -183,6 +180,13 @@ class IrBuiltInsOverFir(
             createMemberFunction(OperatorNameConventions.OR, defaultType, "other" to defaultType) { isInfix = true }
             createMemberFunction(OperatorNameConventions.XOR, defaultType, "other" to defaultType) { isInfix = true }
             createMemberFunction(OperatorNameConventions.COMPARE_TO, intType, "other" to booleanType, modality = Modality.OPEN, isOperator = true)
+            addFakeOverrides(this@IrBuiltInsOverFir)
+        }
+
+        with (arrayClass.owner) {
+            val typeParameter = addTypeParameter("T", anyNType)
+            addArrayMembers(typeParameter.defaultType)
+            addFakeOverrides(this@IrBuiltInsOverFir)
         }
 
         for (numericOrChar in primitiveNumericIrTypes + charType) {
@@ -199,6 +203,7 @@ class IrBuiltInsOverFir(
                 }
                 createMemberFunction(OperatorNameConventions.INC, numericOrChar, isOperator = true)
                 createMemberFunction(OperatorNameConventions.DEC, numericOrChar, isOperator = true)
+                addFakeOverrides(this@IrBuiltInsOverFir)
             }
         }
         for (numeric in primitiveNumericIrTypes) {
@@ -258,11 +263,9 @@ class IrBuiltInsOverFir(
             createProperty("length", intType, modality = Modality.OPEN)
             createMemberFunction(OperatorNameConventions.GET, charType, "index" to intType, modality = Modality.OPEN, isOperator = true)
             createMemberFunction("subSequence", defaultType, "startIndex" to intType, "endIndex" to intType, modality = Modality.OPEN)
+            addFakeOverrides(this@IrBuiltInsOverFir)
         }
         with(stringClass.owner) {
-            createProperty("length", intType, modality = Modality.OPEN)
-            createMemberFunction(OperatorNameConventions.GET, charType, "index" to intType, isOperator = true)
-            createMemberFunction("subSequence", defaultType, "startIndex" to intType, "endIndex" to intType)
             createMemberFunction(OperatorNameConventions.COMPARE_TO, intType, "other" to defaultType, modality = Modality.OPEN, isOperator = true)
             createMemberFunction(OperatorNameConventions.PLUS, defaultType, "other" to anyNType, isOperator = true)
             addFakeOverrides(this@IrBuiltInsOverFir)
@@ -841,7 +844,7 @@ class IrBuiltInsOverFir(
     }
 
     private fun IrPackageFragment.createNumberClass(signature: IdSignature.PublicSignature, builder: IrClass.() -> Unit = {}): IrClassSymbol =
-        createClass(signature) {
+        createClass(signature, numberType) {
             builder()
         }
 
@@ -859,17 +862,4 @@ class IrBuiltInsOverFir(
         components.session.symbolProvider.getTopLevelFunctionSymbols(packageName, name).mapNotNull { firOpSymbol ->
             components.declarationStorage.getIrFunctionSymbol(firOpSymbol) as? IrSimpleFunctionSymbol
         }
-
-    private fun findFunction(
-        packageName: FqName,
-        name: Name,
-        returnType: IrType,
-        vararg valueParameterTypes: IrType
-    ): IrSimpleFunctionSymbol =
-        findFunctions(packageName, name).firstOrNull { irSymbol ->
-            irSymbol.owner.let {
-                it.returnType == returnType && it.valueParameters.size == valueParameterTypes.size &&
-                        it.valueParameters.zip(valueParameterTypes).all { it.first.type == it.second }
-            }
-        } ?: error("no fun $name found in $packageName")
 }
