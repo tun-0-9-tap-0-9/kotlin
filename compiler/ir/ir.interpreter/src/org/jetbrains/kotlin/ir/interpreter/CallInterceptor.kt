@@ -91,9 +91,7 @@ internal class DefaultCallInterceptor(override val interpreter: IrInterpreter) :
 
         val function = when (val symbol = invokedFunction.symbol) {
             is IrSimpleFunctionSymbol -> {
-                val irCall = IrCallImpl.fromSymbolOwner(
-                    UNDEFINED_OFFSET, UNDEFINED_OFFSET, invokedFunction.returnType, invokedFunction.symbol as IrSimpleFunctionSymbol
-                )
+                val irCall = IrCallImpl.fromSymbolOwner(UNDEFINED_OFFSET, UNDEFINED_OFFSET, invokedFunction.returnType, symbol)
                 val actualFunction = dispatchReceiver?.getIrFunctionByIrCall(irCall) ?: invokedFunction
                 callStack.newFrame(actualFunction)
                 callStack.addInstruction(SimpleInstruction(actualFunction))
@@ -115,6 +113,7 @@ internal class DefaultCallInterceptor(override val interpreter: IrInterpreter) :
         function.dispatchReceiverParameter?.let { callStack.addVariable(Variable(it.symbol, dispatchReceiver!!)) }
         function.extensionReceiverParameter?.let { callStack.addVariable(Variable(it.symbol, extensionReceiver!!)) }
         function.valueParameters.forEachIndexed { i, param -> callStack.addVariable(Variable(param.symbol, valueArguments[i])) }
+        if (invokedFunction.symbol is IrConstructorSymbol) return
 
         callStack.loadUpValues(functionState)
         if (extensionReceiver is StateWithClosure) callStack.loadUpValues(extensionReceiver)
@@ -122,7 +121,6 @@ internal class DefaultCallInterceptor(override val interpreter: IrInterpreter) :
             generateSequence(dispatchReceiver.outerClass) { (it.state as? Complex)?.outerClass }.forEach { callStack.addVariable(it) }
         }
 
-        if (invokedFunction.symbol is IrConstructorSymbol) return
         this.interceptCall(call, function, listOfNotNull(dispatchReceiver, extensionReceiver) + valueArguments) {
             callStack.addInstruction(CompoundInstruction(function))
         }
