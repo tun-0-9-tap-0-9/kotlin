@@ -89,6 +89,8 @@ abstract class IrBuiltIns {
     abstract val kMutableProperty2Class: IrClassSymbol
     abstract val functionClass: IrClassSymbol
     abstract val kFunctionClass: IrClassSymbol
+    abstract val annotationType: IrType
+    abstract val annotationClass: IrClassSymbol
 
     // TODO: consider removing to get rid of descriptor-related dependencies
     abstract val primitiveTypeToIrType: Map<PrimitiveType, IrType>

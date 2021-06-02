@@ -103,6 +103,9 @@ class IrBuiltInsOverFir(
 
     override val arrayClass: IrClassSymbol = kotlinIrPackage.createClass(IdSignatureValues.array)
 
+    override val annotationClass: IrClassSymbol = kotlinIrPackage.createClass(Name.identifier("Annotation"))
+    override val annotationType: IrType get() = annotationClass.defaultType
+
     override val collectionClass: IrClassSymbol by lazy { referenceClassByFqname(kotlinCollectionsPackage, "Collection")!! }
     override val setClass: IrClassSymbol by lazy { referenceClassByFqname(kotlinCollectionsPackage, "Set")!! }
     override val listClass: IrClassSymbol by lazy { referenceClassByFqname(kotlinCollectionsPackage, "List")!! }

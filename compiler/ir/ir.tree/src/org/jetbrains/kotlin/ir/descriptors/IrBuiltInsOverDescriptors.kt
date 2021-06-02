@@ -284,6 +284,9 @@ class IrBuiltInsOverDescriptors(
     override val functionClass = builtIns.getBuiltInClassByFqName(FqName("kotlin.Function")).toIrSymbol()
     override val kFunctionClass = builtIns.getBuiltInClassByFqName(FqName("kotlin.reflect.KFunction")).toIrSymbol()
 
+    override val annotationClass: IrClassSymbol = builtIns.annotation.toIrSymbol()
+    override val annotationType: IrType = builtIns.annotationType.toIrType()
+
     override fun getKPropertyClass(mutable: Boolean, n: Int): IrClassSymbol = when (n) {
         0 -> if (mutable) kMutableProperty0Class else kProperty0Class
         1 -> if (mutable) kMutableProperty1Class else kProperty1Class
