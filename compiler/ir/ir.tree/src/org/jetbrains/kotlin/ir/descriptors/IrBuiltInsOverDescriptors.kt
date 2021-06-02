@@ -393,6 +393,11 @@ class IrBuiltInsOverDescriptors(
             NoLookupLocation.FROM_BACKEND
         ) as? ClassDescriptor)?.let { symbolTable.referenceClass(it) }
 
+    override fun findBuiltInClassMemberFunctions(builtInClass: IrClassSymbol, name: Name): Iterable<IrSimpleFunctionSymbol> =
+        builtInClass.descriptor.unsubstitutedMemberScope
+            .getContributedFunctions(name, NoLookupLocation.FROM_BACKEND)
+            .map { symbolTable.referenceSimpleFunction(it) }
+
     private val binaryOperatorCache = mutableMapOf<Triple<Name, IrType, IrType>, IrSimpleFunctionSymbol>()
 
     override fun getBinaryOperator(name: Name, lhsType: IrType, rhsType: IrType): IrSimpleFunctionSymbol {

@@ -8,6 +8,7 @@ package org.jetbrains.kotlin.ir
 import org.jetbrains.kotlin.builtins.PrimitiveType
 import org.jetbrains.kotlin.config.LanguageVersionSettings
 import org.jetbrains.kotlin.ir.declarations.IrClass
+import org.jetbrains.kotlin.ir.declarations.IrDeclarationOrigin
 import org.jetbrains.kotlin.ir.declarations.IrDeclarationOriginImpl
 import org.jetbrains.kotlin.ir.declarations.IrFactory
 import org.jetbrains.kotlin.ir.symbols.IrClassSymbol
@@ -156,6 +157,7 @@ abstract class IrBuiltIns {
 
     abstract fun findFunctions(name: Name, vararg packageNameSegments: String = arrayOf("kotlin")): Iterable<IrSimpleFunctionSymbol>
     abstract fun findClass(name: Name, vararg packageNameSegments: String = arrayOf("kotlin")): IrClassSymbol?
+    abstract fun findBuiltInClassMemberFunctions(builtInClass: IrClassSymbol, name: Name): Iterable<IrSimpleFunctionSymbol>
 
     abstract fun getBinaryOperator(name: Name, lhsType: IrType, rhsType: IrType): IrSimpleFunctionSymbol
     abstract fun getUnaryOperator(name: Name, receiverType: IrType): IrSimpleFunctionSymbol
@@ -164,9 +166,11 @@ abstract class IrBuiltIns {
 
     companion object {
         val KOTLIN_INTERNAL_IR_FQN = FqName("kotlin.internal.ir")
-        val BUILTIN_CLASS = object : IrDeclarationOriginImpl("BUILTIN_CLASS") {}
+        val BUILTIN_CLASS = IrDeclarationOrigin.IR_EXTERNAL_JAVA_DECLARATION_STUB// object : IrDeclarationOriginImpl("BUILTIN_CLASS") {}
         val BUILTIN_OPERATOR = object : IrDeclarationOriginImpl("OPERATOR") {}
-        val BUILTIN_CLASS_CONSTRUCTOR = object : IrDeclarationOriginImpl("CONSTRUCTOR") {}
+        val BUILTIN_CLASS_METHODO = object : IrDeclarationOriginImpl("BUILTIN_CLASS_METHOD") {}
+        val BUILTIN_TOPLEVEL_FUNCTION = object : IrDeclarationOriginImpl("BUILTIN_TOPLEVEL_FUNCTION") {}
+        val BUILTIN_CLASS_CONSTRUCTOR = object : IrDeclarationOriginImpl("BUILTIN_CLASS_CONSTRUCTOR") {}
     }
 }
 

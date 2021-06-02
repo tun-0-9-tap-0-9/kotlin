@@ -330,7 +330,7 @@ class IrBuiltInsOverFir(
                 vararg valueParameterTypes: Pair<String, IrType>,
                 builder: IrSimpleFunction.() -> Unit = {}
             ) =
-                createFunction(fqName, name, returnType, valueParameterTypes).also {
+                createFunction(fqName, name, returnType, valueParameterTypes, origin = BUILTIN_OPERATOR).also {
                     declarations.add(it)
                     it.builder()
                 }.symbol
@@ -365,7 +365,8 @@ class IrBuiltInsOverFir(
                 createFunction(
                     fqName, "CHECK_NOT_NULL",
                     IrSimpleTypeImpl(typeParameter.symbol, hasQuestionMark = false, emptyList(), emptyList()),
-                    arrayOf("" to IrSimpleTypeImpl(typeParameter.symbol, hasQuestionMark = true, emptyList(), emptyList()))
+                    arrayOf("" to IrSimpleTypeImpl(typeParameter.symbol, hasQuestionMark = true, emptyList(), emptyList())),
+                    origin = BUILTIN_OPERATOR
                 ).also {
                     it.typeParameters = listOf(typeParameter)
                     typeParameter.parent = it
@@ -510,6 +511,15 @@ class IrBuiltInsOverFir(
 
     override fun findClass(name: Name, vararg packageNameSegments: String): IrClassSymbol? =
         referenceClassByFqname(FqName.fromSegments(packageNameSegments.asList()), name)
+
+    private val builtInClasses by lazy {
+        setOf(anyClass)
+    }
+
+    override fun findBuiltInClassMemberFunctions(builtInClass: IrClassSymbol, name: Name): Iterable<IrSimpleFunctionSymbol> {
+        require(builtInClass in builtInClasses)
+        return builtInClass.functions.filter { it.owner.name == name }.asIterable()
+    }
 
     override fun getBinaryOperator(name: Name, lhsType: IrType, rhsType: IrType): IrSimpleFunctionSymbol {
         val definingClass = lhsType.getMaybeBuiltinClass() ?: error("Defining class not found: $lhsType")
@@ -656,7 +666,7 @@ class IrBuiltInsOverFir(
 
     private fun IrClass.createMemberFunction(
         name: String, returnType: IrType, vararg valueParameterTypes: Pair<String, IrType>,
-        origin: IrDeclarationOrigin = BUILTIN_OPERATOR,
+        origin: IrDeclarationOrigin = BUILTIN_CLASS_METHODO,
         modality: Modality = Modality.FINAL,
         isOperator: Boolean = false,
         build: IrFunctionBuilder.() -> Unit = {}
@@ -688,7 +698,7 @@ class IrBuiltInsOverFir(
 
     private fun IrClass.createMemberFunction(
         name: Name, returnType: IrType, vararg valueParameterTypes: Pair<String, IrType>,
-        origin: IrDeclarationOrigin = BUILTIN_OPERATOR,
+        origin: IrDeclarationOrigin = BUILTIN_CLASS_METHODO,
         modality: Modality = Modality.FINAL,
         isOperator: Boolean = false,
         build: IrFunctionBuilder.() -> Unit = {}
@@ -702,7 +712,7 @@ class IrBuiltInsOverFir(
         name: String,
         returnType: IrType,
         valueParameterTypes: Array<out Pair<String, IrType>>,
-        origin: IrDeclarationOrigin = BUILTIN_OPERATOR,
+        origin: IrDeclarationOrigin = BUILTIN_TOPLEVEL_FUNCTION,
         modality: Modality = Modality.FINAL,
         isOperator: Boolean = false,
         build: IrFunctionBuilder.() -> Unit = {}
@@ -729,7 +739,7 @@ class IrBuiltInsOverFir(
         name: String,
         returnType: IrType,
         valueParameterTypes: Array<out Pair<String, IrType>>,
-        origin: IrDeclarationOrigin = BUILTIN_OPERATOR,
+        origin: IrDeclarationOrigin = BUILTIN_TOPLEVEL_FUNCTION,
         modality: Modality = Modality.FINAL,
         isOperator: Boolean = false
     ) = createFunction(
