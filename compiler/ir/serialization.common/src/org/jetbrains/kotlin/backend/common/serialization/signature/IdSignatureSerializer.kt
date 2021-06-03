@@ -48,11 +48,8 @@ class PublicIdSignatureComputer(val mangler: KotlinMangler.IrMangler) : IdSignat
 
     private fun IrDeclaration.checkIfPlatformSpecificExport(): Boolean = mangler.run { isPlatformSpecificExport() }
 
-    private var preservedParentSig: IdSignature? = null
-
     private var localCounter: Long = 0
     private var scopeCounter: Int = 0
-    private var errorCounter: Int = 0
 
     // TODO: we need to disentangle signature construction with declaration tables.
     lateinit var table: DeclarationTable
@@ -222,7 +219,7 @@ open class IdSignatureSerializer(
         }
 
     fun composePublicIdSignature(declaration: IrDeclaration): IdSignature {
-        return PublicIdSigBuilder(preservedParentSig).buildSignature(declaration)
+        return PublicIdSigBuilder().buildSignature(declaration)
     }
 
     fun composeFileLocalIdSignature(declaration: IrDeclaration, compatibleMode: Boolean): IdSignature {
