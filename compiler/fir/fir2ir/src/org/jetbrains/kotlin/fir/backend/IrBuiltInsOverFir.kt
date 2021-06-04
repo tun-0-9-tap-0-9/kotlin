@@ -177,7 +177,7 @@ class IrBuiltInsOverFir(
             createMemberFunction("toString", stringType, modality = Modality.OPEN)
         }
 
-        for (klass in arrayOf(booleanClass, charClass, numberClass, stringClass)) {
+        for (klass in arrayOf(booleanClass, charClass, numberClass, charSequenceClass, stringClass)) {
             klass.owner.superTypes += anyType
         }
 
