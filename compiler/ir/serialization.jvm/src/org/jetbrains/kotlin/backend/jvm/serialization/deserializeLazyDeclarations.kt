@@ -7,6 +7,7 @@ package org.jetbrains.kotlin.backend.jvm.serialization
 
 import org.jetbrains.kotlin.backend.common.overrides.DefaultFakeOverrideClassFilter
 import org.jetbrains.kotlin.backend.common.overrides.FakeOverrideBuilder
+import org.jetbrains.kotlin.backend.common.overrides.FakeOverrideDeclarationTable
 import org.jetbrains.kotlin.backend.common.overrides.FileLocalAwareLinker
 import org.jetbrains.kotlin.backend.common.serialization.DescriptorByIdSignatureFinder
 import org.jetbrains.kotlin.backend.common.serialization.IrDeclarationDeserializer
@@ -190,6 +191,7 @@ fun makeSimpleFakeOverrideBuilder(
     irBuiltIns: IrBuiltIns,
     symbolDeserializer: IrSymbolDeserializer
 ): FakeOverrideBuilder {
+    val signatureSerializer = IdSignatureSerializer(JvmManglerIr)
     return FakeOverrideBuilder(
         object : FileLocalAwareLinker {
             override fun tryReferencingPropertyByLocalSignature(parent: IrDeclaration, idSignature: IdSignature): IrPropertySymbol =
@@ -201,8 +203,9 @@ fun makeSimpleFakeOverrideBuilder(
                 symbolDeserializer.referenceSimpleFunctionByLocalSignature(idSignature)
         },
         symbolTable,
-        IdSignatureSerializer(JvmManglerIr),
-        irBuiltIns
+        signatureSerializer,
+        irBuiltIns,
+        fakeOverrideDeclarationTable = PrePopulatedDeclarationTable(symbolDeserializer.deserializedSymbols, signatureSerializer)
     )
 }
 
@@ -225,4 +228,16 @@ private fun buildFakeOverridesForLocalClasses(
             super.visitClass(declaration)
         }
     })
+}
+
+class PrePopulatedDeclarationTable(
+    sig2symbol: Map<IdSignature, IrSymbol>,
+    signatureSerializer: IdSignatureSerializer
+) : FakeOverrideDeclarationTable(signatureSerializer) {
+    private val symbol2Sig = sig2symbol.entries.associate { (x, y) -> y to x }
+
+    override fun tryComputeBackendSpecificSignature(declaration: IrDeclaration): IdSignature? {
+        symbol2Sig[declaration.symbol]?.let { return it }
+        return super.tryComputeBackendSpecificSignature(declaration)
+    }
 }
