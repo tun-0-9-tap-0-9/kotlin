@@ -168,7 +168,7 @@ abstract class IrBuiltIns {
 
     companion object {
         val KOTLIN_INTERNAL_IR_FQN = FqName("kotlin.internal.ir")
-        val BUILTIN_CLASS = IrDeclarationOrigin.IR_EXTERNAL_JAVA_DECLARATION_STUB// object : IrDeclarationOriginImpl("BUILTIN_CLASS") {}
+        val BUILTIN_CLASS = IrDeclarationOrigin.IR_EXTERNAL_DECLARATION_STUB
         val BUILTIN_OPERATOR = object : IrDeclarationOriginImpl("OPERATOR") {}
         val BUILTIN_CLASS_METHODO = object : IrDeclarationOriginImpl("BUILTIN_CLASS_METHOD") {}
         val BUILTIN_TOPLEVEL_FUNCTION = object : IrDeclarationOriginImpl("BUILTIN_TOPLEVEL_FUNCTION") {}

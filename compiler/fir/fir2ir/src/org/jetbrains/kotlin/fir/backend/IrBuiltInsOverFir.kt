@@ -67,7 +67,7 @@ class IrBuiltInsOverFir(
     override val anyType: IrType = anyClass.defaultType
     override val anyNType = anyType.withHasQuestionMark(true)
 
-    override val numberClass: IrClassSymbol = kotlinIrPackage.createClass(IdSignatureValues.number)
+    override val numberClass: IrClassSymbol = kotlinIrPackage.createClass(IdSignatureValues.number, classModality = Modality.ABSTRACT)
     override val numberType: IrType get() = numberClass.defaultType
 
     override val nothingClass: IrClassSymbol = kotlinIrPackage.createClass(IdSignatureValues.nothing)
@@ -177,6 +177,10 @@ class IrBuiltInsOverFir(
             createMemberFunction("toString", stringType, modality = Modality.OPEN)
         }
 
+        for (klass in arrayOf(booleanClass, charClass, numberClass, stringClass)) {
+            klass.owner.superTypes += anyType
+        }
+
         with (booleanClass.owner) {
             booleanNotSymbol = createMemberFunction(OperatorNameConventions.NOT, defaultType, isOperator = true).symbol
             createMemberFunction(OperatorNameConventions.AND, defaultType, "other" to defaultType) { isInfix = true }
@@ -189,6 +193,13 @@ class IrBuiltInsOverFir(
         with (arrayClass.owner) {
             val typeParameter = addTypeParameter("T", anyNType)
             addArrayMembers(typeParameter.defaultType)
+            addFakeOverrides(this@IrBuiltInsOverFir)
+        }
+
+        with (numberClass.owner) {
+            for (targetPrimitive in primitiveIrTypesWithComparisons) {
+                createMemberFunction("to${targetPrimitive.classFqName!!.shortName().asString()}", targetPrimitive, modality = Modality.ABSTRACT)
+            }
             addFakeOverrides(this@IrBuiltInsOverFir)
         }
 
@@ -263,12 +274,15 @@ class IrBuiltInsOverFir(
             createMemberFunction(OperatorNameConventions.RANGE_TO, charRange, "other" to charType)
         }
         with(charSequenceClass.owner) {
-            createProperty("length", intType, modality = Modality.OPEN)
-            createMemberFunction(OperatorNameConventions.GET, charType, "index" to intType, modality = Modality.OPEN, isOperator = true)
-            createMemberFunction("subSequence", defaultType, "startIndex" to intType, "endIndex" to intType, modality = Modality.OPEN)
+            createProperty("length", intType, modality = Modality.ABSTRACT)
+            createMemberFunction(OperatorNameConventions.GET, charType, "index" to intType, modality = Modality.ABSTRACT, isOperator = true)
+            createMemberFunction("subSequence", defaultType, "startIndex" to intType, "endIndex" to intType, modality = Modality.ABSTRACT)
             addFakeOverrides(this@IrBuiltInsOverFir)
         }
         with(stringClass.owner) {
+            createProperty("length", intType, modality = Modality.OPEN)
+            createMemberFunction(OperatorNameConventions.GET, charType, "index" to intType, modality = Modality.OPEN, isOperator = true)
+            createMemberFunction("subSequence", defaultType, "startIndex" to intType, "endIndex" to intType, modality = Modality.OPEN)
             createMemberFunction(OperatorNameConventions.COMPARE_TO, intType, "other" to defaultType, modality = Modality.OPEN, isOperator = true)
             createMemberFunction(OperatorNameConventions.PLUS, defaultType, "other" to anyNType, isOperator = true)
             addFakeOverrides(this@IrBuiltInsOverFir)
@@ -618,9 +632,7 @@ class IrBuiltInsOverFir(
                 it.parent = this
                 it.createImplicitParameterDeclarationWithWrappedDescriptor()
                 it.block()
-                if (signature != IdSignatureValues.any) {
-                    it.superTypes = supertypes.asList().ifEmpty { listOf(anyType) }
-                }
+                it.superTypes = supertypes.asList()
             }
         }
     ).symbol
@@ -788,7 +800,7 @@ class IrBuiltInsOverFir(
                     this.name = Name.special("<get-$propertyName>")
                     this.returnType = returnType
                     this.modality = modality
-                    this.isOperator = true
+                    this.isOperator = false
                 }.also {
                     it.addDispatchReceiver { type = this@createProperty.defaultType }
                     it.parent = this
