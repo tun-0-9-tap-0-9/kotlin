@@ -282,7 +282,7 @@ class IrBuiltInsOverFir(
         with(stringClass.owner) {
             createProperty("length", intType, modality = Modality.OPEN)
             createMemberFunction(OperatorNameConventions.GET, charType, "index" to intType, modality = Modality.OPEN, isOperator = true)
-            createMemberFunction("subSequence", defaultType, "startIndex" to intType, "endIndex" to intType, modality = Modality.OPEN)
+            createMemberFunction("subSequence", charSequenceClass.defaultType, "startIndex" to intType, "endIndex" to intType, modality = Modality.OPEN)
             createMemberFunction(OperatorNameConventions.COMPARE_TO, intType, "other" to defaultType, modality = Modality.OPEN, isOperator = true)
             createMemberFunction(OperatorNameConventions.PLUS, defaultType, "other" to anyNType, isOperator = true)
             addFakeOverrides(this@IrBuiltInsOverFir)
