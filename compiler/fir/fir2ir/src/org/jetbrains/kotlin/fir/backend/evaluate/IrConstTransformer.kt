@@ -6,11 +6,7 @@
 package org.jetbrains.kotlin.fir.backend.evaluate
 
 import org.jetbrains.kotlin.ir.IrStatement
-import org.jetbrains.kotlin.ir.declarations.IrAnnotationContainer
-import org.jetbrains.kotlin.ir.declarations.IrDeclarationBase
-import org.jetbrains.kotlin.ir.declarations.IrField
-import org.jetbrains.kotlin.ir.declarations.IrModuleFragment
-import org.jetbrains.kotlin.ir.IrBuiltIns
+import org.jetbrains.kotlin.ir.declarations.*
 import org.jetbrains.kotlin.ir.expressions.*
 import org.jetbrains.kotlin.ir.expressions.impl.IrVarargImpl
 import org.jetbrains.kotlin.ir.interpreter.IrInterpreter
@@ -104,6 +100,6 @@ class IrConstTransformer(private val interpreter: IrInterpreter, private val irF
     private fun IrExpression.convertToConstIfPossible(type: IrType): IrExpression {
         if (this !is IrConst<*> || type is IrErrorType) return this
         if (type.isArray()) return this.convertToConstIfPossible((type as IrSimpleType).arguments.single().typeOrNull!!)
-        return this.value.toIrConst(type, irBuiltIns, this.startOffset, this.endOffset)
+        return this.value.toIrConst(type, this.startOffset, this.endOffset)
     }
 }

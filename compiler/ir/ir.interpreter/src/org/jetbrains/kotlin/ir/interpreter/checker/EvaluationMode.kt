@@ -6,7 +6,7 @@
 package org.jetbrains.kotlin.ir.interpreter.checker
 
 import org.jetbrains.kotlin.ir.declarations.*
-import org.jetbrains.kotlin.ir.descriptors.IrBuiltIns
+import org.jetbrains.kotlin.ir.IrBuiltIns
 import org.jetbrains.kotlin.ir.expressions.*
 import org.jetbrains.kotlin.ir.interpreter.*
 import org.jetbrains.kotlin.ir.interpreter.hasAnnotation
