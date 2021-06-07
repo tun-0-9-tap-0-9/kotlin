@@ -162,7 +162,7 @@ class JvmBackendContext(
             psiFileEntry != null && element != null -> {
                 var psi = psiFileEntry.findPsiElement(element)
                 while (psi?.parent !is KtProperty && psi?.parent !is KtBlockExpression && psi?.parent is KtExpression) psi = psi.parent
-                "${psi?.text} at ${psiFileEntry.getLineNumber(element.startOffset)} line"
+                "${psi?.text} at ${psiFileEntry.getLineNumber(element.startOffset) + 1} line"
             }
             else -> ""
         }

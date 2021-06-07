@@ -35,8 +35,9 @@ import org.jetbrains.kotlin.js.config.ErrorTolerancePolicy
 import org.jetbrains.kotlin.js.config.JSConfigurationKeys
 import org.jetbrains.kotlin.name.FqName
 import org.jetbrains.kotlin.name.Name
+import org.jetbrains.kotlin.psi.KtBlockExpression
 import org.jetbrains.kotlin.psi.KtExpression
-import org.jetbrains.kotlin.psi.psiUtil.isDotSelector
+import org.jetbrains.kotlin.psi.KtProperty
 import org.jetbrains.kotlin.resolve.scopes.MemberScope
 import org.jetbrains.kotlin.types.Variance
 
@@ -395,13 +396,13 @@ class JsIrBackendContext(
         val elementInfo = when {
             psiFileEntry != null && element != null -> {
                 var psi = psiFileEntry.findPsiElement(element)
-                while ((psi as? KtExpression)?.isDotSelector() == true) psi = psi.parent
-                "${psi?.text} at ${psiFileEntry.getLineNumber(element.startOffset)} line"
+                while (psi?.parent !is KtProperty && psi?.parent !is KtBlockExpression && psi?.parent is KtExpression) psi = psi.parent
+                "${psi?.text} at ${psiFileEntry.getLineNumber(element.startOffset) + 1} line"
             }
             else -> ""
         }
         val messageCollector = configuration[CLIConfigurationKeys.MESSAGE_COLLECTOR_KEY]!!
-        val severity = /*if (isError) CompilerMessageSeverity.ERROR else*/ CompilerMessageSeverity.INFO
+        val severity = if (isError) CompilerMessageSeverity.EXCEPTION else CompilerMessageSeverity.INFO
         val textInTheMiddle = if (isError) "will produce exception:" else "will be replaced on:"
         messageCollector.report(severity, "$elementInfo $textInTheMiddle $message")
         print(message)
