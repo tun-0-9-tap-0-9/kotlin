@@ -1,0 +1,11 @@
+INFO: withLambda(10) { it * 2 } at 8 line will be replaced on: 20
+
+INFO: withLambda(20, { num -> num * 2 }) at 9 line will be replaced on: 40
+
+INFO: withLambda(30, @CompileTimeCalculation fun(number: Int) = number * 2) at 10 line will be replaced on: 60
+
+INFO: withLambda2(5, 2.75) { arg1, arg2 -> arg1 * arg2 } at 17 line will be replaced on: 13.75
+
+INFO: withLambda2(5, "unused") { arg1, _ -> arg1 * 5 } at 18 line will be replaced on: 25
+
+INFO: withLambdaAndReceiver(5, 2.75) { arg -> this.plus(arg) } at 25 line will be replaced on: 7.75

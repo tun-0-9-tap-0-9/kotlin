@@ -1,0 +1,15 @@
+INFO: returnTheSameValueFun(10).invoke() at 20 line will be replaced on: 10
+
+INFO: multiplyBy() { a, b -> (a + b) * 2 }.invoke(1, 3) at 37 line will be replaced on: 8
+
+INFO: returnTheSameValueFun(2).invoke() at 52 line will be replaced on: 2
+
+INFO: multiplyByTwo(1).invoke() at 53 line will be replaced on: 2
+
+INFO: checkStackCorrectness() at 54 line will be replaced on: 5
+
+INFO: checkLaterInvoke() at 55 line will be replaced on: previous = 10; multiplied by two = 20; b = 0
+
+INFO: localInline() at 56 line will be replaced on: result = 8; (a, b) = (10, 20)
+
+INFO: getNumAfterLocalInvoke() at 57 line will be replaced on: 2

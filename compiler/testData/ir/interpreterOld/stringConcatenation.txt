@@ -1,0 +1,48 @@
+INFO: echo("Success") at 37 line will be replaced on: Success
+
+INFO: concat("String concatenation example: ", constStr) at 38 line will be replaced on: String concatenation example: Success
+
+INFO: concat("String concatenation example with primitive: ", 1) at 39 line will be replaced on: String concatenation example with primitive: 1
+
+INFO: concat("String concatenation example with primitive and explicit toString call: ", 1.toString()) at 40 line will be replaced on: String concatenation example with primitive and explicit toString call: 1
+
+INFO: "String concatenation example with function that return primitive: ${getDoubledValue(10)}" at 41 line will be replaced on: String concatenation example with function that return primitive: 20
+
+INFO: "String concatenation example with A class: ${A()}" at 42 line will be replaced on: String concatenation example with A class: toString call from A class
+
+INFO: "String concatenation example with B class, where toString is FAKE_OVERRIDDEN: ${B()}" at 43 line will be replaced on: String concatenation example with B class, where toString is FAKE_OVERRIDDEN: toString call from A class
+
+INFO: "String concatenation example with B class and explicit toString call: ${B().toString()}" at 44 line will be replaced on: String concatenation example with B class and explicit toString call: toString call from A class
+
+INFO: "String concatenation example with C class, where toString isn't present; is it correct: ${checkToStringCorrectness(C(), 'C')}" at 45 line will be replaced on: String concatenation example with C class, where toString isn't present; is it correct: true
+
+INFO: "String concatenation example with D class, where toString is taken from Any; is it correct: ${checkToStringCorrectness(D(), 'D')}" at 46 line will be replaced on: String concatenation example with D class, where toString is taken from Any; is it correct: true
+
+INFO: "String plus example with A class: " + A() at 48 line will be replaced on: String plus example with A class: toString call from A class
+
+INFO: "String plus example with B class, where toString is FAKE_OVERRIDDEN: " + B() at 49 line will be replaced on: String plus example with B class, where toString is FAKE_OVERRIDDEN: toString call from A class
+
+INFO: "" + fun(): String = "" at 51 line will be replaced on: () -> kotlin.String
+
+INFO: "" + (fun(): String = "").toString() at 52 line will be replaced on: () -> kotlin.String
+
+INFO: "" + fun(): String = "Some string" at 53 line will be replaced on: () -> kotlin.String
+
+INFO: "" + fun(i: Int): String = "" at 54 line will be replaced on: (kotlin.Int) -> kotlin.String
+
+INFO: "" + fun(i: Int?): String? = "" at 55 line will be replaced on: (kotlin.Int?) -> kotlin.String?
+
+INFO: "" + { i: Int -> "" } at 56 line will be replaced on: (kotlin.Int) -> kotlin.String
+
+INFO: "" + {  } at 57 line will be replaced on: () -> kotlin.Unit
+
+INFO: "" + { i: Int, b: Double, c: String ->  } at 58 line will be replaced on: (kotlin.Int, kotlin.Double, kotlin.String) -> kotlin.Unit
+
+INFO: "".let {
+    val lambdaWith: Double.(Int) -> String = { "A" }
+    lambdaWith.toString()
+} at 59 line will be replaced on: kotlin.Double.(kotlin.Int) -> kotlin.String
+
+INFO: "Null as string = " + null at 64 line will be replaced on: Null as string = null
+
+INFO: "Null as string = ${null.toString()}" at 65 line will be replaced on: Null as string = null

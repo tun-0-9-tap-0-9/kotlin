@@ -1,0 +1,12 @@
+INFO: firstNotNull(listOf(1, 2, 3)) at 12 line will be replaced on: 1
+
+INFO: firstNotNull(listOf(1, null, 3)) at 13 line will be replaced on: 1
+
+INFO: firstNotNull(listOf(null, 2, 3)) at 14 line will be replaced on: 2
+
+INFO: firstNotNull(listOf(null, null, 3)) at 15 line will be replaced on: 3
+
+EXCEPTION: firstNotNull(listOf<Int?>(null, null, null)) at 16 line will produce exception:
+Exception kotlin.NoSuchElementException: All elements are null
+	at ComplexReturnKt.firstNotNull(complexReturn.kt:9)
+	at ComplexReturnKt.<clinit>(complexReturn.kt:16)

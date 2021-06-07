@@ -1,0 +1,33 @@
+INFO: compareTo('a', 'b') at 44 line will be replaced on: -1
+
+INFO: plus('1', 2) at 45 line will be replaced on: 3
+
+INFO: minus('9', '1') at 46 line will be replaced on: 8
+
+INFO: minus('9', 1) at 47 line will be replaced on: 8
+
+INFO: inc('1') at 48 line will be replaced on: 2
+
+INFO: dec('1') at 49 line will be replaced on: 0
+
+INFO: rangeTo('9', '1').last at 50 line will be replaced on: 1
+
+INFO: toByte('1') at 52 line will be replaced on: 49
+
+INFO: toChar('2') at 53 line will be replaced on: 2
+
+INFO: toShort('3') at 54 line will be replaced on: 51
+
+INFO: toInt('4') at 55 line will be replaced on: 52
+
+INFO: toLong('5') at 56 line will be replaced on: 53
+
+INFO: toFloat('6') at 57 line will be replaced on: 54.0
+
+INFO: toDouble('7') at 58 line will be replaced on: 55.0
+
+INFO: toString('q') at 60 line will be replaced on: q
+
+INFO: hashCode('q') at 61 line will be replaced on: 113
+
+INFO: equals('1', '2') at 62 line will be replaced on: false

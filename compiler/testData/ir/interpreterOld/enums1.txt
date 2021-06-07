@@ -1,0 +1,24 @@
+INFO: EnumClass.VALUE1.name at 8 line will be replaced on: VALUE1
+
+INFO: EnumClass.values().size at 9 line will be replaced on: 2
+
+INFO: EnumClass.valueOf("VALUE1").ordinal at 10 line will be replaced on: 0
+
+EXCEPTION: EnumClass.valueOf("VALUE3").ordinal at 11 line will produce exception:
+Exception java.lang.IllegalArgumentException: No enum constant EnumClass.VALUE3
+	at Enums1Kt.EnumClass.valueOf(enums1.kt)
+	at Enums1Kt.<clinit>(enums1.kt:11)
+
+INFO: EnumClass.VALUE1.hashCode().let { it is Int && it > 0 && it == EnumClass.VALUE1.hashCode() } at 13 line will be replaced on: true
+
+INFO: EnumClass.VALUE1.toString() at 14 line will be replaced on: VALUE1
+
+INFO: EnumClass.VALUE1 == EnumClass.VALUE1 at 15 line will be replaced on: true
+
+INFO: EnumClass.VALUE1 == EnumClass.VALUE2 at 16 line will be replaced on: false
+
+INFO: enumValues<EnumClass>().size at 18 line will be replaced on: 2
+
+INFO: enumValueOf<EnumClass>("VALUE1").name at 19 line will be replaced on: VALUE1
+
+INFO: enumValues<EnumClass>().joinToString { it.name } at 21 line will be replaced on: VALUE1, VALUE2

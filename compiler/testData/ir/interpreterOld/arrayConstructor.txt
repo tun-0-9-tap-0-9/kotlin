@@ -1,0 +1,25 @@
+INFO: IntArray(42).size at 3 line will be replaced on: 42
+
+INFO: IntArray(42)[0] at 4 line will be replaced on: 0
+
+INFO: IntArray(10) { 42 }[0] at 5 line will be replaced on: 42
+
+INFO: IntArray(10) { it -> it }[7] at 6 line will be replaced on: 7
+
+INFO: FloatArray(42).size at 8 line will be replaced on: 42
+
+INFO: FloatArray(42)[0] at 9 line will be replaced on: 0.0
+
+INFO: FloatArray(10) { 42.5f }[0] at 10 line will be replaced on: 42.5
+
+INFO: FloatArray(10) { it -> it.toFloat() }[7] at 11 line will be replaced on: 7.0
+
+INFO: Array<Any?>(4) {
+    when(it) {
+        0 -> 1
+        1 -> 2.0
+        2 -> "3"
+        3 -> null
+        else -> throw IllegalArgumentException("$it is wrong")
+    }
+}.let { it[0].toString() + " " + it[1] + " " + it[2] + " " + it[3] } at 21 line will be replaced on: 1 2.0 3 null

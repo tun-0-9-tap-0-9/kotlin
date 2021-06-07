@@ -1,0 +1,3 @@
+INFO: A().inc(10) at 15 line will be replaced on: 11
+
+INFO: B(10).inc(11) at 16 line will be replaced on: 21

@@ -1,0 +1,15 @@
+INFO: Person("John", 123456).name at 12 line will be replaced on: John
+
+INFO: Person("John", 123456).component1() at 13 line will be replaced on: John
+
+INFO: Person("John", 123456).phone at 14 line will be replaced on: 123456
+
+INFO: Person("John", 123456).component2() at 15 line will be replaced on: 123456
+
+INFO: Person("John", 789).copy("Adam").toString() at 17 line will be replaced on: Person(name=Adam, phone=789)
+
+INFO: Person("John", 789).copy("Adam", 123).toString() at 18 line will be replaced on: Person(name=Adam, phone=123)
+
+INFO: Person("John", 123456).equals(Person("John", 123456)) at 20 line will be replaced on: true
+
+INFO: Person("John", 123456).getAsString() at 21 line will be replaced on: Persom name is John and his phone is 123456

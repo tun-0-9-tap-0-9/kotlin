@@ -1,0 +1,133 @@
+INFO: echo(Int.MIN_VALUE) at 79 line will be replaced on: -2147483648
+
+INFO: echo(Int.MAX_VALUE) at 80 line will be replaced on: 2147483647
+
+INFO: echo(Int.SIZE_BYTES) at 81 line will be replaced on: 4
+
+INFO: echo(Int.SIZE_BITS) at 82 line will be replaced on: 32
+
+INFO: compareTo(5, 1.toByte()) at 84 line will be replaced on: 1
+
+INFO: compareTo(5, 2.toShort()) at 85 line will be replaced on: 1
+
+INFO: compareTo(5, 3) at 86 line will be replaced on: 1
+
+INFO: compareTo(5, 4L) at 87 line will be replaced on: 1
+
+INFO: compareTo(5, 5.toFloat()) at 88 line will be replaced on: 0
+
+INFO: compareTo(5, 6.toDouble()) at 89 line will be replaced on: -1
+
+INFO: plus(5, 1.toByte()) at 91 line will be replaced on: 6
+
+INFO: plus(5, 2.toShort()) at 92 line will be replaced on: 7
+
+INFO: plus(5, 3) at 93 line will be replaced on: 8
+
+INFO: plus(5, 4L) at 94 line will be replaced on: 9
+
+INFO: plus(5, 5.toFloat()) at 95 line will be replaced on: 10.0
+
+INFO: plus(5, 6.toDouble()) at 96 line will be replaced on: 11.0
+
+INFO: minus(5, 1.toByte()) at 98 line will be replaced on: 4
+
+INFO: minus(5, 2.toShort()) at 99 line will be replaced on: 3
+
+INFO: minus(5, 3) at 100 line will be replaced on: 2
+
+INFO: minus(5, 4L) at 101 line will be replaced on: 1
+
+INFO: minus(5, 5.toFloat()) at 102 line will be replaced on: 0.0
+
+INFO: minus(5, 6.toDouble()) at 103 line will be replaced on: -1.0
+
+INFO: times(5, 1.toByte()) at 105 line will be replaced on: 5
+
+INFO: times(5, 2.toShort()) at 106 line will be replaced on: 10
+
+INFO: times(5, 3) at 107 line will be replaced on: 15
+
+INFO: times(5, 4L) at 108 line will be replaced on: 20
+
+INFO: times(5, 5.toFloat()) at 109 line will be replaced on: 25.0
+
+INFO: times(5, 6.toDouble()) at 110 line will be replaced on: 30.0
+
+INFO: div(100, 1.toByte()) at 112 line will be replaced on: 100
+
+INFO: div(100, 2.toShort()) at 113 line will be replaced on: 50
+
+INFO: div(100, 4) at 114 line will be replaced on: 25
+
+INFO: div(100, 10L) at 115 line will be replaced on: 10
+
+INFO: div(100, 25.toFloat()) at 116 line will be replaced on: 4.0
+
+INFO: div(100, 50.toDouble()) at 117 line will be replaced on: 2.0
+
+INFO: rem(5, 1.toByte()) at 119 line will be replaced on: 0
+
+INFO: rem(5, 2.toShort()) at 120 line will be replaced on: 1
+
+INFO: rem(5, 3) at 121 line will be replaced on: 2
+
+INFO: rem(5, 4L) at 122 line will be replaced on: 1
+
+INFO: rem(5, 5.toFloat()) at 123 line will be replaced on: 0.0
+
+INFO: rem(5, 6.toDouble()) at 124 line will be replaced on: 5.0
+
+INFO: inc(3) at 126 line will be replaced on: 4
+
+INFO: dec(3) at 127 line will be replaced on: 2
+
+INFO: unaryPlus(3) at 129 line will be replaced on: 3
+
+INFO: unaryMinus(3) at 130 line will be replaced on: -3
+
+INFO: rangeTo(5, 1.toByte()).last at 132 line will be replaced on: 1
+
+INFO: rangeTo(5, 2.toShort()).last at 133 line will be replaced on: 2
+
+INFO: rangeTo(5, 3).last at 134 line will be replaced on: 3
+
+INFO: rangeTo(5, 4L).last at 135 line will be replaced on: 4
+
+INFO: shl(8, 1) at 137 line will be replaced on: 16
+
+INFO: shr(8, 2) at 138 line will be replaced on: 2
+
+INFO: ushr(-8, 3) at 139 line will be replaced on: 536870911
+
+INFO: and(8, 1) at 141 line will be replaced on: 0
+
+INFO: or(8, 2) at 142 line will be replaced on: 10
+
+INFO: xor(-8, 3) at 143 line will be replaced on: -5
+
+INFO: inv(8) at 144 line will be replaced on: -9
+
+INFO: toByte(1) at 146 line will be replaced on: 1
+
+INFO: toChar(2) at 147 line will be replaced on: 
+
+INFO: toShort(3) at 148 line will be replaced on: 3
+
+INFO: toInt(4) at 149 line will be replaced on: 4
+
+INFO: toLong(5) at 150 line will be replaced on: 5
+
+INFO: toFloat(6) at 151 line will be replaced on: 6.0
+
+INFO: toDouble(7) at 152 line will be replaced on: 7.0
+
+INFO: toString(10) at 154 line will be replaced on: 10
+
+INFO: hashCode(10) at 155 line will be replaced on: 10
+
+INFO: equals(10, 11) at 156 line will be replaced on: false
+
+INFO: equals(1, 1.toInt()) at 157 line will be replaced on: true
+
+INFO: equals(1, 1) at 158 line will be replaced on: true

@@ -1,0 +1,13 @@
+INFO: checkHashCodeCorrectness(A()) at 51 line will be replaced on: true
+
+INFO: checkHashCodeCorrectness(B()) at 52 line will be replaced on: true
+
+INFO: checkHashCodeCorrectness(arrayOf(A(), B())) at 56 line will be replaced on: true
+
+INFO: checkHashCodeCorrectness(arrayOf(1, 2, 3)) at 57 line will be replaced on: true
+
+INFO: theSameObjectHashCode(A()) at 59 line will be replaced on: true
+
+INFO: theSameObjectHashCode(StringBuilder()) at 60 line will be replaced on: true
+
+INFO: theSameObjectHashCode(StringBuilder("Some Builder")) at 61 line will be replaced on: true

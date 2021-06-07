@@ -1,0 +1,4 @@
+EXCEPTION: infinityWhile() at 9 line will produce exception:
+Exception org.jetbrains.kotlin.ir.interpreter.exceptions.InterpreterTimeOutError: Exceeded execution limit of constexpr expression
+	at CommandsOutExceptionKt.infinityWhile(commandsOutException.kt:5)
+	at CommandsOutExceptionKt.<clinit>(commandsOutException.kt:9)

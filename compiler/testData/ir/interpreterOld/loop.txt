@@ -1,0 +1,9 @@
+INFO: loop(0, 1, 10) at 50 line will be replaced on: 10
+
+INFO: withInnerContinue() at 51 line will be replaced on: 15
+
+INFO: withBreak(10) at 52 line will be replaced on: 10
+
+INFO: earlyExit(10, 5) at 53 line will be replaced on: 5
+
+INFO: earlyExit(10, 15) at 54 line will be replaced on: 10

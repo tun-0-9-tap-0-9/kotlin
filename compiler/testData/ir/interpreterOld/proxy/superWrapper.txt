@@ -1,0 +1,1 @@
+INFO: test() at 21 line will be replaced on: Counter 3; size 3

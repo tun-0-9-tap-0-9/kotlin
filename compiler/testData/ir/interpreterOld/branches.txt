@@ -1,0 +1,23 @@
+INFO: ifGreaterOrEqualToZero(10) at 53 line will be replaced on: true
+
+INFO: whenGreaterOrEqualToZero(-10) at 54 line will be replaced on: false
+
+INFO: if (a == true) "True" else "False" at 55 line will be replaced on: True
+
+INFO: whenMultiBranch(2) at 57 line will be replaced on: -2
+
+INFO: whenMultiBranch(4) at 58 line will be replaced on: -4
+
+INFO: whenMultiBranch(10) at 59 line will be replaced on: 0
+
+INFO: whenWithoutReturn(A(1)) at 61 line will be replaced on: -1
+
+INFO: whenWithoutReturn(A(3)) at 62 line will be replaced on: -3
+
+INFO: whenWithoutReturn(A(10)) at 63 line will be replaced on: 0
+
+INFO: whenWithoutElse(A(1)) at 65 line will be replaced on: -1
+
+INFO: whenWithoutElse(A(4)) at 66 line will be replaced on: -4
+
+INFO: whenWithoutElse(A(10)) at 67 line will be replaced on: 10

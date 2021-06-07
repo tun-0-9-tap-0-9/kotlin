@@ -1,0 +1,15 @@
+INFO: foo() at 3 line will be replaced on: OK
+
+INFO: bar() at 4 line will be replaced on: OK
+
+INFO: checkForArrayList(1) at 6 line will be replaced on: fail 2; fail 3; fail 4; fail 5; fail 6;
+
+INFO: checkForArrayList(listOf<Int>()) at 7 line will be replaced on: fail 5; fail 6;
+
+INFO: checkForArrayList(arrayListOf<Int>()) at 8 line will be replaced on: OK
+
+INFO: checkForArray(1) at 10 line will be replaced on: fail 1; fail 2; fail 3; fail 4;
+
+INFO: checkForArray(intArrayOf()) at 11 line will be replaced on: fail 1; fail 2; fail 3; fail 4;
+
+INFO: checkForArray(arrayOf<Int>()) at 12 line will be replaced on: fail 3; fail 4;

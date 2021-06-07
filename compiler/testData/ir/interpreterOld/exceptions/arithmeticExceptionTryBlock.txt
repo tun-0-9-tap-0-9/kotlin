@@ -1,0 +1,9 @@
+INFO: tryCatch(0) at 13 line will be replaced on: false
+
+INFO: tryCatch(1) at 14 line will be replaced on: true
+
+INFO: tryCatch(100) at 15 line will be replaced on: true
+
+INFO: multiTryCatch(0) at 29 line will be replaced on: ArithmeticException
+
+INFO: multiTryCatch(1) at 30 line will be replaced on: Normal

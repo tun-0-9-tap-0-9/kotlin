@@ -1,0 +1,15 @@
+INFO: mutableListOf<Any>().size at 30 line will be replaced on: 0
+
+INFO: mutableListOf(1, 2, 3).size at 31 line will be replaced on: 3
+
+INFO: testAdd(mutableListOf(1, 2, 3), 4) at 32 line will be replaced on: After add new size is 4
+
+INFO: testRemove(mutableListOf("1", "2", "3"), "1") at 33 line will be replaced on: After remove new size is 2
+
+INFO: testRemove(mutableListOf("1", "2", "3"), "4") at 34 line will be replaced on: After remove new size is 3
+
+INFO: testAddAll(mutableListOf(1.0, 2.0, 3.0), listOf(4.333, -5.5)) at 35 line will be replaced on: After addAll new size is 5
+
+INFO: testIterator(mutableListOf<Byte>(1, (-2).toByte(), 127, 10, 0)) at 36 line will be replaced on: Sum = 136
+
+INFO: mutableListOf(1, 2, 3, 4).subList(0, 2).size at 37 line will be replaced on: 2

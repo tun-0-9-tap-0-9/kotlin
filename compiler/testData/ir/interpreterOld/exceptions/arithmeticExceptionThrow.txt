@@ -1,0 +1,82 @@
+INFO: try {
+    throwExample(10, 0)
+    true
+} catch (e: ArithmeticException) {
+    false
+} at 15 line will be replaced on: false
+
+INFO: try {
+    throwExample(10, 1)
+    true
+} catch (e: ArithmeticException) {
+    false
+} at 21 line will be replaced on: true
+
+INFO: try {
+    throwExample(10, 0)
+    true
+} catch (e: Exception) {
+    false
+} at 28 line will be replaced on: false
+
+INFO: try {
+    throwExample(10, 1)
+    true
+} catch (e: Exception) {
+    false
+} at 34 line will be replaced on: true
+
+INFO: try {
+    throwExample(10, 0)
+    true
+} catch (e: Throwable) {
+    false
+} at 40 line will be replaced on: false
+
+INFO: try {
+    throwExample(10, 0)
+    0
+} catch (e: ArithmeticException) {
+    1
+} catch (e: Exception) {
+    2
+} at 47 line will be replaced on: 1
+
+INFO: try {
+    throwExample(10, 0)
+    0
+} catch (e: Exception) {
+    1
+} catch (e: ArithmeticException) {
+    2
+} at 55 line will be replaced on: 1
+
+INFO: try {
+    throwExample(10, 0)
+    0
+} catch (e: NullPointerException) {
+    1
+} catch (e: ArithmeticException) {
+    2
+} at 63 line will be replaced on: 2
+
+INFO: try {
+    throwExample(10, 0)
+    "Without exception"
+} catch (e: ArithmeticException) {
+    e.message ?: "Exception without message"
+} at 72 line will be replaced on: Divide by zero
+
+INFO: try {
+    throwExample(10, 1)
+    "Without exception"
+} catch (e: ArithmeticException) {
+    e.message ?: "Exception without message"
+} at 78 line will be replaced on: Without exception
+
+INFO: try {
+    throwNullMessage(10, 0)
+    "Without exception"
+} catch (e: ArithmeticException) {
+    e.message ?: "Exception without message"
+} at 85 line will be replaced on: Exception without message

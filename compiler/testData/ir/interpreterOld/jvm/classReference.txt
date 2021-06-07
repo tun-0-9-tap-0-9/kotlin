@@ -1,0 +1,29 @@
+INFO: A::class.simpleName!! at 15 line will be replaced on: A
+
+INFO: A::class.qualifiedName!! at 16 line will be replaced on: test.A
+
+INFO: A::class.members.joinToString() at 17 line will be replaced on: val test.A.a: kotlin.Int, val test.A.b: kotlin.String, val test.A.(kotlin.String.)propertyWithExtension: kotlin.Int, fun test.A.(kotlin.Int.)funWithExtension(kotlin.Int): kotlin.Int, fun test.A.equals(kotlin.Any?): kotlin.Boolean, fun test.A.hashCode(): kotlin.Int, fun test.A.toString(): kotlin.String
+
+INFO: A::class.constructors.joinToString() at 18 line will be replaced on: fun <init>(kotlin.Int, kotlin.String): test.A
+
+INFO: A::class.visibility.toString() at 19 line will be replaced on: PUBLIC
+
+INFO: A::class.supertypes.joinToString() at 20 line will be replaced on: kotlin.Any
+
+INFO: B::class.members.joinToString() at 34 line will be replaced on: val test.B<T, E, D>.prop: T, fun test.B<T, E, D>.get(): T, fun test.B<T, E, D>.getThis(): test.B<T, out E, in D>, fun test.B<T, E, D>.withTypeParameter(E): kotlin.String, fun test.B<T, E, D>.equals(kotlin.Any?): kotlin.Boolean, fun test.B<T, E, D>.hashCode(): kotlin.Int, fun test.B<T, E, D>.toString(): kotlin.String
+
+INFO: B::class.typeParameters.joinToString() at 35 line will be replaced on: T, E, D
+
+INFO: B::class.supertypes.joinToString() at 36 line will be replaced on: test.Base<T>, kotlin.Any
+
+INFO: B::class.members.toList()[1].returnType.toString() at 37 line will be replaced on: T
+
+INFO: B::class.members.toList()[3].returnType.toString() at 38 line will be replaced on: kotlin.String
+
+INFO: (B<Number, Double, Int>(1)::getThis as KFunction<*>).returnType.arguments.joinToString() at 40 line will be replaced on: T, out E, in D
+
+INFO: (arrayOf(1)::iterator as KFunction<*>).returnType.arguments.joinToString() at 41 line will be replaced on: T
+
+INFO: C::class.members.toList()[0].toString() at 49 line will be replaced on: val test.C.(kotlin.String.)getLength: kotlin.Int
+
+INFO: C::class.members.toList()[0].returnType.classifier.toString() at 50 line will be replaced on: class kotlin.Int

@@ -1,0 +1,11 @@
+INFO: getClassDAsA(1).getInt() at 46 line will be replaced on: 3
+
+INFO: getClassDAsB(1).getInt() at 47 line will be replaced on: 3
+
+INFO: getClassDAsC(1).getInt() at 48 line will be replaced on: 3
+
+INFO: getClassDAsC(1).getString() at 49 line will be replaced on: 1
+
+INFO: getClassDAsD(1).getInt() at 50 line will be replaced on: 3
+
+INFO: getClassDAsD(1).getString() at 51 line will be replaced on: 1

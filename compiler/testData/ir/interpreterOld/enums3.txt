@@ -1,0 +1,13 @@
+INFO: RegexOption.IGNORE_CASE.name at 3 line will be replaced on: IGNORE_CASE
+
+INFO: RegexOption.IGNORE_CASE.ordinal at 4 line will be replaced on: 0
+
+INFO: RegexOption.MULTILINE.name at 5 line will be replaced on: MULTILINE
+
+INFO: RegexOption.MULTILINE.ordinal at 6 line will be replaced on: 1
+
+INFO: RegexOption.IGNORE_CASE == RegexOption.IGNORE_CASE at 7 line will be replaced on: true
+
+INFO: RegexOption.IGNORE_CASE != RegexOption.MULTILINE at 8 line will be replaced on: true
+
+INFO: RegexOption.IGNORE_CASE.toString() at 9 line will be replaced on: IGNORE_CASE

@@ -1,0 +1,8 @@
+INFO: append(StringBuilder("Some string with not zero length"), "!!!", 0, 3) at 8 line will be replaced on: Some string with not zero length!!!
+
+EXCEPTION: append(StringBuilder("Some string with not zero length"), "!!!", -1, 0) at 9 line will produce exception:
+Exception kotlin.IndexOutOfBoundsException: start -1, end 0, s.length() 3
+	at java.lang.AbstractStringBuilder.append(AbstractStringBuilder.java:539)
+	at java.lang.StringBuilder.append(StringBuilder.java:175)
+	at ExceptionFromWrapperKt.append(exceptionFromWrapper.kt:5)
+	at ExceptionFromWrapperKt.<clinit>(exceptionFromWrapper.kt:9)

@@ -1,0 +1,5 @@
+INFO: mapOf(1 to "A(1)").size at 5 line will be replaced on: 1
+
+INFO: mapOf(1 to "A(1)").entries.single().key at 6 line will be replaced on: 1
+
+INFO: mapOf(1 to "A(1)").values.single() at 7 line will be replaced on: A(1)

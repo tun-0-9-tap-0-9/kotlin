@@ -1,0 +1,133 @@
+INFO: echo(Long.MIN_VALUE) as Long at 79 line will be replaced on: -9223372036854775808
+
+INFO: echo(Long.MAX_VALUE) as Long at 80 line will be replaced on: 9223372036854775807
+
+INFO: echo(Long.SIZE_BYTES) as Int at 81 line will be replaced on: 8
+
+INFO: echo(Long.SIZE_BITS) as Int at 82 line will be replaced on: 64
+
+INFO: compareTo(5L, 1.toByte()) at 84 line will be replaced on: 1
+
+INFO: compareTo(5L, 2.toShort()) at 85 line will be replaced on: 1
+
+INFO: compareTo(5L, 3) at 86 line will be replaced on: 1
+
+INFO: compareTo(5L, 4L) at 87 line will be replaced on: 1
+
+INFO: compareTo(5L, 5.toFloat()) at 88 line will be replaced on: 0
+
+INFO: compareTo(5L, 6.toDouble()) at 89 line will be replaced on: -1
+
+INFO: plus(5L, 1.toByte()) at 91 line will be replaced on: 6
+
+INFO: plus(5L, 2.toShort()) at 92 line will be replaced on: 7
+
+INFO: plus(5L, 3) at 93 line will be replaced on: 8
+
+INFO: plus(5L, 4L) at 94 line will be replaced on: 9
+
+INFO: plus(5L, 5.toFloat()) at 95 line will be replaced on: 10.0
+
+INFO: plus(5L, 6.toDouble()) at 96 line will be replaced on: 11.0
+
+INFO: minus(5L, 1.toByte()) at 98 line will be replaced on: 4
+
+INFO: minus(5L, 2.toShort()) at 99 line will be replaced on: 3
+
+INFO: minus(5L, 3) at 100 line will be replaced on: 2
+
+INFO: minus(5L, 4L) at 101 line will be replaced on: 1
+
+INFO: minus(5L, 5.toFloat()) at 102 line will be replaced on: 0.0
+
+INFO: minus(5L, 6.toDouble()) at 103 line will be replaced on: -1.0
+
+INFO: times(5L, 1.toByte()) at 105 line will be replaced on: 5
+
+INFO: times(5L, 2.toShort()) at 106 line will be replaced on: 10
+
+INFO: times(5L, 3) at 107 line will be replaced on: 15
+
+INFO: times(5L, 4L) at 108 line will be replaced on: 20
+
+INFO: times(5L, 5.toFloat()) at 109 line will be replaced on: 25.0
+
+INFO: times(5L, 6.toDouble()) at 110 line will be replaced on: 30.0
+
+INFO: div(100L, 1.toByte()) at 112 line will be replaced on: 100
+
+INFO: div(100L, 2.toShort()) at 113 line will be replaced on: 50
+
+INFO: div(100L, 4) at 114 line will be replaced on: 25
+
+INFO: div(100L, 10L) at 115 line will be replaced on: 10
+
+INFO: div(100L, 25.toFloat()) at 116 line will be replaced on: 4.0
+
+INFO: div(100L, 50.toDouble()) at 117 line will be replaced on: 2.0
+
+INFO: rem(5L, 1.toByte()) at 119 line will be replaced on: 0
+
+INFO: rem(5L, 2.toShort()) at 120 line will be replaced on: 1
+
+INFO: rem(5L, 3) at 121 line will be replaced on: 2
+
+INFO: rem(5L, 4L) at 122 line will be replaced on: 1
+
+INFO: rem(5L, 5.toFloat()) at 123 line will be replaced on: 0.0
+
+INFO: rem(5L, 6.toDouble()) at 124 line will be replaced on: 5.0
+
+INFO: inc(3L) at 126 line will be replaced on: 4
+
+INFO: dec(3L) at 127 line will be replaced on: 2
+
+INFO: unaryPlus(3L) at 129 line will be replaced on: 3
+
+INFO: unaryMinus(3L) at 130 line will be replaced on: -3
+
+INFO: rangeTo(5L, 1.toByte()).last at 132 line will be replaced on: 1
+
+INFO: rangeTo(5L, 2.toShort()).last at 133 line will be replaced on: 2
+
+INFO: rangeTo(5L, 3).last at 134 line will be replaced on: 3
+
+INFO: rangeTo(5L, 4L).last at 135 line will be replaced on: 4
+
+INFO: shl(8L, 1) at 137 line will be replaced on: 16
+
+INFO: shr(8L, 2) at 138 line will be replaced on: 2
+
+INFO: ushr(-8L, 3) at 139 line will be replaced on: 2305843009213693951
+
+INFO: and(8L, 1L) at 141 line will be replaced on: 0
+
+INFO: or(8L, 2L) at 142 line will be replaced on: 10
+
+INFO: xor(-8L, 3L) at 143 line will be replaced on: -5
+
+INFO: inv(8L) at 144 line will be replaced on: -9
+
+INFO: toByte(1L) at 146 line will be replaced on: 1
+
+INFO: toChar(2L) at 147 line will be replaced on: 
+
+INFO: toShort(3L) at 148 line will be replaced on: 3
+
+INFO: toInt(4L) at 149 line will be replaced on: 4
+
+INFO: toLong(5L) at 150 line will be replaced on: 5
+
+INFO: toFloat(6L) at 151 line will be replaced on: 6.0
+
+INFO: toDouble(7L) at 152 line will be replaced on: 7.0
+
+INFO: toString(10L) at 154 line will be replaced on: 10
+
+INFO: hashCode(10L) at 155 line will be replaced on: 10
+
+INFO: equals(10L, 11L) at 156 line will be replaced on: false
+
+INFO: equals(1L, 1.toLong()) at 157 line will be replaced on: true
+
+INFO: equals(1L, 1) at 158 line will be replaced on: true

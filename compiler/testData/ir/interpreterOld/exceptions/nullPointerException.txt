@@ -1,0 +1,15 @@
+INFO: notNullAssertion(1) at 43 line will be replaced on: Value isn't null
+
+INFO: notNullAssertion(null) at 44 line will be replaced on: Value is null
+
+INFO: notNullAssertionForObject(A()) at 45 line will be replaced on: Value isn't null
+
+INFO: notNullAssertionForObject(null) at 46 line will be replaced on: Value is null
+
+INFO: notNullAssertionForSomeWrapper(StringBuilder("Some text")) at 47 line will be replaced on: Some text
+
+INFO: notNullAssertionForSomeWrapper(null) at 48 line will be replaced on: Value is null
+
+INFO: notNullLambda { "Not null lambda" } at 49 line will be replaced on: Not null lambda
+
+INFO: notNullLambda(null) at 50 line will be replaced on: Lambda is null

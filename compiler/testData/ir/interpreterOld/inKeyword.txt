@@ -1,0 +1,13 @@
+INFO: numberIsInArray(intArrayOf(1, 2, 3), 1) at 13 line will be replaced on: true
+
+INFO: numberIsInArray(intArrayOf(1, 2, 3), -1) at 14 line will be replaced on: false
+
+INFO: valueIsInArray(arrayOf(1, 2, 3), 1) at 16 line will be replaced on: true
+
+INFO: valueIsInArray(arrayOf(1, 2, 3), -1) at 17 line will be replaced on: false
+
+INFO: valueIsInArray(arrayOf(1, 2.0f, "3"), "3") at 18 line will be replaced on: true
+
+INFO: valueIsInArray(arrayOf(1, 2.0f, "3"), null) at 19 line will be replaced on: false
+
+INFO: valueIsInArray(arrayOf(1, 2.0f, "3"), 1.0f) at 20 line will be replaced on: false

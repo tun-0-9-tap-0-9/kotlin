@@ -1,0 +1,7 @@
+INFO: sequenceOf(1, 2, 3).iterator().next() at 3 line will be replaced on: 1
+
+INFO: sequenceOf(2, 3).iterator().next() at 4 line will be replaced on: 2
+
+INFO: sequenceOf<Int>().iterator().hasNext() at 5 line will be replaced on: false
+
+INFO: generateSequence() { 42 }.iterator().next() at 6 line will be replaced on: 42

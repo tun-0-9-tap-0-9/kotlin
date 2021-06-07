@@ -1,0 +1,5 @@
+INFO: IntProgression.fromClosedRange(0, 10, 1).first at 3 line will be replaced on: 0
+
+INFO: LongProgression.fromClosedRange(0L, 10L, 1L).last at 4 line will be replaced on: 10
+
+INFO: CharProgression.fromClosedRange('0', '9', 1).step at 5 line will be replaced on: 1

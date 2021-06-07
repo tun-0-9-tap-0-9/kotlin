@@ -1,0 +1,1 @@
+INFO: returnValueFromA(1, 2) at 9 line will be replaced on: 2

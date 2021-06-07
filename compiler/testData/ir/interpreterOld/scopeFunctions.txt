@@ -1,0 +1,27 @@
+INFO: run { echo("Run block") } at 13 line will be replaced on: Run block
+
+INFO: A(0, "Run with receiver").run { this.str + this.num } at 15 line will be replaced on: Run with receiver0
+
+INFO: with (A(1, "String")) {
+    setNewStr("New String")
+    this.str
+} at 17 line will be replaced on: New String
+
+INFO: A(2, "Apply test").apply { this.setNewStr("New apply str") }.str at 22 line will be replaced on: New apply str
+
+INFO: mutableListOf("one", "two", "three").also { it.add("four") }.size at 24 line will be replaced on: 4
+
+INFO: mutableListOf("one", "two", "three").let {
+    it.add("four")
+    it.size
+} at 25 line will be replaced on: 4
+
+INFO: 10.let { it + 10 } at 29 line will be replaced on: 20
+
+INFO: 1.takeIf { it % 2 == 0 } at 31 line will be replaced on: null
+
+INFO: 2.takeIf { it % 2 == 0 } at 32 line will be replaced on: 2
+
+INFO: (-1).takeUnless { it > 0 } at 33 line will be replaced on: -1
+
+INFO: 1.takeUnless { it > 0 } at 34 line will be replaced on: null

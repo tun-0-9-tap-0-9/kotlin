@@ -1,0 +1,5 @@
+INFO: factorialDoWhile(6) at 34 line will be replaced on: 720
+
+INFO: firstNotNull(arrayOf<Int?>(null, null, 1, 2, null)) at 35 line will be replaced on: 1
+
+INFO: singleExpressionLoop(10) at 36 line will be replaced on: 10

@@ -1,0 +1,5 @@
+INFO: withVararg(1, 2, 3) at 33 line will be replaced on: size = 3; sum = 6
+
+INFO: withVarargUnknownType(1, 2.0, "a") at 34 line will be replaced on: size = 3; join = 1 2.0 a
+
+INFO: withVarargClassType(A(1), A(2), A(3)) at 35 line will be replaced on: size = 3; join = 1 2 3

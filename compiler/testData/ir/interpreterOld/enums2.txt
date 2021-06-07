@@ -1,0 +1,13 @@
+INFO: Empty.values().size at 20 line will be replaced on: 0
+
+INFO: enumValues<Empty>().size at 21 line will be replaced on: 0
+
+INFO: Color.BLACK.name at 23 line will be replaced on: BLACK
+
+INFO: Color.BLACK.getColorAsString() at 24 line will be replaced on: 0x000000
+
+INFO: Color.RED.getColorAsString() at 25 line will be replaced on: 0xFF0000
+
+INFO: Color.BLACK.getColorAsInt() at 27 line will be replaced on: 0
+
+INFO: Color.RED.getColorAsInt() at 28 line will be replaced on: 16711680

@@ -1,0 +1,13 @@
+INFO: varargSum(3, 1, 2, 3) at 30 line will be replaced on: 6
+
+INFO: varargSum(num = *intArrayOf(1, 2, 3), quantityToSum = 2) at 31 line will be replaced on: 3
+
+INFO: varargSum(6, *intArrayOf(1, 2), 3, *intArrayOf(4, 5, 6)) at 32 line will be replaced on: 21
+
+INFO: sumWithVarargAtFirst(1, 2, 3) at 34 line will be replaced on: 6
+
+INFO: sumWithVarargAtFirst(quantityToSum = 3, num = *intArrayOf(1, 2, 3)) at 35 line will be replaced on: 6
+
+INFO: concatenation(*arrayOf("1", " "), "2", *arrayOf(" ", "3")) at 37 line will be replaced on: 1 2 3
+
+INFO: customArrayConcatenation(*arrayOf(1, 2.0), "3", *arrayOf(-1, -2.0)) at 38 line will be replaced on: 1 2.0 3 -1 -2.0

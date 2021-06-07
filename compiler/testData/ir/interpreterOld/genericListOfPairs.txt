@@ -1,0 +1,1 @@
+INFO: listOfPairs<Int, Int>() at 10 line will be replaced on: List size is: 2; first is Int: true; second is String: true

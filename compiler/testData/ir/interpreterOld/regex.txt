@@ -1,0 +1,49 @@
+INFO: Regex("pattern").pattern at 3 line will be replaced on: pattern
+
+INFO: Regex("pattern", RegexOption.IGNORE_CASE).options.iterator().next().name at 4 line will be replaced on: IGNORE_CASE
+
+INFO: Regex("pattern", setOf(RegexOption.IGNORE_CASE, RegexOption.MULTILINE)).options.size at 5 line will be replaced on: 2
+
+INFO: Regex("pat").matchEntire("pat")?.value at 7 line will be replaced on: pat
+
+INFO: Regex("[abc]").matchEntire("a")?.range?.last at 8 line will be replaced on: 0
+
+INFO: Regex("str(1)?").matches("str1") at 9 line will be replaced on: true
+
+INFO: Regex("str(1)?").matches("str2") at 10 line will be replaced on: false
+
+INFO: Regex("[0-9]").containsMatchIn("0") at 11 line will be replaced on: true
+
+INFO: Regex("[0-9]").containsMatchIn("!!0!!") at 12 line will be replaced on: true
+
+INFO: Regex("[0-9]").containsMatchIn("!!p!!") at 13 line will be replaced on: false
+
+INFO: Regex("0").replace("There are 0 apples", "n") at 16 line will be replaced on: There are n apples
+
+INFO: Regex("(red|green|blue)").replace("Roses are red, Violets are blue") { it.value + "!" } at 17 line will be replaced on: Roses are red!, Violets are blue!
+
+INFO: Regex("(red|green|blue)").replaceFirst("Roses are red, Violets are blue", "REPLACED") at 18 line will be replaced on: Roses are REPLACED, Violets are blue
+
+INFO: Regex("\\W+").split("Roses are red, Violets are blue").size at 19 line will be replaced on: 6
+
+INFO: Regex("p").find("p")?.value at 22 line will be replaced on: p
+
+INFO: Regex("(red|green|blue)").find("Roses are red, Violets are blue")?.groups?.size at 23 line will be replaced on: 2
+
+INFO: Regex("(red|green|blue)").find("Roses are red, Violets are blue")?.destructured?.component1() at 24 line will be replaced on: red
+
+INFO: Regex("(red|green|blue)").find("Roses are red, Violets are blue")?.next()?.value at 25 line will be replaced on: blue
+
+INFO: Regex("(red|green|blue)").find("Roses are red, Violets are blue", 15)?.value at 26 line will be replaced on: blue
+
+INFO: Regex("(red|green|blue)").findAll("Roses are red, Violets are blue").iterator().next()?.value at 27 line will be replaced on: red
+
+INFO: Regex("(red|green|blue)").findAll("Roses are red, Violets are blue").iterator().next()?.next()?.value at 28 line will be replaced on: blue
+
+INFO: Regex("(red|green|blue)").findAll("Roses are red, Violets are blue").iterator().next()?.next()?.next()?.value at 29 line will be replaced on: null
+
+INFO: Regex.fromLiteral("[a-z0-9]+").pattern at 32 line will be replaced on: [a-z0-9]+
+
+INFO: Regex.escape("[a-z0-9]+") at 33 line will be replaced on: \Q[a-z0-9]+\E
+
+INFO: Regex.escapeReplacement("[a-z0-9]+") at 34 line will be replaced on: [a-z0-9]+

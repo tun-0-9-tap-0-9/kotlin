@@ -1,0 +1,7 @@
+INFO: arrayOf(1, 2, 3).size at 22 line will be replaced on: 3
+
+INFO: changeAndReturnSum(intArrayOf(1, 2, 3), 0, 10) at 23 line will be replaced on: 15
+
+INFO: emptyArray<Int>().size at 24 line will be replaced on: 0
+
+INFO: changeAndReturnSumForObject(arrayOf(A(1), A(2), A(3)), 0, A(10)) at 25 line will be replaced on: 15

@@ -1,0 +1,5 @@
+INFO: 1.get() at 19 line will be replaced on: 1
+
+INFO: A(3).check("123") at 20 line will be replaced on: true
+
+INFO: A(2).check("123") at 21 line will be replaced on: false

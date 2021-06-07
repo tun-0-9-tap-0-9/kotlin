@@ -1,0 +1,11 @@
+INFO: (::withParameters as KFunction<*>).parameters.joinToString() at 17 line will be replaced on: parameter #0 a of fun withParameters(kotlin.Int, kotlin.Double): kotlin.Int, parameter #1 b of fun withParameters(kotlin.Int, kotlin.Double): kotlin.Int
+
+INFO: (String::withExtension as KFunction<*>).parameters.joinToString() at 18 line will be replaced on: extension receiver parameter of fun kotlin.String.withExtension(kotlin.Int): kotlin.Int, parameter #1 a of fun kotlin.String.withExtension(kotlin.Int): kotlin.Int
+
+INFO: A::class.members.toList()[0].parameters.joinToString() at 19 line will be replaced on: instance parameter of fun test.A.(kotlin.String.)get(kotlin.Int): kotlin.String, extension receiver parameter of fun test.A.(kotlin.String.)get(kotlin.Int): kotlin.String, parameter #2 a of fun test.A.(kotlin.String.)get(kotlin.Int): kotlin.String
+
+INFO: B(1)::b.parameters.toString() at 28 line will be replaced on: []
+
+INFO: B::b.parameters.toString() at 29 line will be replaced on: [instance parameter of val test.B.b: kotlin.Int]
+
+INFO: B::class.members.toList()[1].parameters.toString() at 30 line will be replaced on: [instance parameter of val test.B.(kotlin.String.)size: kotlin.Int, extension receiver parameter of val test.B.(kotlin.String.)size: kotlin.Int]

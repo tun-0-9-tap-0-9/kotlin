@@ -1,0 +1,3 @@
+INFO: getLocalObject(10).getNum() at 20 line will be replaced on: 10
+
+INFO: A(2).localObject.getNum() at 21 line will be replaced on: 2

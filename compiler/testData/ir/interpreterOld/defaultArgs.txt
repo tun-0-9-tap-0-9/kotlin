@@ -1,0 +1,9 @@
+INFO: sum() at 9 line will be replaced on: 6
+
+INFO: sum(b = -3) at 10 line will be replaced on: 1
+
+INFO: sum(c = 1, a = 1, b = 1) at 11 line will be replaced on: 3
+
+INFO: sumBasedOnPrevious() at 13 line will be replaced on: 7
+
+INFO: sumBasedOnPrevious(b = 1, c = 1) at 14 line will be replaced on: 3

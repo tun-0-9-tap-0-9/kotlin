@@ -1,0 +1,3 @@
+INFO: getLenght("Elvis") at 6 line will be replaced on: 5
+
+INFO: getLenght(null) at 7 line will be replaced on: -1

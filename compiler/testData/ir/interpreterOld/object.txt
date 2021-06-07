@@ -1,0 +1,17 @@
+INFO: { 10 }() at 5 line will be replaced on: 10
+
+INFO: { -10 }() at 9 line will be replaced on: -10
+
+INFO: { -10 }() at 11 line will be replaced on: -10
+
+INFO: return Int.MAX_VALUE at 15 line will be replaced on: 2147483647
+
+INFO: concat("Value in a: ", a) at 29 line will be replaced on: Value in a: 100
+
+INFO: concat("Non const, ", "still will be calculated") at 30 line will be replaced on: Non const, still will be calculated
+
+INFO: A().a at 35 line will be replaced on: 10
+
+INFO: A.static at 36 line will be replaced on: -10
+
+INFO: A.getStaticNumber() at 37 line will be replaced on: 2147483647

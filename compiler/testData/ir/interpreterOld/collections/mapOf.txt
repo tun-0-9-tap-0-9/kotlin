@@ -1,0 +1,23 @@
+INFO: mapOf(1 to "1", 2 to "2", 3 to "3").size at 3 line will be replaced on: 3
+
+INFO: emptyMap<Any, Any>().size at 4 line will be replaced on: 0
+
+INFO: mapOf(1 to "1", 2 to "2", 3 to "3").containsKey(1) at 6 line will be replaced on: true
+
+INFO: mapOf(1 to "1", 2 to "2", 3 to "3").contains(1) at 7 line will be replaced on: true
+
+INFO: mapOf(1 to "1", 2 to "2", 3 to "3").contains<Any, String>("1") at 8 line will be replaced on: false
+
+INFO: mapOf(1 to "1", 2 to "2", 3 to "3").containsValue("1") at 9 line will be replaced on: true
+
+INFO: mapOf(1 to "1", 2 to "2", 3 to "3").get(1)!! at 11 line will be replaced on: 1
+
+INFO: mapOf(1 to "1", 2 to "2", 3 to "3")[2]!! at 12 line will be replaced on: 2
+
+INFO: mapOf(1 to "1", 2 to "2", 3 to "3")[0].toString() at 13 line will be replaced on: null
+
+INFO: mapOf(1 to "1", 2 to "2", 3 to "3").keys.size at 15 line will be replaced on: 3
+
+INFO: mapOf(1 to "1", 2 to "2", 3 to "3").values.size at 16 line will be replaced on: 3
+
+INFO: mapOf(1 to "1", 2 to "2", 3 to "3").entries.size at 17 line will be replaced on: 3

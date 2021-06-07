@@ -1,0 +1,9 @@
+INFO: getAClassImplementation(1).getIntNum() at 47 line will be replaced on: 1
+
+INFO: getBClassImplementation(2).getIntNum() at 48 line will be replaced on: 2
+
+INFO: getClassCAsA(3).getIntNum() at 51 line will be replaced on: 3
+
+INFO: getClassCAsB(4).getIntNum() at 52 line will be replaced on: 4
+
+INFO: getClassCAsC(5).getIntNum() at 53 line will be replaced on: 5

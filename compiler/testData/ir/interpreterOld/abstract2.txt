@@ -1,0 +1,7 @@
+INFO: getClassCAsA(1).getIntNum() at 41 line will be replaced on: 1
+
+INFO: getClassCAsB(2).getIntNum() at 42 line will be replaced on: 2
+
+INFO: getClassCAsA(3).getIntNumInverse() at 44 line will be replaced on: -3
+
+INFO: getClassCAsB(4).getIntNumInverse() at 45 line will be replaced on: -4

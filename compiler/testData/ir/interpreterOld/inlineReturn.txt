@@ -1,0 +1,16 @@
+INFO: x(10) { return@x 1 } at 16 line will be replaced on: 11
+
+INFO: x(10) l@ { //this call will be replaced on 20
+        x(9) {
+            return@l 10
+        }
+    } at 22 line will be replaced on: 20
+
+INFO: x(11) { //this call will be replaced on 21
+            val j = 0
+            x(j) { 10 }
+        } at 33 line will be replaced on: 21
+
+INFO: withNonLocalReturn() at 40 line will be replaced on: Non local
+
+INFO: withLocalReturn() at 41 line will be replaced on: Local

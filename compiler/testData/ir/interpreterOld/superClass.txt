@@ -1,0 +1,33 @@
+INFO: A(1).get() at 53 line will be replaced on: 1
+
+INFO: A(1).setA(2).get() at 54 line will be replaced on: 2
+
+INFO: A(1).openGet() at 55 line will be replaced on: 1
+
+INFO: A(1).a at 56 line will be replaced on: 1
+
+INFO: B(1).getAFromB() at 58 line will be replaced on: 2
+
+INFO: B(1).getFromValueParameter(A(10)) at 59 line will be replaced on: 10
+
+INFO: B(1).get() at 60 line will be replaced on: 2
+
+INFO: B(1).setA(-1).get() at 61 line will be replaced on: -1
+
+INFO: C(1).getAFromC() at 63 line will be replaced on: 3
+
+INFO: C(1).get() at 64 line will be replaced on: 3
+
+INFO: C(1).openGet() at 65 line will be replaced on: 3
+
+INFO: C(1).getAFromB() at 66 line will be replaced on: 3
+
+INFO: C(1).getFromValueParameter(A(10)) at 67 line will be replaced on: 10
+
+INFO: C(1).setA(-2).get() at 68 line will be replaced on: -2
+
+INFO: D(1).get() at 71 line will be replaced on: 4
+
+INFO: E(1).get() at 72 line will be replaced on: 5
+
+INFO: A(1).get() at 74 line will be replaced on: 1

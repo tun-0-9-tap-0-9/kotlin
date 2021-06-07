@@ -1,0 +1,37 @@
+INFO: foo<Int>() at 13 line will be replaced on: Safe cast
+
+INFO: foo<Int?>() at 14 line will be replaced on: Safe cast
+
+INFO: foo<Double?>() at 15 line will be replaced on: Safe cast
+
+INFO: foo<List<*>>() at 16 line will be replaced on: Safe cast
+
+INFO: foo<Map<*,*>>() at 17 line will be replaced on: Safe cast
+
+INFO: bar<Int>() at 19 line will be replaced on: Can't cast
+
+INFO: bar<Int?>() at 20 line will be replaced on: Can't cast
+
+INFO: bar<Double?>() at 21 line will be replaced on: Can't cast
+
+INFO: bar<Map<*,*>>() at 22 line will be replaced on: Can't cast
+
+INFO: bar<List<Int>>() at 23 line will be replaced on: Safe cast
+
+INFO: bar<List<String>>() at 24 line will be replaced on: Safe cast
+
+INFO: arrayOf<Int>(1, 2, 3) as? Array<String> == null at 26 line will be replaced on: true
+
+INFO: arrayOf<Int>(1, 2, 3) as? Array<Number> == null at 27 line will be replaced on: false
+
+INFO: arrayOf<Any>(listOf(1, 2), listOf(2, 3)) as? Array<List<String>?> == null at 28 line will be replaced on: true
+
+INFO: arrayOf<List<Int>>(listOf(1, 2), listOf(2, 3)) as? Array<List<String>?> == null at 29 line will be replaced on: false
+
+INFO: arrayOf<List<Int>>(listOf(1, 2), listOf(2, 3)) as? Array<Set<Int>> == null at 30 line will be replaced on: true
+
+INFO: arrayOf<List<Int>>(listOf(1, 2), listOf(2, 3)) as? Array<Collection<String>> == null at 31 line will be replaced on: false
+
+INFO: Array<List<Int>>(3) { listOf(it, it + 1) } as? Array<List<String>?> == null at 32 line will be replaced on: false
+
+INFO: Array<List<Int>>(3) { listOf(it, it + 1) } as? Array<Set<Int>> == null at 33 line will be replaced on: true

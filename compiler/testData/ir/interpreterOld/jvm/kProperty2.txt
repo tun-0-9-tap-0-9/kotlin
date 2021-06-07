@@ -1,0 +1,1 @@
+INFO: A::class.members.toList()[1].call(A(2), "123").toString() at 11 line will be replaced on: 6

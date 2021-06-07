@@ -1,0 +1,9 @@
+INFO: getClassAsA(1).getStr() at 40 line will be replaced on: 1
+
+INFO: getClassAsB(2).getStr() at 41 line will be replaced on: 2
+
+INFO: getClassAsB(3).getInt() at 42 line will be replaced on: 3
+
+INFO: getClassAsC(4).getStr() at 43 line will be replaced on: 4
+
+INFO: getClassAsC(5).getInt() at 44 line will be replaced on: 5

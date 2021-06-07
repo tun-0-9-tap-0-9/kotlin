@@ -1,0 +1,7 @@
+INFO: Outer().foo() at 25 line will be replaced on: outer foo
+
+INFO: Outer().Middle().foo() at 26 line will be replaced on: middle foo
+
+INFO: Outer().Middle().Inner().foo() at 27 line will be replaced on: inner foo with outer bar = "bar"
+
+INFO: Outer().Middle().Inner().getAllNums() at 29 line will be replaced on: From inner: 3; from middle: 2; from outer: 1

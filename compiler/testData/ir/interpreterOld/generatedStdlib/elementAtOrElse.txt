@@ -1,0 +1,9 @@
+INFO: listOf(1, 2, 3).elementAtOrElse(1) { -1 } at 3 line will be replaced on: 2
+
+INFO: listOf(1, 2, 3).elementAtOrElse(4) { -1 } at 4 line will be replaced on: -1
+
+INFO: uintArrayOf(1u, 2u, 3u, 4u).elementAtOrElse(2) { 0u } at 5 line will be replaced on: 3
+
+INFO: "abcd".elementAtOrElse(2) { '0' } at 6 line will be replaced on: c
+
+INFO: "abcd".elementAtOrElse(4) { '0' } at 7 line will be replaced on: 0

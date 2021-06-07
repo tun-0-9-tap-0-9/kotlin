@@ -1,0 +1,15 @@
+INFO: Person("Ivan", "Ivanov").age at 25 line will be replaced on: -1
+
+INFO: Person("Ivan", "Ivanov").wholeName at 26 line will be replaced on: Ivan Ivanov
+
+INFO: Person("Ivan").age at 28 line will be replaced on: -1
+
+INFO: Person("Ivan").wholeName at 29 line will be replaced on: Ivan <NULL>
+
+INFO: Person().age at 31 line will be replaced on: -1
+
+INFO: Person().wholeName at 32 line will be replaced on: <NOT_GIVEN> <NULL>
+
+INFO: Person("Ivan", 20).age at 34 line will be replaced on: 20
+
+INFO: Person("Ivan", 20).wholeName at 35 line will be replaced on: Ivan <NULL>

@@ -1,0 +1,27 @@
+INFO: A::a.name at 6 line will be replaced on: a
+
+INFO: A::a.get(A(1)) at 7 line will be replaced on: 1
+
+INFO: A::a.invoke(A(2)) at 8 line will be replaced on: 2
+
+INFO: A(10)::a.name at 10 line will be replaced on: a
+
+INFO: A(11)::a.get() at 11 line will be replaced on: 11
+
+INFO: A(12)::a.invoke() at 12 line will be replaced on: 12
+
+INFO: B::b.name at 17 line will be replaced on: b
+
+INFO: B::b.get(B(1)) at 18 line will be replaced on: 1
+
+INFO: B(2).apply { B::b.set(this, 3) }.b at 19 line will be replaced on: 3
+
+INFO: B::b.invoke(B(4)) at 20 line will be replaced on: 4
+
+INFO: B(10)::b.name at 22 line will be replaced on: b
+
+INFO: B(11)::b.get() at 23 line will be replaced on: 11
+
+INFO: B(12).apply { this::b.set(13) }.b at 24 line will be replaced on: 13
+
+INFO: B(14)::b.invoke() at 25 line will be replaced on: 14

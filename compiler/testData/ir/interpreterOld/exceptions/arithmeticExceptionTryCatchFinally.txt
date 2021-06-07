@@ -1,0 +1,13 @@
+INFO: tryCatch(0) at 18 line will be replaced on: Start dividing
+Exception
+Finally
+
+
+INFO: tryCatch(1) at 19 line will be replaced on: Start dividing
+Without exception
+Finally
+
+
+INFO: tryCatch(100) at 20 line will be replaced on: Start dividing
+Without exception
+Finally

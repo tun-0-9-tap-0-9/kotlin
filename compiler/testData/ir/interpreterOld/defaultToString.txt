@@ -1,0 +1,13 @@
+INFO: checkToStringCorrectness(A(), "A") at 31 line will be replaced on: true
+
+INFO: checkToStringCorrectness(B(), "B") at 32 line will be replaced on: true
+
+INFO: checkToStringCorrectness(arrayOf(A(), B()).toString(), "[Ljava.lang.Object;") at 36 line will be replaced on: true
+
+INFO: checkToStringCorrectness(intArrayOf(1, 2, 3).toString(), "[I") at 37 line will be replaced on: true
+
+INFO: theSameObjectToString(A()) at 39 line will be replaced on: true
+
+INFO: theSameObjectToString(StringBuilder()) at 40 line will be replaced on: true
+
+INFO: theSameObjectToString(StringBuilder("Some Builder")) at 41 line will be replaced on: true

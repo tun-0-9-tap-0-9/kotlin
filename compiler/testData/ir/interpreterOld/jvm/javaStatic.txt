@@ -1,0 +1,43 @@
+INFO: { java.lang.Byte.MAX_VALUE }() at 3 line will be replaced on: 127
+
+INFO: { java.lang.Byte.MIN_VALUE }() at 4 line will be replaced on: -128
+
+INFO: { java.lang.Byte.SIZE }() at 5 line will be replaced on: 8
+
+INFO: { java.lang.Byte.BYTES }() at 6 line will be replaced on: 1
+
+INFO: { java.lang.Integer.MAX_VALUE }() at 8 line will be replaced on: 2147483647
+
+INFO: { java.lang.Integer.MIN_VALUE }() at 9 line will be replaced on: -2147483648
+
+INFO: { java.lang.Integer.SIZE }() at 10 line will be replaced on: 32
+
+INFO: { java.lang.Integer.BYTES }() at 11 line will be replaced on: 4
+
+INFO: { java.lang.Float.MAX_VALUE }() at 13 line will be replaced on: 3.4028235E38
+
+INFO: { java.lang.Float.MIN_VALUE }() at 14 line will be replaced on: 1.4E-45
+
+INFO: { java.lang.Float.SIZE }() at 15 line will be replaced on: 32
+
+INFO: { java.lang.Float.BYTES }() at 16 line will be replaced on: 4
+
+INFO: { java.lang.Float.MAX_EXPONENT }() at 17 line will be replaced on: 127
+
+INFO: { java.lang.Float.MIN_EXPONENT }() at 18 line will be replaced on: -126
+
+INFO: { java.lang.Float.NEGATIVE_INFINITY }() at 19 line will be replaced on: -Infinity
+
+INFO: { java.lang.Float.POSITIVE_INFINITY }() at 20 line will be replaced on: Infinity
+
+INFO: { java.lang.Boolean.FALSE }().toString() at 22 line will be replaced on: false
+
+INFO: { java.lang.Boolean.TRUE }().toString() at 23 line will be replaced on: true
+
+INFO: { java.lang.Character.MAX_VALUE }().toInt() at 25 line will be replaced on: 65535
+
+INFO: { java.lang.Character.MIN_VALUE }().toInt() at 26 line will be replaced on: 0
+
+INFO: { java.lang.Character.SIZE }() at 27 line will be replaced on: 16
+
+INFO: { java.lang.Character.BYTES }() at 28 line will be replaced on: 2

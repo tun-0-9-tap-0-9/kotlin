@@ -1,0 +1,3 @@
+INFO: A().returnSizeOf("1234") at 15 line will be replaced on: 4
+
+INFO: B().returnSizeOf("1234") at 16 line will be replaced on: -1

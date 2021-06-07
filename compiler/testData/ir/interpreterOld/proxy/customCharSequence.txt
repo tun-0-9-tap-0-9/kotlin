@@ -1,0 +1,5 @@
+INFO: StringBuilder(MyCharSequence("MyString")).length at 12 line will be replaced on: 8
+
+INFO: StringBuilder().append(MyCharSequence("MyString")).length at 13 line will be replaced on: 8
+
+INFO: StringBuilder(StringBuilder(MyCharSequence("MyString")).subSequence(0, 4)).length at 14 line will be replaced on: 4

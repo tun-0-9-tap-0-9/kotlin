@@ -1,0 +1,13 @@
+EXCEPTION: echo(1, 0) at 18 line will produce exception:
+Exception java.lang.ArithmeticException: / by zero
+	at StackTraceKt.divide(stackTrace.kt:4)
+	at StackTraceKt.echo(stackTrace.kt:7)
+	at StackTraceKt.<clinit>(stackTrace.kt:18)
+
+EXCEPTION: getLengthOrThrowException(null) at 19 line will produce exception:
+Exception kotlin.UnsupportedOperationException: kotlin.NullPointerException
+	at StackTraceKt.getLengthOrThrowException(stackTrace.kt:14)
+    at StackTraceKt.<clinit>(stackTrace.kt:19)
+Caused by: kotlin.NullPointerException
+	at StackTraceKt.getLengthOrThrowException(stackTrace.kt:12)
+    at StackTraceKt.<clinit>(stackTrace.kt:19)

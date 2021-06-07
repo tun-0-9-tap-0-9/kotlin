@@ -1,0 +1,14 @@
+INFO: try {
+    10 / 0
+    0
+} catch (e: RuntimeException) {
+    1
+} at 3 line will be replaced on: 1
+
+EXCEPTION: 10 / 0 at 10 line will produce exception:
+Exception java.lang.ArithmeticException: / by zero
+	at DivideByZeroKt.<clinit>(divideByZero.kt:10)
+
+EXCEPTION: 1 / 0 at 13 line will produce exception:
+Exception java.lang.ArithmeticException: / by zero
+	at DivideByZeroKt.<clinit>(divideByZero.kt:13)

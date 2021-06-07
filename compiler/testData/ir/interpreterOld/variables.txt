@@ -1,0 +1,7 @@
+INFO: evalWithVariables() at 32 line will be replaced on: 2.5
+
+INFO: evalWithVariablesLateinit() at 33 line will be replaced on: -2.25
+
+INFO: evalWithValueParameter(10) at 34 line will be replaced on: -2
+
+INFO: createObject(c) at 35 line will be replaced on: -2

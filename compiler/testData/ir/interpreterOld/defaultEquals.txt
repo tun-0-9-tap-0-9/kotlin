@@ -1,0 +1,3 @@
+INFO: A().equals(A()) at 14 line will be replaced on: false
+
+INFO: theSameObjectEquals(A()) at 15 line will be replaced on: true

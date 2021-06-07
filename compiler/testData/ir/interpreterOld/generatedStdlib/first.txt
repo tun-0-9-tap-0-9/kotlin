@@ -1,0 +1,10 @@
+INFO: "abcs".first() at 3 line will be replaced on: a
+
+INFO: UIntArray(3) { it.toUInt() }.first() at 4 line will be replaced on: 0
+
+INFO: listOf(1, "2", 3.0).first() as Int at 5 line will be replaced on: 1
+
+EXCEPTION: listOf<Int>().first() at 6 line will produce exception:
+Exception kotlin.NoSuchElementException: List is empty.
+	at _CollectionsKt.kotlin.collections.first(_Collections.kt:224)
+	at FirstKt.<clinit>(first.kt:6)

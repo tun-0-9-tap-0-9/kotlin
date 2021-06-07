@@ -1,0 +1,33 @@
+INFO: classCastWithException(10) at 39 line will be replaced on: Given value is 10 and its doubled value is 20
+
+INFO: classCastWithException("10") at 40 line will be replaced on: Given value isnt't Int; Exception message: "kotlin.String cannot be cast to kotlin.Int"
+
+INFO: safeClassCast(10) at 42 line will be replaced on: -1
+
+INFO: safeClassCast("10") at 43 line will be replaced on: 2
+
+INFO: unsafeClassCast<Int>() at 46 line will be replaced on: 1
+
+EXCEPTION: unsafeClassCast<String>() at 47 line will produce exception:
+Exception kotlin.ClassCastException: kotlin.Int cannot be cast to kotlin.String
+	at ClassCastExceptionKt.<clinit>(classCastException.kt:47)
+
+INFO: A<Int>().unsafeCast() at 49 line will be replaced on: 1
+
+EXCEPTION: A<String>().unsafeCast() at 50 line will produce exception:
+Exception kotlin.ClassCastException: kotlin.Int cannot be cast to kotlin.String
+	at ClassCastExceptionKt.<clinit>(classCastException.kt:50)
+
+EXCEPTION: getIntList<List<String>>().let {
+    it[0].length
+} at 52 line will produce exception:
+Exception kotlin.ClassCastException: kotlin.Int cannot be cast to kotlin.String
+	at ClassCastExceptionKt.<clinit>(classCastException.kt:53)
+
+EXCEPTION: getStringNullableList<List<String>>().let { it[0].length } at 55 line will produce exception:
+Exception kotlin.NullPointerException
+	at ClassCastExceptionKt.<clinit>(classCastException.kt:55)
+
+EXCEPTION: getLength(getStringNullableList<List<String>>()[0]) at 56 line will produce exception:
+Exception kotlin.IllegalArgumentException: Parameter specified as non-null is null: method ClassCastExceptionKt.getLength, parameter str
+	at ClassCastExceptionKt.<clinit>(classCastException.kt:56)

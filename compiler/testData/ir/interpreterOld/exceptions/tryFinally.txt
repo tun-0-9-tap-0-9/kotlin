@@ -1,0 +1,41 @@
+INFO: tryFinally(0) at 194 line will be replaced on: 0
+
+INFO: tryFinally(10) at 195 line will be replaced on: 10
+
+INFO: outerReturnTryFinally(10) at 196 line will be replaced on: 10
+
+INFO: tryFinally2() at 197 line will be replaced on: Inside try block; Inside finally; Outside try;
+
+EXCEPTION: tryCatchFinally() at 198 line will produce exception:
+Exception kotlin.IllegalArgumentException: In finally
+	at TryFinallyKt.tryCatchFinally(tryFinally.kt:50)
+	at TryFinallyKt.<clinit>(tryFinally.kt:198)
+
+INFO: exceptionInFinally(10) at 199 line will be replaced on: 0
+
+EXCEPTION: exceptionInFinally(0) at 200 line will produce exception:
+Exception java.lang.ArithmeticException: / by zero
+	at TryFinallyKt.exceptionInFinally(tryFinally.kt:39)
+	at TryFinallyKt.<clinit>(tryFinally.kt:200)
+
+INFO: returnTryFinally() at 201 line will be replaced on: OK
+
+INFO: tryCatchReturnFinally(10) at 202 line will be replaced on: 1
+
+INFO: tryCatchReturnFinally(0) at 203 line will be replaced on: 0
+
+INFO: tryFinallyContinue() at 204 line will be replaced on: 10
+
+INFO: tryFinallyBreak() at 205 line will be replaced on: 1
+
+INFO: tryCatchFinallyContinue(0) at 206 line will be replaced on: 10
+
+INFO: innerTryFinally(10) at 207 line will be replaced on: 1
+
+INFO: innerTryFinallyReturn(10) at 208 line will be replaced on: 20
+
+INFO: tryCatch(10) at 209 line will be replaced on: 0
+
+INFO: tryCatch(0) at 210 line will be replaced on: -1
+
+INFO: tryTryFinally() at 211 line will be replaced on: -1

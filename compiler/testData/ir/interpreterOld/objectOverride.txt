@@ -1,0 +1,7 @@
+INFO: A.defaultGet() at 26 line will be replaced on: Object
+
+INFO: A.get() at 27 line will be replaced on: A
+
+INFO: C.defaultGet() at 28 line will be replaced on: Object
+
+INFO: C.get() at 29 line will be replaced on: Default: Object; from super B: B; from current:  companion C

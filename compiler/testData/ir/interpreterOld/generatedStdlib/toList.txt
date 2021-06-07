@@ -1,0 +1,15 @@
+INFO: intArrayOf().toList().size at 3 line will be replaced on: 0
+
+INFO: intArrayOf(1).toList().size at 4 line will be replaced on: 1
+
+INFO: intArrayOf(1, 2, 3).toList().size at 5 line will be replaced on: 3
+
+INFO: arrayOf(1, "2", 3.0, "Some other value").toList()[3] as String at 6 line will be replaced on: Some other value
+
+INFO: setOf(1, 2, 2, 3, 3).toList().joinToString() at 8 line will be replaced on: 1, 2, 3
+
+INFO: mapOf(1 to "One", 2 to "Two", 3 to "Three").entries.toList().joinToString() at 9 line will be replaced on: 1=One, 2=Two, 3=Three
+
+INFO: "String".toList().joinToString() at 11 line will be replaced on: S, t, r, i, n, g
+
+INFO: sequenceOf(3, 2, 1).toList().joinToString() at 13 line will be replaced on: 3, 2, 1

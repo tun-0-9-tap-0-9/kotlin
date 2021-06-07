@@ -1,0 +1,23 @@
+INFO: sourceLocation() at 6 line will be replaced on: logIntrinsic.kt:6
+
+INFO: getSomeInfo() at 7 line will be replaced on: other.kt:7
+
+INFO: log("Function start") (it's default argument) at 11 line will be replaced on: logIntrinsic.kt:11
+
+INFO: log("Function start") at 11 line will be replaced on: Function start at logIntrinsic.kt:11
+
+INFO: log("Start summation of $a and $b") (it's default argument) at 12 line will be replaced on: logIntrinsic.kt:12
+
+INFO: log("Result of summation is ${a + b}") (it's default argument) at 13 line will be replaced on: logIntrinsic.kt:13
+
+INFO: log("Function end", "<WITHOUT FILE>") at 14 line will be replaced on: Function end at <WITHOUT FILE>
+
+INFO: sumWithLog(2, 5) at 19 line will be replaced on:
+Function start at logIntrinsic.kt:11
+Start summation of 2 and 5 at logIntrinsic.kt:12
+Result of summation is 7 at logIntrinsic.kt:13
+Function end at <WITHOUT FILE>
+
+INFO: return sourceLocation() at 7 line will be replaced on: other.kt:7
+
+INFO: fileNameAndLine: String = sourceLocation() at 11 line will be replaced on: other.kt:11

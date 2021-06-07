@@ -1,0 +1,37 @@
+INFO: getArray(arrayOf(1, 2.0, "3")) as? Array<Int> == null at 6 line will be replaced on: true
+
+INFO: getArray(arrayOf(1, 2, 3)) as? Array<Int> == null at 7 line will be replaced on: false
+
+INFO: getArray(arrayOf(1, 2, 3)) as? Array<Double> == null at 8 line will be replaced on: true
+
+INFO: getArray(arrayOf(1, 2, 3)) as? Array<Number> == null at 9 line will be replaced on: false
+
+INFO: arrayOf(arrayOf(1, 2, 3)) as? Array<Array<String>> == null at 11 line will be replaced on: true
+
+INFO: arrayOf(arrayOf(1, 2, 3)) as? Array<Array<Int>> == null at 12 line will be replaced on: false
+
+INFO: arrayOf(arrayOf(1, 2, 3)) as? Array<Array<Number>> == null at 13 line will be replaced on: false
+
+INFO: arrayOf(arrayOf(1, 2, 3), arrayOf("1", "2", "3"))[0] as? Array<Int> == null at 15 line will be replaced on: false
+
+INFO: arrayOf(arrayOf(1, 2, 3), arrayOf("1", "2", "3"))[1] as? Array<String> == null at 16 line will be replaced on: false
+
+INFO: combineArrays(arrayOf(1, 2, 3), arrayOf(1, 2, 3)) as? Array<Array<Int>> == null at 21 line will be replaced on: true
+
+INFO: combineArrays(arrayOf(1, 2, 3), arrayOf(1, 2, 3)) as? Array<Array<Number>> == null at 22 line will be replaced on: true
+
+INFO: combineArrays(arrayOf(1, 2, 3), arrayOf(1, 2, 3)) as? Array<Array<Any>> == null at 23 line will be replaced on: false
+
+INFO: combineArrays(arrayOf(1, 2, 3), arrayOf(1, 2, 3)) as? Array<Array<*>> == null at 24 line will be replaced on: false
+
+INFO: combineArrays(arrayOf(1, 2, 3), arrayOf("1", "2", "3"))[0] as? Array<Int> == null at 25 line will be replaced on: false
+
+INFO: combineArrays(arrayOf(1, 2, 3), arrayOf("1", "2", "3"))[1] as? Array<Int> == null at 26 line will be replaced on: true
+
+INFO: combineArrays(arrayOf(1, 2, 3), arrayOf("1", "2", "3"))[1] as? Array<String> == null at 27 line will be replaced on: false
+
+INFO: echo<Any>(arrayOf(1, 2, 3)) as? Array<Int> == null at 31 line will be replaced on: false
+
+INFO: echo<Any>(arrayOf(arrayOf(1, 2, 3))) as? Array<Array<Int>> == null at 32 line will be replaced on: false
+
+INFO: echo<Any>(arrayOf(echo<Any>(1), echo<Any>(2), echo<Any>(3))) as? Array<Int> == null at 33 line will be replaced on: true

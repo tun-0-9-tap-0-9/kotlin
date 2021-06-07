@@ -1,0 +1,23 @@
+INFO: 1 is Int at 11 line will be replaced on: true
+
+INFO: 2 !is Int at 12 line will be replaced on: false
+
+INFO: A() is Base at 14 line will be replaced on: true
+
+INFO: A() !is Base at 15 line will be replaced on: false
+
+INFO: A() is A at 16 line will be replaced on: true
+
+INFO: A() !is A at 17 line will be replaced on: false
+
+INFO: B() is Base at 19 line will be replaced on: true
+
+INFO: B() !is Base at 20 line will be replaced on: false
+
+INFO: B() is A at 21 line will be replaced on: true
+
+INFO: B() !is A at 22 line will be replaced on: false
+
+INFO: B() is B at 23 line will be replaced on: true
+
+INFO: B() !is B at 24 line will be replaced on: false
