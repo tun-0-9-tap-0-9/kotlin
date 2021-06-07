@@ -331,7 +331,12 @@ class IrBuiltInsOverFir(
     override lateinit var dataClassArrayMemberToStringSymbol: IrSimpleFunctionSymbol private set
 
     override lateinit var checkNotNullSymbol: IrSimpleFunctionSymbol private set
-    override lateinit var arrayOfNulls: IrSimpleFunctionSymbol private set
+    override val arrayOfNulls: IrSimpleFunctionSymbol by lazy {
+        findFunctions(kotlinPackage, Name.identifier("arrayOfNulls")).first {
+            it.owner.dispatchReceiverParameter == null && it.owner.valueParameters.size == 1 &&
+                    it.owner.valueParameters[0].type == intType
+        }
+    }
 
     override lateinit var lessFunByOperandType: Map<IrClassifierSymbol, IrSimpleFunctionSymbol> private set
     override lateinit var lessOrEqualFunByOperandType: Map<IrClassifierSymbol, IrSimpleFunctionSymbol> private set
@@ -341,7 +346,7 @@ class IrBuiltInsOverFir(
     init {
         with(internalIrPackage) {
 
-            fun addBuiltinFunctionSymbol(
+            fun addBuiltinOperatorSymbol(
                 name: String,
                 returnType: IrType,
                 vararg valueParameterTypes: Pair<String, IrType>,
@@ -355,21 +360,21 @@ class IrBuiltInsOverFir(
             primitiveFloatingPointIrTypes.forEach { fpType ->
                 _ieee754equalsFunByOperandType.put(
                     fpType.classifierOrFail,
-                    addBuiltinFunctionSymbol(BuiltInOperatorNames.IEEE754_EQUALS, booleanType, "arg0" to fpType.makeNullable(), "arg1" to fpType.makeNullable())
+                    addBuiltinOperatorSymbol(BuiltInOperatorNames.IEEE754_EQUALS, booleanType, "arg0" to fpType.makeNullable(), "arg1" to fpType.makeNullable())
                 )
             }
-            eqeqeqSymbol = addBuiltinFunctionSymbol(BuiltInOperatorNames.EQEQEQ, booleanType, "" to anyNType, "" to anyNType)
-            eqeqSymbol = addBuiltinFunctionSymbol(BuiltInOperatorNames.EQEQ, booleanType, "" to anyNType, "" to anyNType)
-            throwCceSymbol = addBuiltinFunctionSymbol(BuiltInOperatorNames.THROW_CCE, nothingType)
-            throwIseSymbol = addBuiltinFunctionSymbol(BuiltInOperatorNames.THROW_ISE, nothingType)
-            andandSymbol = addBuiltinFunctionSymbol(BuiltInOperatorNames.ANDAND, booleanType, "" to booleanType, "" to booleanType)
-            ororSymbol = addBuiltinFunctionSymbol(BuiltInOperatorNames.OROR, booleanType, "" to booleanType, "" to booleanType)
+            eqeqeqSymbol = addBuiltinOperatorSymbol(BuiltInOperatorNames.EQEQEQ, booleanType, "" to anyNType, "" to anyNType)
+            eqeqSymbol = addBuiltinOperatorSymbol(BuiltInOperatorNames.EQEQ, booleanType, "" to anyNType, "" to anyNType)
+            throwCceSymbol = addBuiltinOperatorSymbol(BuiltInOperatorNames.THROW_CCE, nothingType)
+            throwIseSymbol = addBuiltinOperatorSymbol(BuiltInOperatorNames.THROW_ISE, nothingType)
+            andandSymbol = addBuiltinOperatorSymbol(BuiltInOperatorNames.ANDAND, booleanType, "" to booleanType, "" to booleanType)
+            ororSymbol = addBuiltinOperatorSymbol(BuiltInOperatorNames.OROR, booleanType, "" to booleanType, "" to booleanType)
             noWhenBranchMatchedExceptionSymbol =
-                addBuiltinFunctionSymbol(BuiltInOperatorNames.NO_WHEN_BRANCH_MATCHED_EXCEPTION, nothingType)
+                addBuiltinOperatorSymbol(BuiltInOperatorNames.NO_WHEN_BRANCH_MATCHED_EXCEPTION, nothingType)
             illegalArgumentExceptionSymbol =
-                addBuiltinFunctionSymbol(BuiltInOperatorNames.ILLEGAL_ARGUMENT_EXCEPTION, nothingType, "" to stringType)
-            dataClassArrayMemberHashCodeSymbol = addBuiltinFunctionSymbol("dataClassArrayMemberHashCode", intType, "" to anyType)
-            dataClassArrayMemberToStringSymbol = addBuiltinFunctionSymbol("dataClassArrayMemberToString", stringType, "" to anyNType)
+                addBuiltinOperatorSymbol(BuiltInOperatorNames.ILLEGAL_ARGUMENT_EXCEPTION, nothingType, "" to stringType)
+            dataClassArrayMemberHashCodeSymbol = addBuiltinOperatorSymbol("dataClassArrayMemberHashCode", intType, "" to anyType)
+            dataClassArrayMemberToStringSymbol = addBuiltinOperatorSymbol("dataClassArrayMemberToString", stringType, "" to anyNType)
 
             checkNotNullSymbol = run {
                 val typeParameter: IrTypeParameter = irFactory.createTypeParameter(
@@ -392,7 +397,7 @@ class IrBuiltInsOverFir(
             }
 
             fun List<IrType>.defineComparisonOperatorForEachIrType(name: String) =
-                associate { it.classifierOrFail to addBuiltinFunctionSymbol(name, booleanType, "" to it, "" to it) }
+                associate { it.classifierOrFail to addBuiltinOperatorSymbol(name, booleanType, "" to it, "" to it) }
 
             lessFunByOperandType = primitiveIrTypesWithComparisons.defineComparisonOperatorForEachIrType(BuiltInOperatorNames.LESS)
             lessOrEqualFunByOperandType =
@@ -402,12 +407,6 @@ class IrBuiltInsOverFir(
             greaterFunByOperandType = primitiveIrTypesWithComparisons.defineComparisonOperatorForEachIrType(BuiltInOperatorNames.GREATER)
 
         }
-
-        arrayOfNulls =
-            kotlinIrPackage.createFunction(kotlinPackage, "arrayOfNulls", arrayClass.defaultType, arrayOf("noOfElements" to intType)).also {
-                val typeParameter = it.addTypeParameter("T", anyNType)
-                it.returnType = arrayClass.typeWithArguments(listOf(typeParameter.defaultType as IrTypeArgument))
-            }.symbol
     }
 
     override val unsignedArrays: Set<IrClassSymbol> = UnsignedType.values().mapNotNullTo(mutableSetOf()) { unsignedType ->
@@ -622,7 +621,7 @@ class IrBuiltInsOverFir(
                 kind = classKind
                 modality = classModality
                 isInline = classIsInline
-                origin = BUILTIN_CLASS
+                origin = IrDeclarationOrigin.IR_EXTERNAL_DECLARATION_STUB
                 builderBlock()
                 irFactory.createClass(
                     startOffset, endOffset, origin, symbol, name, kind, visibility, modality,
@@ -652,7 +651,7 @@ class IrBuiltInsOverFir(
         )
 
     private fun IrClass.createConstructor(
-        origin: IrDeclarationOrigin = BUILTIN_CLASS_CONSTRUCTOR,
+        origin: IrDeclarationOrigin = object : IrDeclarationOriginImpl("BUILTIN_CLASS_CONSTRUCTOR") {},
         isPrimary: Boolean = true,
         visibility: DescriptorVisibility = DescriptorVisibilities.PUBLIC,
         build: IrConstructor.() -> Unit = {}
@@ -681,7 +680,7 @@ class IrBuiltInsOverFir(
 
     private fun IrClass.createMemberFunction(
         name: String, returnType: IrType, vararg valueParameterTypes: Pair<String, IrType>,
-        origin: IrDeclarationOrigin = BUILTIN_CLASS_METHODO,
+        origin: IrDeclarationOrigin = object : IrDeclarationOriginImpl("BUILTIN_CLASS_METHOD") {},
         modality: Modality = Modality.FINAL,
         isOperator: Boolean = false,
         build: IrFunctionBuilder.() -> Unit = {}
@@ -704,7 +703,7 @@ class IrBuiltInsOverFir(
             functions.find {
                 it.name == fn.name && it.typeParameters.count() == fn.typeParameters.count() &&
                         it.valueParameters.count() == fn.valueParameters.count() &&
-                        it.valueParameters.zip(fn.valueParameters).all { (l,r) -> l.type == r.type }
+                        it.valueParameters.zip(fn.valueParameters).all { (l, r) -> l.type == r.type }
             }?.let {
                 fn.overriddenSymbols += it.symbol
             }
@@ -713,7 +712,7 @@ class IrBuiltInsOverFir(
 
     private fun IrClass.createMemberFunction(
         name: Name, returnType: IrType, vararg valueParameterTypes: Pair<String, IrType>,
-        origin: IrDeclarationOrigin = BUILTIN_CLASS_METHODO,
+        origin: IrDeclarationOrigin = object : IrDeclarationOriginImpl("BUILTIN_CLASS_METHOD") {},
         modality: Modality = Modality.FINAL,
         isOperator: Boolean = false,
         build: IrFunctionBuilder.() -> Unit = {}
@@ -727,7 +726,7 @@ class IrBuiltInsOverFir(
         name: String,
         returnType: IrType,
         valueParameterTypes: Array<out Pair<String, IrType>>,
-        origin: IrDeclarationOrigin = BUILTIN_TOPLEVEL_FUNCTION,
+        origin: IrDeclarationOrigin = IrDeclarationOrigin.IR_EXTERNAL_DECLARATION_STUB,
         modality: Modality = Modality.FINAL,
         isOperator: Boolean = false,
         build: IrFunctionBuilder.() -> Unit = {}
@@ -754,7 +753,7 @@ class IrBuiltInsOverFir(
         name: String,
         returnType: IrType,
         valueParameterTypes: Array<out Pair<String, IrType>>,
-        origin: IrDeclarationOrigin = BUILTIN_TOPLEVEL_FUNCTION,
+        origin: IrDeclarationOrigin = IrDeclarationOrigin.IR_EXTERNAL_DECLARATION_STUB,
         modality: Modality = Modality.FINAL,
         isOperator: Boolean = false
     ) = createFunction(
@@ -764,11 +763,11 @@ class IrBuiltInsOverFir(
 
     private fun IrClass.addArrayMembers(elementType: IrType) {
         addConstructor {
-            origin = BUILTIN_CLASS_CONSTRUCTOR
+            origin = object : IrDeclarationOriginImpl("BUILTIN_CLASS_CONSTRUCTOR") {}
             returnType = defaultType
             isPrimary = true
         }.also {
-            it.addValueParameter("size", intType, BUILTIN_CLASS_CONSTRUCTOR)
+            it.addValueParameter("size", intType, object : IrDeclarationOriginImpl("BUILTIN_CLASS_CONSTRUCTOR") {})
         }
         createMemberFunction(OperatorNameConventions.GET, elementType, "index" to intType, isOperator = true)
         createMemberFunction(OperatorNameConventions.SET, unitType, "index" to intType, "value" to elementType, isOperator = true)
