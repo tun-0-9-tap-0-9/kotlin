@@ -12,7 +12,9 @@ import org.jetbrains.kotlin.backend.jvm.lower.SingletonObjectJvmStaticTransforme
 import org.jetbrains.kotlin.backend.jvm.serialization.deserializeClassFromByteArray
 import org.jetbrains.kotlin.backend.jvm.serialization.deserializeIrFileFromByteArray
 import org.jetbrains.kotlin.codegen.JvmSamTypeFactory
-import org.jetbrains.kotlin.config.LanguageVersionSettings
+import org.jetbrains.kotlin.config.CompilerConfiguration
+import org.jetbrains.kotlin.config.JVMConfigurationKeys
+import org.jetbrains.kotlin.config.languageVersionSettings
 import org.jetbrains.kotlin.descriptors.*
 import org.jetbrains.kotlin.descriptors.annotations.FilteredAnnotations
 import org.jetbrains.kotlin.incremental.components.NoLookupLocation
@@ -29,7 +31,6 @@ import org.jetbrains.kotlin.ir.expressions.IrDelegatingConstructorCall
 import org.jetbrains.kotlin.ir.expressions.impl.IrDelegatingConstructorCallImpl
 import org.jetbrains.kotlin.ir.symbols.impl.DescriptorlessExternalPackageFragmentSymbol
 import org.jetbrains.kotlin.ir.util.DeclarationStubGenerator
-import org.jetbrains.kotlin.ir.util.ExternalDependenciesGenerator
 import org.jetbrains.kotlin.ir.util.SymbolTable
 import org.jetbrains.kotlin.ir.util.constructors
 import org.jetbrains.kotlin.load.java.JvmAnnotationNames
@@ -60,10 +61,14 @@ import org.jetbrains.kotlin.types.KotlinType
 import org.jetbrains.kotlin.types.typeUtil.replaceAnnotations
 
 open class JvmGeneratorExtensionsImpl(
+    configuration: CompilerConfiguration,
     private val generateFacades: Boolean = true,
-    override val irDeserializationEnabled: Boolean = false,
 ) : GeneratorExtensions(), JvmGeneratorExtensions {
     override val classNameOverride: MutableMap<IrClass, JvmClassName> = mutableMapOf()
+
+    override val irDeserializationEnabled: Boolean = configuration.getBoolean(JVMConfigurationKeys.SERIALIZE_IR)
+
+    override val cachedFields = CachedFieldsForObjectInstances(IrFactoryImpl, configuration.languageVersionSettings)
 
     override val samConversion: SamConversion
         get() = JvmSamConversion
@@ -109,18 +114,6 @@ open class JvmGeneratorExtensionsImpl(
         }
     }
 
-    @Volatile
-    private var cachedFields: CachedFieldsForObjectInstances? = null
-
-    override fun getCachedFields(irFactory: IrFactory, languageVersionSettings: LanguageVersionSettings): CachedFieldsForObjectInstances {
-        cachedFields?.let { return it }
-        synchronized(this) {
-            cachedFields?.let { return it }
-            cachedFields = CachedFieldsForObjectInstances(irFactory, languageVersionSettings)
-            return cachedFields!!
-        }
-    }
-
     override fun deserializeLazyClass(
         irClass: IrLazyClass,
         stubGenerator: DeclarationStubGenerator,
@@ -129,7 +122,6 @@ open class JvmGeneratorExtensionsImpl(
     ): Boolean {
         val serializedIr = (irClass.source as? KotlinJvmBinarySourceElement)?.binaryClass?.classHeader?.serializedIr ?: return false
         deserializeClassFromByteArray(serializedIr, stubGenerator, irClass, allowErrorNodes)
-        val cachedFields = getCachedFields(stubGenerator.irBuiltIns.irFactory, stubGenerator.irBuiltIns.languageVersionSettings)
         irClass.transform(SingletonObjectJvmStaticTransformer(stubGenerator.irBuiltIns, cachedFields), null)
         return true
     }
@@ -142,7 +134,6 @@ open class JvmGeneratorExtensionsImpl(
     ): Boolean {
         val serializedIr = (irClass.source as? JvmPackagePartSource)?.knownJvmBinaryClass?.classHeader?.serializedIr ?: return false
         deserializeIrFileFromByteArray(serializedIr, stubGenerator, irClass, allowErrorNodes)
-        val cachedFields = getCachedFields(stubGenerator.irBuiltIns.irFactory, stubGenerator.irBuiltIns.languageVersionSettings)
         irClass.transform(SingletonObjectJvmStaticTransformer(stubGenerator.irBuiltIns, cachedFields), null)
         return true
     }
