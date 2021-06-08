@@ -175,6 +175,8 @@ open class JvmGeneratorExtensionsImpl(
     private val kotlinJvmInternalPackage =
         IrExternalPackageFragmentImpl(DescriptorlessExternalPackageFragmentSymbol(), JvmAnnotationNames.KOTLIN_JVM_INTERNAL)
 
+    private val specialAnnotationConstructors = mutableListOf<IrConstructor>()
+
     private fun createSpecialAnnotationClass(fqn: FqName, parent: IrPackageFragment) =
         IrFactoryImpl.buildClass {
             kind = ClassKind.ANNOTATION_CLASS
@@ -184,6 +186,8 @@ open class JvmGeneratorExtensionsImpl(
             this.parent = parent
             addConstructor {
                 isPrimary = true
+            }.also { constructor ->
+                specialAnnotationConstructors.add(constructor)
             }
         }
 
@@ -211,14 +215,13 @@ open class JvmGeneratorExtensionsImpl(
 
     override fun registerDeclarations(symbolTable: SymbolTable) {
         val signatureComputer = IdSignatureSerializer(JvmManglerIr)
-        listOf(flexibleNullabilityAnnotationConstructor, enhancedNullabilityAnnotationConstructor, rawTypeAnnotationConstructor)
-            .forEach { constructor ->
-                symbolTable.declareConstructor(
-                    signatureComputer.composePublicIdSignature(constructor),
-                    { constructor.symbol },
-                    { constructor }
-                )
-            }
+        specialAnnotationConstructors.forEach { constructor ->
+            symbolTable.declareConstructor(
+                signatureComputer.composePublicIdSignature(constructor),
+                { constructor.symbol },
+                { constructor }
+            )
+        }
         super.registerDeclarations(symbolTable)
     }
 
