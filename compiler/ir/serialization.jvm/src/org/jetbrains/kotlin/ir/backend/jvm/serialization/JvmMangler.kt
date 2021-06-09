@@ -19,9 +19,11 @@ import org.jetbrains.kotlin.descriptors.DeclarationDescriptor
 import org.jetbrains.kotlin.descriptors.FunctionDescriptor
 import org.jetbrains.kotlin.descriptors.PropertyDescriptor
 import org.jetbrains.kotlin.idea.MainFunctionDetector
-import org.jetbrains.kotlin.ir.declarations.*
+import org.jetbrains.kotlin.ir.declarations.IrDeclaration
+import org.jetbrains.kotlin.ir.declarations.IrDeclarationOrigin
+import org.jetbrains.kotlin.ir.declarations.IrFunction
+import org.jetbrains.kotlin.ir.declarations.IrField
 import org.jetbrains.kotlin.ir.util.isFromJava
-import org.jetbrains.kotlin.ir.util.resolveFakeOverride
 import org.jetbrains.kotlin.load.java.descriptors.JavaMethodDescriptor
 import org.jetbrains.kotlin.load.java.lazy.descriptors.isJavaField
 
@@ -44,10 +46,8 @@ abstract class AbstractJvmManglerIr : IrBasedKotlinManglerImpl() {
         override fun copy(newMode: MangleMode): IrMangleComputer =
             JvmIrManglerComputer(builder, newMode)
 
-        override fun addReturnTypeSpecialCase(irFunction: IrFunction): Boolean {
-            val trueFunction = (irFunction as? IrSimpleFunction)?.resolveFakeOverride() ?: return false
-            return trueFunction.isFromJava()
-        }
+        override fun addReturnTypeSpecialCase(irFunction: IrFunction): Boolean =
+            irFunction.isFromJava()
     }
 
     override fun getExportChecker(): KotlinExportChecker<IrDeclaration> = exportChecker
