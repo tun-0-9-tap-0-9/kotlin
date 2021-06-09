@@ -36,6 +36,7 @@ object ImplementationConfigurator : AbstractFirTreeImplementationConfigurator() 
         }
 
         impl(anonymousObject)
+        noImpl(anonymousObjectExpression)
 
         impl(typeAlias)
 
@@ -484,7 +485,6 @@ object ImplementationConfigurator : AbstractFirTreeImplementationConfigurator() 
             "FirTypeProjectionWithVarianceImpl",
             "FirCallableReferenceAccessImpl",
             "FirThisReceiverExpressionImpl",
-            "FirAnonymousObjectImpl",
             "FirQualifiedAccessExpressionImpl",
             "FirFunctionCallImpl",
             "FirAnonymousFunctionImpl",
