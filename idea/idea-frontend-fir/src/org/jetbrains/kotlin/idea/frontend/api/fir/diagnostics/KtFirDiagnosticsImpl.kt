@@ -1798,6 +1798,16 @@ internal class OverridingFinalMemberImpl(
     override val firDiagnostic: FirPsiDiagnostic by weakRef(firDiagnostic)
 }
 
+internal class ReturnTypeMismatchOnInheritanceImpl(
+    override val classOrObject: KtClassLikeSymbol,
+    override val conflictingDeclaration1: KtCallableSymbol,
+    override val conflictingDeclaration2: KtCallableSymbol,
+    firDiagnostic: FirPsiDiagnostic<*>,
+    override val token: ValidityToken,
+) : KtFirDiagnostic.ReturnTypeMismatchOnInheritance(), KtAbstractFirDiagnostic<KtClassOrObject> {
+    override val firDiagnostic: FirPsiDiagnostic<*> by weakRef(firDiagnostic)
+}
+
 internal class AbstractMemberNotImplementedImpl(
     override val classOrObject: KtClassLikeSymbol,
     override val missingDeclaration: KtCallableSymbol,
