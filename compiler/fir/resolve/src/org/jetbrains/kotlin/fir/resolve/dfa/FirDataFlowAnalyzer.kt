@@ -252,12 +252,16 @@ abstract class FirDataFlowAnalyzer<FLOW : Flow>(
         return FirControlFlowGraphReferenceImpl(graph)
     }
 
-    fun visitPostponedAnonymousFunction(anonymousFunction: FirAnonymousFunction) {
-        val (enterNode, exitNode) = graphBuilder.visitPostponedAnonymousFunction(anonymousFunction)
+    fun visitPostponedAnonymousFunction(anonymousFunctionExpression: FirAnonymousFunctionExpression) {
+        val (enterNode, exitNode) = graphBuilder.visitPostponedAnonymousFunction(anonymousFunctionExpression)
         enterNode.mergeIncomingFlow()
-        enterCapturingStatement(enterNode, anonymousFunction)
+        enterCapturingStatement(enterNode, anonymousFunctionExpression.anonymousFunction)
         exitNode.mergeIncomingFlow()
         enterNode.flow = enterNode.flow.fork()
+    }
+
+    fun exitAnonymousFunctionExpression(anonymousFunctionExpression: FirAnonymousFunctionExpression) {
+        graphBuilder.exitAnonymousFunctionExpression(anonymousFunctionExpression).mergeIncomingFlow()
     }
 
     // ----------------------------------- Classes -----------------------------------
