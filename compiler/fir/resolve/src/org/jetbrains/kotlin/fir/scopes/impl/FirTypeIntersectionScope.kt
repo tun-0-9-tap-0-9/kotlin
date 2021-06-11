@@ -344,7 +344,11 @@ class FirTypeIntersectionScope private constructor(
         newModality: Modality?,
         newVisibility: Visibility,
     ): FirPropertySymbol {
-        val newSymbol = FirIntersectionOverridePropertySymbol(mostSpecific.callableId, overrides)
+        val callableId = CallableId(
+            dispatchReceiverType.classId ?: mostSpecific.dispatchReceiverClassOrNull()?.classId!!,
+            mostSpecific.fir.name
+        )
+        val newSymbol = FirIntersectionOverridePropertySymbol(callableId, overrides)
         val mostSpecificProperty = mostSpecific.fir
         FirFakeOverrideGenerator.createCopyForFirProperty(
             newSymbol, mostSpecificProperty, session, FirDeclarationOrigin.IntersectionOverride,
