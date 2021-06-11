@@ -10,7 +10,7 @@ import org.jetbrains.kotlin.fir.declarations.FirCallableDeclaration
 import org.jetbrains.kotlin.fir.diagnostics.ConeDiagnostic
 import org.jetbrains.kotlin.fir.render
 import org.jetbrains.kotlin.fir.resolve.calls.Candidate
-import org.jetbrains.kotlin.fir.symbols.AbstractFirBasedSymbol
+import org.jetbrains.kotlin.fir.symbols.FirBasedSymbol
 import org.jetbrains.kotlin.fir.symbols.impl.FirCallableSymbol
 import org.jetbrains.kotlin.fir.symbols.impl.FirClassLikeSymbol
 import org.jetbrains.kotlin.fir.symbols.impl.FirTypeParameterSymbol
@@ -45,7 +45,7 @@ class ConeUnresolvedNameError(val name: Name) : ConeUnresolvedError() {
 }
 
 class ConeHiddenCandidateError(
-    val candidateSymbol: AbstractFirBasedSymbol<*>
+    val candidateSymbol: FirBasedSymbol<*>
 ) : ConeDiagnostic() {
     override val reason: String get() = "HIDDEN: ${describeSymbol(candidateSymbol)} is invisible"
 }
@@ -75,7 +75,7 @@ class ConeAmbiguityError(val name: Name, val applicability: CandidateApplicabili
     override val reason: String get() = "Ambiguity: $name, ${candidates.map { describeSymbol(it.symbol) }}"
 }
 
-class ConeOperatorAmbiguityError(val candidates: Collection<AbstractFirBasedSymbol<*>>) : ConeDiagnostic() {
+class ConeOperatorAmbiguityError(val candidates: Collection<FirBasedSymbol<*>>) : ConeDiagnostic() {
     override val reason: String get() = "Operator overload ambiguity. Compatible candidates: ${candidates.map { describeSymbol(it) }}"
 }
 
@@ -133,7 +133,7 @@ class ConeImportFromSingleton(val name: Name) : ConeDiagnostic() {
     override val reason: String get() = "Import from singleton $name is not allowed"
 }
 
-private fun describeSymbol(symbol: AbstractFirBasedSymbol<*>): String {
+private fun describeSymbol(symbol: FirBasedSymbol<*>): String {
     return when (symbol) {
         is FirClassLikeSymbol<*> -> symbol.classId.asString()
         is FirCallableSymbol<*> -> symbol.callableId.toString()
