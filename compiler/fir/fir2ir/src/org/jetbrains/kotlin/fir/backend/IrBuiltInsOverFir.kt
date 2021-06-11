@@ -63,7 +63,9 @@ class IrBuiltInsOverFir(
     private val kotlinIrPackage = createPackage(kotlinPackage)
     private val kotlinCollectionsIrPackage = createPackage(kotlinCollectionsPackage)
 
-    override lateinit var booleanNotSymbol: IrSimpleFunctionSymbol private set
+    override val booleanNotSymbol: IrSimpleFunctionSymbol by lazy {
+        booleanClass.owner.functions.first { it.name == OperatorNameConventions.NOT && it.returnType == booleanType }.symbol
+    }
 
     private val any by createClass(kotlinIrPackage, IdSignatureValues.any) {
         createConstructor()
@@ -95,7 +97,7 @@ class IrBuiltInsOverFir(
 
     private val boolean by createClass(kotlinIrPackage, IdSignatureValues._boolean) {
         // TODO: dangerous dependency on call sequence, consider making extended BuiltInsClass to trigger lazy initialization
-        booleanNotSymbol = createMemberFunction(OperatorNameConventions.NOT, defaultType, isOperator = true).symbol
+        createMemberFunction(OperatorNameConventions.NOT, booleanType, isOperator = true).symbol
         createMemberFunction(OperatorNameConventions.AND, booleanType, "other" to booleanType) { isInfix = true }
         createMemberFunction(OperatorNameConventions.OR, booleanType, "other" to booleanType) { isInfix = true }
         createMemberFunction(OperatorNameConventions.XOR, booleanType, "other" to booleanType) { isInfix = true }
@@ -183,7 +185,7 @@ class IrBuiltInsOverFir(
     override val listClass: IrClassSymbol get() = list.klass
     private val map by loadClass(kotlinCollectionsPackage, "Map")
     override val mapClass: IrClassSymbol get() = map.klass
-    private val mapEntry by BuiltInsClass({ referenceNestedClass(mapClass, "Entry")!! })
+    private val mapEntry by BuiltInsClass({ true to referenceNestedClass(mapClass, "Entry")!! })
     override val mapEntryClass: IrClassSymbol get() = mapEntry.klass
 
     private val iterable by loadClass(StandardNames.FqNames.iterable)
@@ -198,7 +200,7 @@ class IrBuiltInsOverFir(
     override val mutableListClass: IrClassSymbol get() = mutableList.klass
     private val mutableMap by loadClass(StandardNames.FqNames.mutableMap)
     override val mutableMapClass: IrClassSymbol get() = mutableMap.klass
-    private val mutableMapEntry by BuiltInsClass({ referenceNestedClass(StandardNames.FqNames.mutableMapEntry)!! })
+    private val mutableMapEntry by BuiltInsClass({ true to referenceNestedClass(StandardNames.FqNames.mutableMapEntry)!! })
     override val mutableMapEntryClass: IrClassSymbol get() = mutableMapEntry.klass
 
     private val mutableIterable by loadClass(StandardNames.FqNames.mutableIterable)
@@ -263,29 +265,40 @@ class IrBuiltInsOverFir(
             else -> intType
         }
 
-    override val booleanArray: IrClassSymbol = kotlinIrPackage.createClass(PrimitiveType.BOOLEAN.arrayTypeName) { addArrayMembers(booleanType) }
-    override val charArray: IrClassSymbol = kotlinIrPackage.createClass(PrimitiveType.CHAR.arrayTypeName) { addArrayMembers(charType) }
-    override val byteArray: IrClassSymbol = kotlinIrPackage.createClass(PrimitiveType.BYTE.arrayTypeName) { addArrayMembers(byteType) }
-    override val shortArray: IrClassSymbol = kotlinIrPackage.createClass(PrimitiveType.SHORT.arrayTypeName) { addArrayMembers(shortType) }
-    override val intArray: IrClassSymbol = kotlinIrPackage.createClass(PrimitiveType.INT.arrayTypeName) { addArrayMembers(intType) }
-    override val longArray: IrClassSymbol = kotlinIrPackage.createClass(PrimitiveType.LONG.arrayTypeName) { addArrayMembers(longType) }
-    override val floatArray: IrClassSymbol = kotlinIrPackage.createClass(PrimitiveType.FLOAT.arrayTypeName) { addArrayMembers(floatType) }
-    override val doubleArray: IrClassSymbol = kotlinIrPackage.createClass(PrimitiveType.DOUBLE.arrayTypeName) { addArrayMembers(doubleType) }
+    private val _booleanArray by createPrimitiveArrayClass(kotlinIrPackage, PrimitiveType.BOOLEAN)
+    private val _charArray by createPrimitiveArrayClass(kotlinIrPackage, PrimitiveType.CHAR)
+    private val _byteArray by createPrimitiveArrayClass(kotlinIrPackage, PrimitiveType.BYTE)
+    private val _shortArray by createPrimitiveArrayClass(kotlinIrPackage, PrimitiveType.SHORT)
+    private val _intArray by createPrimitiveArrayClass(kotlinIrPackage, PrimitiveType.INT)
+    private val _longArray by createPrimitiveArrayClass(kotlinIrPackage, PrimitiveType.LONG)
+    private val _floatArray by createPrimitiveArrayClass(kotlinIrPackage, PrimitiveType.FLOAT)
+    private val _doubleArray by createPrimitiveArrayClass(kotlinIrPackage, PrimitiveType.DOUBLE)
 
-    override val primitiveArraysToPrimitiveTypes: Map<IrClassSymbol, PrimitiveType> = mapOf(
-        booleanArray to PrimitiveType.BOOLEAN,
-        charArray to PrimitiveType.CHAR,
-        byteArray to PrimitiveType.BYTE,
-        shortArray to PrimitiveType.SHORT,
-        intArray to PrimitiveType.INT,
-        longArray to PrimitiveType.LONG,
-        floatArray to PrimitiveType.FLOAT,
-        doubleArray to PrimitiveType.DOUBLE
-    )
+    override val booleanArray: IrClassSymbol get() = _booleanArray.klass
+    override val charArray: IrClassSymbol get() = _charArray.klass
+    override val byteArray: IrClassSymbol get() = _byteArray.klass
+    override val shortArray: IrClassSymbol get() = _shortArray.klass
+    override val intArray: IrClassSymbol get() = _intArray.klass
+    override val longArray: IrClassSymbol get() = _longArray.klass
+    override val floatArray: IrClassSymbol get() = _floatArray.klass
+    override val doubleArray: IrClassSymbol get() = _doubleArray.klass
 
-    override val primitiveArrays = primitiveArraysToPrimitiveTypes.keys
-    override val primitiveArrayElementTypes = primitiveArraysToPrimitiveTypes.mapValues { primitiveTypeToIrType[it.value] }
-    override val primitiveArrayForType = primitiveArrayElementTypes.asSequence().associate { it.value to it.key }
+    override val primitiveArraysToPrimitiveTypes: Map<IrClassSymbol, PrimitiveType> by lazy {
+        mapOf(
+            booleanArray to PrimitiveType.BOOLEAN,
+            charArray to PrimitiveType.CHAR,
+            byteArray to PrimitiveType.BYTE,
+            shortArray to PrimitiveType.SHORT,
+            intArray to PrimitiveType.INT,
+            longArray to PrimitiveType.LONG,
+            floatArray to PrimitiveType.FLOAT,
+            doubleArray to PrimitiveType.DOUBLE
+        )
+    }
+
+    override val primitiveArrays get() = primitiveArraysToPrimitiveTypes.keys
+    override val primitiveArrayElementTypes get() = primitiveArraysToPrimitiveTypes.mapValues { primitiveTypeToIrType[it.value] }
+    override val primitiveArrayForType get() = primitiveArrayElementTypes.asSequence().associate { it.value to it.key }
 
     private val _ieee754equalsFunByOperandType = mutableMapOf<IrClassifierSymbol, IrSimpleFunctionSymbol>()
     override val ieee754equalsFunByOperandType: MutableMap<IrClassifierSymbol, IrSimpleFunctionSymbol>
@@ -381,8 +394,10 @@ class IrBuiltInsOverFir(
         }
     }
 
-    override val unsignedArrays: Set<IrClassSymbol> = UnsignedType.values().mapNotNullTo(mutableSetOf()) { unsignedType ->
-        referenceClassByClassId(unsignedType.arrayClassId)
+    override val unsignedArrays: Set<IrClassSymbol> by lazy {
+        UnsignedType.values().mapNotNullTo(mutableSetOf()) { unsignedType ->
+            referenceClassByClassId(unsignedType.arrayClassId)
+        }
     }
 
     override fun getKPropertyClass(mutable: Boolean, n: Int): IrClassSymbol = when (n) {
@@ -393,7 +408,7 @@ class IrBuiltInsOverFir(
     }
 
     private val enum by loadClass(kotlinPackage, "Enum")
-override val enumClass: IrClassSymbol get() = enum.klass
+    override val enumClass: IrClassSymbol get() = enum.klass
 
     override val intPlusSymbol: IrSimpleFunctionSymbol
         get() = intClass.functions.single {
@@ -528,7 +543,7 @@ override val enumClass: IrClassSymbol get() = enum.klass
         findFunctions(kotlinPackage.child(Name.identifier("internal")), Name.identifier("getProgressionLastElement")).mapNotNull { fn ->
             fn.owner.returnType.classOrNull?.let { it to fn }
         }.toMap()
-     }
+    }
 
 // ---------------
 
@@ -545,11 +560,11 @@ override val enumClass: IrClassSymbol get() = enum.klass
                 return generatedClass
             }
 
-        val type: IrType = generatedClass.defaultType
+        val type: IrType get() = generatedClass.defaultType
     }
 
-    private inner class BuiltInsClass internal constructor(
-        private var generator: (() -> IrClassSymbol)?,
+    private inner class BuiltInsClass(
+        private var generator: (() -> Pair<Boolean, IrClassSymbol>)?,
         private var lazyContents: (IrClass.() -> Unit)? = null
     ) {
 
@@ -558,31 +573,17 @@ override val enumClass: IrClassSymbol get() = enum.klass
         operator fun getValue(thisRef: Any?, property: KProperty<*>): BuiltInClassValue = value ?: run {
             synchronized(this) {
                 if (value == null) {
-                    value = BuiltInClassValue(generator!!(), lazyContents)
+                    val (isLoaded, symbol) = generator!!()
+                    value = BuiltInClassValue(symbol, if (isLoaded) null else lazyContents)
                     generator = null
                     lazyContents = null
                 }
             }
             value!!
         }
-
-        constructor(
-            parent: IrDeclarationParent,
-            signature: IdSignature.PublicSignature,
-            builderInit: IrClassBuilder.() -> Unit = {},
-            init: IrClass.() -> Unit = {}
-        ): this(
-            {
-                (if (tryLoadBuiltInsFirst) {
-                    referenceClassByFqname(parent.kotlinFqName, signature.shortName)
-                } else {
-                    parent.createClass(signature, builderBlock = builderInit, block = init)
-                })!!
-            }
-        )
     }
 
-    private fun loadClass(classId: ClassId) = BuiltInsClass({ referenceClassByClassId(classId)!! })
+    private fun loadClass(classId: ClassId) = BuiltInsClass({ true to referenceClassByClassId(classId)!! })
     private fun loadClass(packageFqName: FqName, name: String) = loadClass(ClassId(packageFqName, Name.identifier(name)))
     private fun loadClass(topLevelFqName: FqName) = loadClass(ClassId.topLevel(topLevelFqName))
 
@@ -590,14 +591,13 @@ override val enumClass: IrClassSymbol get() = enum.klass
         parent: IrDeclarationParent,
         signature: IdSignature.PublicSignature,
         build: IrClassBuilder.() -> Unit = {},
-        init: IrClass.() -> Unit = {},
         lazyContents: (IrClass.() -> Unit)? = null
     ) = BuiltInsClass(
         generator = {
             val loaded = if (tryLoadBuiltInsFirst) {
-                referenceClassByClassId(ClassId(parent.kotlinFqName, Name.special(signature.shortName)))
+                referenceClassByClassId(ClassId(parent.kotlinFqName, Name.identifier(signature.shortName)))
             } else null
-            loaded ?: components.symbolTable.declareClass(
+            (loaded != null) to (loaded ?: components.symbolTable.declareClass(
                 signature,
                 { IrClassPublicSymbolImpl(signature) },
                 { symbol ->
@@ -613,10 +613,9 @@ override val enumClass: IrClassSymbol get() = enum.klass
                     }.also {
                         it.parent = parent
                         it.createImplicitParameterDeclarationWithWrappedDescriptor()
-                        it.init()
                     }
                 }
-            ).symbol
+            ).symbol)
         },
         lazyContents = lazyContents
     )
@@ -700,20 +699,6 @@ override val enumClass: IrClassSymbol get() = enum.klass
         }
     ).symbol
 
-    private fun IrPackageFragment.createClass(
-        name: Name,
-        vararg supertypes: IrType,
-        classKind: ClassKind = ClassKind.CLASS,
-        classModality: Modality = Modality.OPEN,
-        classIsInline: Boolean = false,
-        builderBlock: IrClassBuilder.() -> Unit = {},
-        block: IrClass.() -> Unit = {}
-    ): IrClassSymbol =
-        this.createClass(
-            fqName.child(name), *supertypes,
-            classKind = classKind, classModality = classModality, classIsInline = classIsInline, builderBlock = builderBlock, block = block
-        )
-
     private fun IrClass.createConstructor(
         origin: IrDeclarationOrigin = object : IrDeclarationOriginImpl("BUILTIN_CLASS_CONSTRUCTOR") {},
         isPrimary: Boolean = true,
@@ -789,7 +774,7 @@ override val enumClass: IrClassSymbol get() = enum.klass
         if (!defaultAny || superTypes.contains(anyType) || this.superTypes.contains(anyType)) {
             this.superTypes += superTypes
         } else {
-            this.superTypes += listOf(anyType, *superTypes)
+            this.superTypes += listOf(*superTypes, anyType)
         }
         addFakeOverrides(this@IrBuiltInsOverFir)
     }
@@ -942,10 +927,9 @@ override val enumClass: IrClassSymbol get() = enum.klass
 
     private fun IrPackageFragment.createNumberClass(
         signature: IdSignature.PublicSignature,
-        builder: IrClass.() -> Unit = {},
         lazyContents: (IrClass.() -> Unit)? = null
     ) =
-        createClass(this, signature, init = builder) {
+        createClass(this, signature) {
             val thisType = defaultType
             createStandardNumericAndCharMembers(thisType)
             createStandardNumericMembers(thisType)
@@ -959,6 +943,21 @@ override val enumClass: IrClassSymbol get() = enum.klass
             configureSuperTypes(numberType)
         }
 
+    private fun createPrimitiveArrayClass(
+        parent: IrDeclarationParent,
+        primitiveType: PrimitiveType,
+        lazyContents: (IrClass.() -> Unit)? = null
+    ) =
+        createClass(
+            parent,
+            IdSignature.PublicSignature(parent.kotlinFqName.asString(), primitiveType.arrayTypeName.asString(), null, 0),
+            build = { modality = Modality.FINAL }
+        ) {
+            addArrayMembers(primitiveTypeToIrType[primitiveType]!!)
+            lazyContents?.invoke(this)
+            configureSuperTypes()
+        }
+
     private fun IrClass.createCompanionObject(block: IrClass.() -> Unit = {}): IrClassSymbol =
         this.createClass(
             kotlinFqName.child(Name.identifier("Companion")), classKind = ClassKind.OBJECT, builderBlock = {
@@ -968,7 +967,7 @@ override val enumClass: IrClassSymbol get() = enum.klass
             it.owner.block()
             declarations.add(it.owner)
         }
-    
+
     private fun IrClass.createStandardBitwiseOps(thisType: IrType) {
         for (op in arrayOf(OperatorNameConventions.AND, OperatorNameConventions.OR, OperatorNameConventions.XOR)) {
             createMemberFunction(op, thisType, "other" to thisType, isOperator = true)
