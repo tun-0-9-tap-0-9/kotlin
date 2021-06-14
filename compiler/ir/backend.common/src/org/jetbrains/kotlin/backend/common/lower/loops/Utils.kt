@@ -105,7 +105,7 @@ internal fun IrExpression.castIfNecessary(targetClass: IrClass) =
         this
     } else {
         val numberCastFunctionName = Name.identifier("to${targetClass.name.asString()}")
-        val castFun = type.getClass()!!.functions.single {
+        val castFun = type.getClass()!!.functions.first {
             it.name == numberCastFunctionName &&
                     it.dispatchReceiverParameter != null && it.extensionReceiverParameter == null && it.valueParameters.isEmpty()
         }
