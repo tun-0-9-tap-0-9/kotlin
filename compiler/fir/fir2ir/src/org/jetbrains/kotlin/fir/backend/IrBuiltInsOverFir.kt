@@ -79,9 +79,10 @@ class IrBuiltInsOverFir(
 
     private val number by createClass(kotlinIrPackage, IdSignatureValues.number, build = { modality = Modality.ABSTRACT }) {
         configureSuperTypes()
-        for (targetPrimitive in primitiveIrTypesWithComparisons) {
-            createMemberFunction("to${targetPrimitive.classFqName!!.shortName().asString()}", targetPrimitive, modality = Modality.ABSTRACT)
-        }
+        // TODO: Find out why fake overrides from these cause problems in castIfNecessary
+//        for (targetPrimitive in primitiveIrTypesWithComparisons) {
+//            createMemberFunction("to${targetPrimitive.classFqName!!.shortName().asString()}", targetPrimitive, modality = Modality.ABSTRACT)
+//        }
     }
     override val numberClass: IrClassSymbol get() = number.klass
     override val numberType: IrType get() = number.type
