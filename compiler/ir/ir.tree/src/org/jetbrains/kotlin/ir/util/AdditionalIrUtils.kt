@@ -225,10 +225,12 @@ class NaiveSourceBasedFileEntryImpl(
 private fun IrClass.getPropertyDeclaration(name: String): IrProperty? {
     val properties = declarations.filterIsInstance<IrProperty>().filter { it.name.asString() == name }
     if (properties.size > 1) {
-        error(
-            "More than one property with name $name in class $fqNameWhenAvailable:\n" +
-                    properties.joinToString("\n", transform = IrProperty::render)
-        )
+        if (properties.count { !it.isFakeOverride } > 1 ) {
+            error(
+                "More than one property with name $name in class $fqNameWhenAvailable:\n" +
+                        properties.joinToString("\n", transform = IrProperty::render)
+            )
+        }
     }
     return properties.firstOrNull()
 }
