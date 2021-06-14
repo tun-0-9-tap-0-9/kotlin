@@ -365,6 +365,13 @@ abstract class CommonCompilerArguments : CommonToolArguments() {
     )
     var extendedCompilerChecks: Boolean by FreezableVar(false)
 
+    @GradleOption(DefaultValues.BooleanFalseDefault::class)
+    @Argument(
+        value = "-Xbuiltins-from-sources",
+        description = "Compile builtIns from sources"
+    )
+    var builtInsFromSources: Boolean by FreezableVar(false)
+
     open fun configureAnalysisFlags(collector: MessageCollector): MutableMap<AnalysisFlag<*>, Any> {
         return HashMap<AnalysisFlag<*>, Any>().apply {
             put(AnalysisFlags.skipMetadataVersionCheck, skipMetadataVersionCheck)
@@ -385,6 +392,7 @@ abstract class CommonCompilerArguments : CommonToolArguments() {
             )
             put(AnalysisFlags.extendedCompilerChecks, extendedCompilerChecks)
             put(AnalysisFlags.allowKotlinPackage, allowKotlinPackage)
+            put(AnalysisFlags.builtInsFromSources, builtInsFromSources)
         }
     }
 

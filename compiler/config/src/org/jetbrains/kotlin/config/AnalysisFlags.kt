@@ -56,4 +56,7 @@ object AnalysisFlags {
 
     @JvmStatic
     val allowKotlinPackage by AnalysisFlag.Delegates.Boolean
+
+    @JvmStatic
+    val builtInsFromSources by AnalysisFlag.Delegates.Boolean
 }
