@@ -64,6 +64,7 @@ class IrBuiltInsOverFir(
     private val kotlinCollectionsIrPackage = createPackage(kotlinCollectionsPackage)
 
     override val booleanNotSymbol: IrSimpleFunctionSymbol by lazy {
+        boolean.ensureLazyContentsCreated()
         booleanClass.owner.functions.first { it.name == OperatorNameConventions.NOT && it.returnType == booleanType }.symbol
     }
 
@@ -82,6 +83,7 @@ class IrBuiltInsOverFir(
         for (targetPrimitive in primitiveIrTypesWithComparisons) {
             createMemberFunction("to${targetPrimitive.classFqName!!.shortName().asString()}", targetPrimitive, modality = Modality.ABSTRACT)
         }
+        finalizeClassDefinition()
     }
     override val numberClass: IrClassSymbol get() = number.klass
     override val numberType: IrType get() = number.type
@@ -103,6 +105,7 @@ class IrBuiltInsOverFir(
         createMemberFunction(OperatorNameConventions.OR, booleanType, "other" to booleanType) { isInfix = true }
         createMemberFunction(OperatorNameConventions.XOR, booleanType, "other" to booleanType) { isInfix = true }
         createMemberFunction(OperatorNameConventions.COMPARE_TO, intType, "other" to booleanType, modality = Modality.OPEN, isOperator = true)
+        finalizeClassDefinition()
     }
     override val booleanType: IrType get() = boolean.type
     override val booleanClass: IrClassSymbol get() = boolean.klass
@@ -116,6 +119,7 @@ class IrBuiltInsOverFir(
         createMemberFunction(OperatorNameConventions.MINUS, intType, "other" to charType, isOperator = true)
         val charRange = referenceClassByFqname(StandardNames.RANGES_PACKAGE_FQ_NAME, "CharRange")!!.owner.defaultType
         createMemberFunction(OperatorNameConventions.RANGE_TO, charRange, "other" to charType)
+        finalizeClassDefinition()
     }
     override val charClass: IrClassSymbol get() = char.klass
     override val charType: IrType get() = char.type
@@ -149,6 +153,7 @@ class IrBuiltInsOverFir(
         createProperty("length", intType, modality = Modality.ABSTRACT)
         createMemberFunction(OperatorNameConventions.GET, charType, "index" to intType, modality = Modality.ABSTRACT, isOperator = true)
         createMemberFunction("subSequence", defaultType, "startIndex" to intType, "endIndex" to intType, modality = Modality.ABSTRACT)
+        finalizeClassDefinition()
     }
     override val charSequenceClass: IrClassSymbol get() = charSequence.klass
 
@@ -159,6 +164,7 @@ class IrBuiltInsOverFir(
         createMemberFunction("subSequence", charSequenceClass.defaultType, "startIndex" to intType, "endIndex" to intType, modality = Modality.OPEN)
         createMemberFunction(OperatorNameConventions.COMPARE_TO, intType, "other" to defaultType, modality = Modality.OPEN, isOperator = true)
         createMemberFunction(OperatorNameConventions.PLUS, defaultType, "other" to anyNType, isOperator = true)
+        finalizeClassDefinition()
     }
     override val stringClass: IrClassSymbol get() = string.klass
     override val stringType: IrType get() = string.type
@@ -167,6 +173,7 @@ class IrBuiltInsOverFir(
         configureSuperTypes()
         val typeParameter = addTypeParameter("T", anyNType)
         addArrayMembers(typeParameter.defaultType)
+        finalizeClassDefinition()
     }
     override val arrayClass: IrClassSymbol get() = array.klass
 
@@ -595,7 +602,7 @@ class IrBuiltInsOverFir(
         parent: IrDeclarationParent,
         signature: IdSignature.PublicSignature,
         build: IrClassBuilder.() -> Unit = {},
-        lazyContents: (IrClass.() -> Unit)? = null
+        lazyContents: (IrClass.() -> Unit) = { finalizeClassDefinition() }
     ) = BuiltInsClass(
         generator = {
             val loaded = if (tryLoadBuiltInsFirst) {
@@ -784,6 +791,9 @@ class IrBuiltInsOverFir(
             any.ensureLazyContentsCreated()
             this.superTypes += superTypes.map { it.type } + anyType
         }
+    }
+
+    private fun IrClass.finalizeClassDefinition() {
         addFakeOverrides(this@IrBuiltInsOverFir)
     }
 
@@ -949,6 +959,7 @@ class IrBuiltInsOverFir(
                 createStandardBitwiseOps(thisType)
             }
             lazyContents?.invoke(this)
+            finalizeClassDefinition()
         }
 
     private fun createPrimitiveArrayClass(
@@ -964,6 +975,7 @@ class IrBuiltInsOverFir(
             configureSuperTypes()
             addArrayMembers(primitiveTypeToIrType[primitiveType]!!)
             lazyContents?.invoke(this)
+            finalizeClassDefinition()
         }
 
     private fun IrClass.createCompanionObject(block: IrClass.() -> Unit = {}): IrClassSymbol =
