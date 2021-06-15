@@ -14,10 +14,12 @@ import com.intellij.psi.PsiManager
 import junit.framework.TestCase
 import org.jetbrains.kotlin.checkers.CompilerTestLanguageVersionSettings
 import org.jetbrains.kotlin.checkers.parseLanguageVersionSettings
+import org.jetbrains.kotlin.cli.common.arguments.K2JsArgumentConstants
 import org.jetbrains.kotlin.cli.common.messages.AnalyzerWithCompilerReport
 import org.jetbrains.kotlin.cli.common.messages.MessageRenderer
 import org.jetbrains.kotlin.cli.common.messages.PrintingMessageCollector
 import org.jetbrains.kotlin.cli.common.output.writeAllTo
+import org.jetbrains.kotlin.cli.js.resolve
 import org.jetbrains.kotlin.cli.jvm.compiler.EnvironmentConfigFiles
 import org.jetbrains.kotlin.cli.jvm.compiler.KotlinCoreEnvironment
 import org.jetbrains.kotlin.config.*
@@ -150,6 +152,12 @@ abstract class BasicBoxTest(
 
         val propertyLazyInitialization = PROPERTY_LAZY_INITIALIZATION.matcher(fileContent).find()
         val safeExternalBoolean = SAFE_EXTERNAL_BOOLEAN.matcher(fileContent).find()
+        val safeExternalBooleanDiagnosticMatcher = SAFE_EXTERNAL_BOOLEAN_DIAGNOSTIC.matcher(fileContent)
+
+        val safeExternalBooleanDiagnostic =
+            if (safeExternalBooleanDiagnosticMatcher.find())
+                RuntimeDiagnostic.resolve(safeExternalBooleanDiagnosticMatcher.group(1))
+            else null
 
         TestFileFactoryImpl().use { testFactory ->
             val inputFiles = TestFiles.createTestFiles(
@@ -215,7 +223,8 @@ abstract class BasicBoxTest(
                     splitPerModule,
                     errorPolicy,
                     propertyLazyInitialization,
-                    safeExternalBoolean
+                    safeExternalBoolean,
+                    safeExternalBooleanDiagnostic,
                 )
 
                 when {
@@ -470,6 +479,7 @@ abstract class BasicBoxTest(
         errorIgnorancePolicy: ErrorTolerancePolicy,
         propertyLazyInitialization: Boolean,
         safeExternalBoolean: Boolean,
+        safeExternalBooleanDiagnostic: RuntimeDiagnostic?,
     ) {
         val kotlinFiles = module.files.filter { it.fileName.endsWith(".kt") }
         val testFiles = kotlinFiles.map { it.fileName }
@@ -521,6 +531,7 @@ abstract class BasicBoxTest(
             splitPerModule,
             propertyLazyInitialization,
             safeExternalBoolean,
+            safeExternalBooleanDiagnostic,
         )
 
         if (incrementalCompilationChecksEnabled && module.hasFilesToRecompile) {
@@ -616,6 +627,7 @@ abstract class BasicBoxTest(
             splitPerModule = false,
             propertyLazyInitialization = false,
             safeExternalBoolean = false,
+            safeExternalBooleanDiagnostic = null,
         )
 
         val originalOutput = FileUtil.loadFile(outputFile)
@@ -696,6 +708,7 @@ abstract class BasicBoxTest(
         splitPerModule: Boolean,
         propertyLazyInitialization: Boolean,
         safeExternalBoolean: Boolean,
+        safeExternalBooleanDiagnostic: RuntimeDiagnostic?,
     ) {
         val translator = K2JSTranslator(config, false)
         val translationResult = translator.translateUnits(ExceptionThrowingReporter, units, mainCallParameters)
@@ -1100,6 +1113,7 @@ abstract class BasicBoxTest(
         private val PROPERTY_LAZY_INITIALIZATION = Pattern.compile("^// *PROPERTY_LAZY_INITIALIZATION *$", Pattern.MULTILINE)
 
         private val SAFE_EXTERNAL_BOOLEAN = Pattern.compile("^// *SAFE_EXTERNAL_BOOLEAN *$", Pattern.MULTILINE)
+        private val SAFE_EXTERNAL_BOOLEAN_DIAGNOSTIC = Pattern.compile("^// *SAFE_EXTERNAL_BOOLEAN_DIAGNOSTIC: *(.+)$", Pattern.MULTILINE)
 
         @JvmStatic
         protected val runTestInNashorn = getBoolean("kotlin.js.useNashorn")
@@ -1134,5 +1148,16 @@ class KotlinJsTestLogger {
         if (verbose) {
             println("TEST_LOG: $description file://${file.absolutePath}")
         }
+    }
+}
+
+fun RuntimeDiagnostic.Companion.resolve(
+    value: String?,
+): RuntimeDiagnostic? = when (value?.lowercase()) {
+    K2JsArgumentConstants.RUNTIME_DIAGNOSTIC_LOG -> RuntimeDiagnostic.LOG
+    K2JsArgumentConstants.RUNTIME_DIAGNOSTIC_EXCEPTION -> RuntimeDiagnostic.EXCEPTION
+    null -> null
+    else -> {
+        null
     }
 }
