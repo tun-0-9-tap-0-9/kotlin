@@ -435,7 +435,7 @@ class IrBuiltInsOverDescriptors(
         }
     }
 
-    override val toUIntByExtensionReceiver: Map<IrClassifierSymbol, IrSimpleFunctionSymbol> =
+    override val toUIntByExtensionReceiver: Map<IrClassifierSymbol, IrSimpleFunctionSymbol> by lazy {
         builtInsPackage("kotlin").getContributedFunctions(
             Name.identifier("toUInt"),
             NoLookupLocation.FROM_BACKEND
@@ -445,8 +445,9 @@ class IrBuiltInsOverDescriptors(
                 val function = symbolTable.referenceSimpleFunction(it)
                 klass to function
             }.toMap()
+    }
 
-    override val toULongByExtensionReceiver: Map<IrClassifierSymbol, IrSimpleFunctionSymbol> =
+    override val toULongByExtensionReceiver: Map<IrClassifierSymbol, IrSimpleFunctionSymbol> by lazy {
         builtInsPackage("kotlin").getContributedFunctions(
             Name.identifier("toULong"),
             NoLookupLocation.FROM_BACKEND
@@ -456,21 +457,26 @@ class IrBuiltInsOverDescriptors(
                 val function = symbolTable.referenceSimpleFunction(it)
                 klass to function
             }.toMap()
-
-    override val extensionToString: IrSimpleFunctionSymbol = findFunctions(Name.identifier("toString"), "kotlin").first {
-        val descriptor = it.descriptor
-        descriptor is SimpleFunctionDescriptor && descriptor.dispatchReceiverParameter == null &&
-                descriptor.extensionReceiverParameter != null &&
-                KotlinBuiltIns.isNullableAny(descriptor.extensionReceiverParameter!!.type) && descriptor.valueParameters.size == 0
     }
 
-    override val stringPlus: IrSimpleFunctionSymbol = findFunctions(Name.identifier("plus"), "kotlin").first {
-        val descriptor = it.descriptor
-        descriptor is SimpleFunctionDescriptor && descriptor.dispatchReceiverParameter == null &&
-                descriptor.extensionReceiverParameter != null &&
-                KotlinBuiltIns.isStringOrNullableString(descriptor.extensionReceiverParameter!!.type) &&
-                descriptor.valueParameters.size == 1 &&
-                KotlinBuiltIns.isNullableAny(descriptor.valueParameters.first().type)
+    override val extensionToString: IrSimpleFunctionSymbol by lazy {
+        findFunctions(Name.identifier("toString"), "kotlin").first {
+            val descriptor = it.descriptor
+            descriptor is SimpleFunctionDescriptor && descriptor.dispatchReceiverParameter == null &&
+                    descriptor.extensionReceiverParameter != null &&
+                    KotlinBuiltIns.isNullableAny(descriptor.extensionReceiverParameter!!.type) && descriptor.valueParameters.size == 0
+        }
+    }
+
+    override val stringPlus: IrSimpleFunctionSymbol by lazy {
+        findFunctions(Name.identifier("plus"), "kotlin").first {
+            val descriptor = it.descriptor
+            descriptor is SimpleFunctionDescriptor && descriptor.dispatchReceiverParameter == null &&
+                    descriptor.extensionReceiverParameter != null &&
+                    KotlinBuiltIns.isStringOrNullableString(descriptor.extensionReceiverParameter!!.type) &&
+                    descriptor.valueParameters.size == 1 &&
+                    KotlinBuiltIns.isNullableAny(descriptor.valueParameters.first().type)
+        }
     }
 
     override fun functionN(arity: Int, declarator: SymbolTable.((IrClassSymbol) -> IrClass) -> IrClass): IrClass =
@@ -490,7 +496,7 @@ class IrBuiltInsOverDescriptors(
     override fun suspendFunctionN(arity: Int): IrClass = functionFactory.suspendFunctionN(arity)
     override fun kSuspendFunctionN(arity: Int): IrClass = functionFactory.kSuspendFunctionN(arity)
 
-    override val getProgressionLastElementByReturnType: Map<IrClassifierSymbol?, IrSimpleFunctionSymbol> =
+    override val getProgressionLastElementByReturnType: Map<IrClassifierSymbol?, IrSimpleFunctionSymbol> by lazy {
         builtInsPackage("kotlin", "internal")
             .getContributedFunctions(Name.identifier("getProgressionLastElement"), NoLookupLocation.FROM_BACKEND)
             .filter { it.containingDeclaration !is BuiltInsPackageFragment }
@@ -500,6 +506,7 @@ class IrBuiltInsOverDescriptors(
                 klass to function
             }
             .toMap()
+    }
 }
 
 private inline fun MemberScope.findFirstFunction(name: String, predicate: (CallableMemberDescriptor) -> Boolean) =
