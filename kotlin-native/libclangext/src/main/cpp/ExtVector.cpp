@@ -30,8 +30,10 @@ static inline QualType GetQualType(CXType CT) {
 
 extern "C"
 int clang_isExtVectorType(CXType CT) {
+// LLVM on Linux and Windows do not support CXType_ExtVector yet.
+#ifndef __APPLE__
   static_assert(CINDEX_VERSION < 59, "Use CXType_ExtVector for this libclang version");
-
+#endif
   QualType T = GetQualType(CT);
   const clang::Type *TP = T.getTypePtrOrNull();
   return TP && TP->isExtVectorType();
