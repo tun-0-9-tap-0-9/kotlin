@@ -21,8 +21,6 @@ import org.jetbrains.kotlin.cli.common.CLIConfigurationKeys
 import org.jetbrains.kotlin.cli.common.checkKotlinPackageUsage
 import org.jetbrains.kotlin.cli.common.messages.AnalyzerWithCompilerReport
 import org.jetbrains.kotlin.cli.common.messages.CompilerMessageSeverity.STRONG_WARNING
-import org.jetbrains.kotlin.cli.jvm.config.JvmClasspathRoot
-import org.jetbrains.kotlin.cli.jvm.config.JvmModulePathRoot
 import org.jetbrains.kotlin.cli.jvm.config.jvmClasspathRoots
 import org.jetbrains.kotlin.cli.jvm.config.jvmModularRoots
 import org.jetbrains.kotlin.codegen.ClassBuilderFactories
@@ -39,7 +37,6 @@ import org.jetbrains.kotlin.fir.backend.jvm.FirJvmBackendExtension
 import org.jetbrains.kotlin.fir.checkers.registerExtendedCommonCheckers
 import org.jetbrains.kotlin.fir.session.FirSessionFactory
 import org.jetbrains.kotlin.fir.session.FirSessionFactory.createSessionWithDependencies
-import org.jetbrains.kotlin.load.kotlin.PackagePartProvider
 import org.jetbrains.kotlin.load.kotlin.incremental.IncrementalPackagePartProvider
 import org.jetbrains.kotlin.modules.Module
 import org.jetbrains.kotlin.modules.TargetId
@@ -160,14 +157,18 @@ object FirKotlinToJvmBytecodeCompiler {
             performanceManager?.notifyGenerationStarted()
 
             performanceManager?.notifyIRTranslationStarted()
-            val extensions = JvmGeneratorExtensionsImpl()
+            val extensions = JvmGeneratorExtensionsImpl(projectConfiguration)
             val (moduleFragment, symbolTable, components) = firAnalyzerFacade.convertToIr(extensions)
 
             performanceManager?.notifyIRTranslationFinished()
 
             val dummyBindingContext = NoScopeRecordCliBindingTrace().bindingContext
 
-            val codegenFactory = JvmIrCodegenFactory(moduleConfiguration.get(CLIConfigurationKeys.PHASE_CONFIG) ?: PhaseConfig(jvmPhases))
+            val codegenFactory = JvmIrCodegenFactory(
+                projectConfiguration,
+                moduleConfiguration.get(CLIConfigurationKeys.PHASE_CONFIG) ?: PhaseConfig(jvmPhases),
+                jvmGeneratorExtensions = extensions
+            )
 
             // Create and initialize the module and its dependencies
             val container = TopDownAnalyzerFacadeForJVM.createContainer(
