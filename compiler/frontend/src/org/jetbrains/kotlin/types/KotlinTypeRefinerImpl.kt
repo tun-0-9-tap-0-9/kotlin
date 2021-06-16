@@ -65,13 +65,25 @@ class KotlinTypeRefinerImpl(
             !type.needsRefinement() -> type
             type.canBeCached() -> {
                 val cached = refinedTypeCache.computeIfAbsent(type.constructor) {
-                    type.constructor.declarationDescriptor!!.defaultType.refine(this)
+                    type.constructor.declarationDescriptor!!.defaultType.refineWithRespectToAbbreviatedTypes(this)
                 }
 
                 cached.restoreAdditionalTypeInformation(type)
             }
-            else -> type.refine(this)
+            else -> type.refineWithRespectToAbbreviatedTypes(this)
         }
+    }
+
+    private fun KotlinType.refineWithRespectToAbbreviatedTypes(refiner: KotlinTypeRefiner): KotlinType {
+        var unrefinedType: KotlinType
+        var refinedType: KotlinType = this
+
+        do {
+            unrefinedType = refinedType
+            refinedType = unrefinedType.refine(refiner)
+        } while (refinedType is AbbreviatedType && refinedType != unrefinedType)
+
+        return refinedType
     }
 
     private fun KotlinType.needsRefinement(): Boolean = isRefinementNeededForTypeConstructor(constructor)
