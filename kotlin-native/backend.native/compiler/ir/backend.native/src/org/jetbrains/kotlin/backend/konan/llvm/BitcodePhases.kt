@@ -300,6 +300,13 @@ internal val linkBitcodeDependenciesPhase = makeKonanModuleOpPhase(
         op = { context, _ -> linkBitcodeDependencies(context) }
 )
 
+internal val checkExternalCallsPhase = makeKonanModuleOpPhase(
+        name = "CheckExternalCalls",
+        description = "Check external calls",
+        op = { context, _ -> checkLlvmModuleExternalCalls(context) }
+)
+
+
 internal val bitcodeOptimizationPhase = makeKonanModuleOpPhase(
         name = "BitcodeOptimization",
         description = "Optimize bitcode",
