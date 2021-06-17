@@ -13,7 +13,6 @@ import org.gradle.api.artifacts.*
 import org.gradle.api.file.ConfigurableFileCollection
 import org.gradle.api.file.FileCollection
 import org.gradle.api.file.FileTree
-import org.gradle.api.logging.Logger
 import org.gradle.api.provider.Provider
 import org.gradle.api.tasks.*
 import org.gradle.api.tasks.compile.AbstractCompile
@@ -33,7 +32,6 @@ import org.jetbrains.kotlin.gradle.targets.native.internal.isAllowCommonizer
 import org.jetbrains.kotlin.gradle.utils.*
 import org.jetbrains.kotlin.gradle.utils.klibModuleName
 import org.jetbrains.kotlin.gradle.utils.listFilesOrEmpty
-import org.jetbrains.kotlin.gradle.utils.newProperty
 import org.jetbrains.kotlin.konan.library.KLIB_INTEROP_IR_PROVIDER_IDENTIFIER
 import org.jetbrains.kotlin.konan.properties.resolvablePropertyList
 import org.jetbrains.kotlin.konan.properties.saveToFile
@@ -45,11 +43,8 @@ import org.jetbrains.kotlin.konan.target.KonanTarget
 import org.jetbrains.kotlin.library.*
 import org.jetbrains.kotlin.project.model.LanguageSettings
 import java.io.File
-import java.nio.charset.StandardCharsets
-import java.security.MessageDigest
 import javax.inject.Inject
 import org.jetbrains.kotlin.konan.file.File as KFile
-import org.jetbrains.kotlin.util.Logger as KLogger
 
 // TODO: It's just temporary tasks used while KN isn't integrated with Big Kotlin compilation infrastructure.
 // region Useful extensions
@@ -878,19 +873,20 @@ internal class CacheBuilder(val project: Project, val binary: NativeBinary, val 
                 .resolvablePropertyList("cacheableTargets", HostManager.hostName)
                 .map { KonanTarget.predefinedTargets.getValue(it) }
 
-        // Targets with well-tested static caches that can be enabled by default.
-        // TODO: Move it to konan.properties.
-        private val targetsWithStableStaticCaches =
-            setOf(KonanTarget.IOS_X64, KonanTarget.MACOS_X64)
+        private fun getOptInCacheableTargets(project: Project) =
+            Distribution(project.konanHome)
+                .properties
+                .resolvablePropertyList("optInCacheableTargets", HostManager.hostName)
+                .map { KonanTarget.predefinedTargets.getValue(it) }
 
         internal fun cacheWorksFor(target: KonanTarget, project: Project) =
             target in getCacheableTargets(project)
 
-        internal fun defaultCacheKindForTarget(target: KonanTarget): NativeCacheKind =
-            if (target in targetsWithStableStaticCaches) {
-                NativeCacheKind.STATIC
-            } else {
+        internal fun defaultCacheKindForTarget(project: Project, target: KonanTarget): NativeCacheKind =
+            if (target in getOptInCacheableTargets(project)) {
                 NativeCacheKind.NONE
+            } else {
+                NativeCacheKind.STATIC
             }
     }
 }

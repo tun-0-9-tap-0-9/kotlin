@@ -40,7 +40,7 @@ internal fun Project.getKonanCacheKind(target: KonanTarget): NativeCacheKind {
     return when {
         targetCacheKind != null -> targetCacheKind
         commonCacheKind != null -> commonCacheKind
-        else -> CacheBuilder.defaultCacheKindForTarget(target)
+        else -> CacheBuilder.defaultCacheKindForTarget(this, target)
     }
 }
 
