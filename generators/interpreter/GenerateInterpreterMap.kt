@@ -168,7 +168,7 @@ private data class Operation(
             val receiver = castValueParenthesized("a", typeA)
             println(name)
             return when {
-                name == IrBuiltIns.OperatorNames.EQEQEQ && parameterTypes.all { it == "Any?" } ->
+                name == BuiltInOperatorNames.EQEQEQ && parameterTypes.all { it == "Any?" } ->
                     "if (a is Proxy && b is Proxy) a.state === b.state else a === b"
                 customExpression != null -> customExpression
                 else -> buildString {
