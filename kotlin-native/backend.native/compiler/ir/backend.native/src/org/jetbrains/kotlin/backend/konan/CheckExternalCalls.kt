@@ -129,11 +129,26 @@ private class CallsChecker(val context: Context) {
 }
 
 internal fun checkLlvmModuleExternalCalls(context: Context) {
+    val staticData = context.llvm.staticData
+
+    val annotations = staticData.getGlobal("llvm.global.annotations")?.getInitializer()
+
+    val ignoredFunctions = annotations?.run {
+        getOperands(this).mapNotNull {
+            val annotationName = LLVMGetInitializer(LLVMGetOperand(LLVMGetOperand(it, 1), 0))?.getAsCString()
+            if (annotationName == "no_external_calls_check") {
+                LLVMGetOperand(LLVMGetOperand(it, 0), 0)!!.name
+            } else {
+                null
+            }
+        }.toSet()
+    } ?: emptySet()
+
     val checker = CallsChecker(context)
     val functions = getFunctions(context.llvmModule!!)
             .filter { !it.isExternalFunction() }
             .toList()
-    functions.forEach(checker::processFunction)
+    functions.asSequence().filterNot { it.name in ignoredFunctions }.forEach(checker::processFunction)
     val functionsArray = staticData.placeGlobalConstArray("", int8TypePtr, functions.map { constPointer(it).bitcast(int8TypePtr) })
     staticData.getGlobal("Kotlin_callsCheckerKnownFunctions")
             ?.setInitializer(functionsArray)

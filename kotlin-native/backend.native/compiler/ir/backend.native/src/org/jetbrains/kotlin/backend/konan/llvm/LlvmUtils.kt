@@ -230,6 +230,15 @@ internal fun RuntimeAware.isObjectType(type: LLVMTypeRef): Boolean {
 internal fun CArrayPointer<ByteVar>.getBytes(size: Long) =
         (0 .. size-1).map { this[it] }.toByteArray()
 
+internal fun LLVMValueRef.getAsCString() : String {
+    memScoped {
+        val lengthPtr = alloc<size_tVar>()
+        val data = LLVMGetAsString(this@getAsCString, lengthPtr.ptr)!!
+        return data.toKString()
+    }
+}
+
+
 internal fun getFunctionType(ptrToFunction: LLVMValueRef): LLVMTypeRef {
     return getGlobalType(ptrToFunction)
 }

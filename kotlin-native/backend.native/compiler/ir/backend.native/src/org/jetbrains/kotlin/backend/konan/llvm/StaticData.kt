@@ -60,6 +60,8 @@ internal class StaticData(override val context: Context): ContextUtils {
 
         val type get() = getGlobalType(this.llvmGlobal)
 
+        fun getInitializer() = LLVMGetInitializer(llvmGlobal)
+
         fun setInitializer(value: ConstValue) {
             LLVMSetInitializer(llvmGlobal, value.llvm)
         }

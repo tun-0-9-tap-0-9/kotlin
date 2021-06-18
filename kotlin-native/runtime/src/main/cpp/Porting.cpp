@@ -201,7 +201,7 @@ static void onThreadExitCallback(void* value) {
   }
 }
 
-bool isOnThreadExitNotSetOrAlreadyStarted() {
+NO_EXTERNAL_CALLS_CHECK bool isOnThreadExitNotSetOrAlreadyStarted() {
     return terminationKey != 0 && pthread_getspecific(terminationKey) == nullptr;
 }
 
