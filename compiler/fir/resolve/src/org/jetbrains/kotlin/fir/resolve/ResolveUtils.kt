@@ -405,7 +405,7 @@ fun FirFunction<*>.getAsForbiddenNamedArgumentsTarget(session: FirSession): Forb
             }
         }
     }
-    if (this is FirMemberDeclaration<*> && status.isExpect) {
+    if (status.isExpect) {
         return ForbiddenNamedArgumentsTarget.EXPECTED_CLASS_MEMBER
     }
     return when (origin) {
