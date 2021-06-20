@@ -111,7 +111,7 @@ class SymbolTable(
                 }
                 val result = createOwner(symbol)
                 // TODO: try to get rid of this
-                set(sig, symbol)
+                set(symbol)
                 return result
             }
         }
@@ -515,6 +515,10 @@ class SymbolTable(
             { createConstructorSymbol(descriptor) },
             constructorFactory
         )
+
+    fun declareConstructorWithSignature(sig: IdSignature, symbol: IrConstructorSymbol) {
+        constructorSymbolTable.set(sig, symbol)
+    }
 
     override fun referenceConstructor(descriptor: ClassConstructorDescriptor) =
         constructorSymbolTable.referenced(descriptor) { createConstructorSymbol(descriptor) }
