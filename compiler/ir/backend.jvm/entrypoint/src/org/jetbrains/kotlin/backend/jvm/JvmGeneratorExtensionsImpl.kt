@@ -216,11 +216,7 @@ open class JvmGeneratorExtensionsImpl(
     override fun registerDeclarations(symbolTable: SymbolTable) {
         val signatureComputer = IdSignatureSerializer(JvmManglerIr)
         specialAnnotationConstructors.forEach { constructor ->
-            symbolTable.declareConstructor(
-                signatureComputer.composePublicIdSignature(constructor),
-                { constructor.symbol },
-                { constructor }
-            )
+            symbolTable.declareConstructorWithSignature(signatureComputer.composePublicIdSignature(constructor), constructor.symbol)
         }
         super.registerDeclarations(symbolTable)
     }
