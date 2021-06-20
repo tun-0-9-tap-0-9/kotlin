@@ -52,7 +52,7 @@ object FirDiagnosticRenderers {
 
     val NAME = Renderer { element: FirElement ->
         when (element) {
-            is FirMemberDeclaration -> DECLARATION_NAME.render(element)
+            is FirMemberDeclaration<*> -> DECLARATION_NAME.render(element)
             is FirCallableDeclaration<*> -> element.symbol.callableId.callableName.asString()
             else -> "???"
         }
@@ -62,7 +62,7 @@ object FirDiagnosticRenderers {
         visibility.externalDisplayName
     }
 
-    val DECLARATION_NAME = Renderer { declaration: FirMemberDeclaration ->
+    val DECLARATION_NAME = Renderer { declaration: FirMemberDeclaration<*> ->
         val name = when (declaration) {
             is FirProperty -> declaration.name
             is FirSimpleFunction -> declaration.name
