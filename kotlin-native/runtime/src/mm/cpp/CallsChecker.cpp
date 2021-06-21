@@ -219,27 +219,38 @@ constexpr const char* goodFunctionNames[] = {
 };
 
 thread_local bool recursiveCallGuard = false;
+bool checkerWasDestroyed = false;
 
 class KnownFunctionChecker {
+    std::atomic<int> inited = false;
     std::unordered_set<const void*> known_functions;
     std::string_view good_names_copy[sizeof(goodFunctionNames) / sizeof(goodFunctionNames[0])];
 
+    void init() {
+        if (inited.load() == 2) return;
+        int actual = 0;
+        if (!inited.compare_exchange_strong(actual, 1)) {
+            while (inited.load() != 2) {
+            }
+            return;
+        }
+        for (int i = 0; i < Kotlin_callsCheckerKnownFunctionsCount; i++) {
+            known_functions.insert(Kotlin_callsCheckerKnownFunctions[i]);
+        }
+        std::copy(std::begin(goodFunctionNames), std::end(goodFunctionNames), std::begin(good_names_copy));
+        std::sort(std::begin(good_names_copy), std::end(good_names_copy));
+
+        inited.store(2);
+    }
+
 public:
     bool isKnown(const void* fun) noexcept {
-        if (known_functions.empty()) {
-            for (int i = 0; i < Kotlin_callsCheckerKnownFunctionsCount; i++) {
-                known_functions.insert(Kotlin_callsCheckerKnownFunctions[i]);
-            }
-        }
-
+        init();
         return known_functions.find(fun) != known_functions.end();
     }
 
     bool isSafeByName(std::string_view name) noexcept {
-        if (good_names_copy[0].empty()) {
-            std::copy(std::begin(goodFunctionNames), std::end(goodFunctionNames), std::begin(good_names_copy));
-            std::sort(std::begin(good_names_copy), std::end(good_names_copy));
-        }
+        init();
         auto it = std::lower_bound(std::begin(good_names_copy), std::end(good_names_copy), name);
         auto check = [&](std::string_view banned) {
             if (banned.back() != '*') {
@@ -257,15 +268,11 @@ public:
     }
 
     ~KnownFunctionChecker() {
-        /*
-         * destroying unordered_map will call checker function, but it will not work,
-         * because this object is destroying. So, let's just disable it.
-         */
-        recursiveCallGuard = true;
+        checkerWasDestroyed = true;
     }
 };
 
-thread_local KnownFunctionChecker checker;
+KnownFunctionChecker checker;
 
 
 constexpr int MSG_SEND_TO_NULL = -1;
@@ -286,7 +293,7 @@ constexpr int CALLED_LLVM_BUILTIN = -2;
 extern "C" RUNTIME_NOTHROW void Kotlin_mm_checkStateAtExternalFunctionCall(const char* caller, const char *callee, const void *calleePtr) noexcept {
     if (reinterpret_cast<int64_t>(calleePtr) == MSG_SEND_TO_NULL) return; // objc_sendMsg called on nil, it does nothing, so it's ok
     if (!strcmp(caller, "_ZN5konan36isOnThreadExitNotSetOrAlreadyStartedEv")) return;
-    if (konan::isOnThreadExitNotSetOrAlreadyStarted()) return;
+    if (checkerWasDestroyed || konan::isOnThreadExitNotSetOrAlreadyStarted()) return;
     if (recursiveCallGuard) return;
     if (!mm::ThreadRegistry::Instance().IsCurrentThreadRegistered()) return;
     struct unlockGuard {
