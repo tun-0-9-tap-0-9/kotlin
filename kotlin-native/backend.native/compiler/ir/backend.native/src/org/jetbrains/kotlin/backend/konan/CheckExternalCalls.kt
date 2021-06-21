@@ -33,7 +33,7 @@ private class CallsChecker(val context: Context) {
     private fun moduleFunction(name: String) =
             LLVMGetNamedFunction(context.llvmModule, name) ?: throw IllegalStateException("$name function is not available")
 
-    val getMethodImpl = externalFunction("class_getMethodImplementation", functionType(int8TypePtr, false, int8TypePtr, int8TypePtr))
+    val getMethodImpl = externalFunction("class_getMethodImplementation", functionType(pointerType(functionType(voidType, false)), false, int8TypePtr, int8TypePtr))
     val getClass = externalFunction("object_getClass", functionType(int8TypePtr, false, int8TypePtr))
     val getSuperClass = externalFunction("class_getSuperclass", functionType(int8TypePtr, false, int8TypePtr))
     val checkerFunction = moduleFunction("Kotlin_mm_checkStateAtExternalFunctionCall")
@@ -84,23 +84,29 @@ private class CallsChecker(val context: Context) {
             val calledPtrLlvm: LLVMValueRef?
             when (calleeInfo.name) {
                 "objc_msgSend" -> {
+                    // objc_msgSend has wrong declaration in header, so generated wrapper is strange, Let's just skip it
+                    if (LLVMGetNumArgOperands(call) < 2) continue
                     callSiteDescription = "$functionName (over objc_msgSend)"
                     calledName = null
                     val firstArgI8Ptr = LLVMBuildBitCast(builder, LLVMGetArgOperand(call, 0), int8TypePtr, "")
                     val firstArgClassPtr = LLVMBuildCall(builder, getClass, listOf(firstArgI8Ptr).toCValues(), 1, "")
                     val isNil = LLVMBuildICmp(builder, LLVMIntPredicate.LLVMIntEQ, firstArgI8Ptr, LLVMConstNull(int8TypePtr), "")
-                    val calledPtrLlvmIfNotNil = LLVMBuildCall(builder, getMethodImpl, listOf(firstArgClassPtr, LLVMGetArgOperand(call, 1)).toCValues(), 2, "")
+                    val selector = LLVMGetArgOperand(call, 1)
+                    val calledPtrLlvmIfNotNilFunPtr = LLVMBuildCall(builder, getMethodImpl, listOf(firstArgClassPtr, selector).toCValues(), 2, "")
+                    val calledPtrLlvmIfNotNil = LLVMBuildBitCast(builder, calledPtrLlvmIfNotNilFunPtr, int8TypePtr, "")
                     val calledPtrLlvmIfNil = LLVMConstIntToPtr(Int64(MSG_SEND_TO_NULL).llvm, int8TypePtr)
                     calledPtrLlvm = LLVMBuildSelect(builder, isNil, calledPtrLlvmIfNil, calledPtrLlvmIfNotNil, "")
                 }
                 "objc_msgSendSuper2" -> {
+                    if (LLVMGetNumArgOperands(call) < 2) continue
                     callSiteDescription = "$functionName (over objc_msgSendSuper2)"
                     calledName = null
                     val superStruct = LLVMGetArgOperand(call, 0)
                     val superClassPtrPtr = LLVMBuildGEP(builder, superStruct, listOf(Int32(0).llvm, Int32(1).llvm).toCValues(), 2, "")
                     val superClassPtr = LLVMBuildLoad(builder, superClassPtrPtr, "")
                     val classPtr = LLVMBuildCall(builder, getSuperClass, listOf(superClassPtr).toCValues(), 1, "")
-                    calledPtrLlvm = LLVMBuildCall(builder, getMethodImpl, listOf(classPtr, LLVMGetArgOperand(call, 1)).toCValues(), 2, "")
+                    val calledPtrLlvmFunPtr = LLVMBuildCall(builder, getMethodImpl, listOf(classPtr, LLVMGetArgOperand(call, 1)).toCValues(), 2, "")
+                    calledPtrLlvm = LLVMBuildBitCast(builder, calledPtrLlvmFunPtr, int8TypePtr, "")
                 }
                 else -> {
                     callSiteDescription = functionName
