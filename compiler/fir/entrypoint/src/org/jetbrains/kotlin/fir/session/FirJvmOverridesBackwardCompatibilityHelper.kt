@@ -14,6 +14,7 @@ import org.jetbrains.kotlin.fir.containingClass
 import org.jetbrains.kotlin.fir.declarations.*
 import org.jetbrains.kotlin.fir.dispatchReceiverTypeOrNull
 import org.jetbrains.kotlin.fir.originalOrSelf
+import org.jetbrains.kotlin.fir.resolve.toFirRegularClass
 import org.jetbrains.kotlin.fir.scopes.getDirectOverriddenFunctions
 import org.jetbrains.kotlin.fir.scopes.getDirectOverriddenProperties
 import org.jetbrains.kotlin.fir.symbols.impl.FirCallableSymbol
@@ -63,7 +64,16 @@ object FirJvmOverridesBackwardCompatibilityHelper : FirOverridesBackwardCompatib
         if (originalMember.origin !in javaOrigin) return false
         val containingClassName = originalMember.containingClass()?.classId?.asSingleFqName()?.toUnsafe() ?: return false
         // If the super class is mapped to a Kotlin built-in class, then we don't require `override` keyword.
-        if (JavaToKotlinClassMap.mapKotlinToJava(containingClassName) != null) return true
+        if (JavaToKotlinClassMap.mapKotlinToJava(containingClassName) != null) {
+            return true
+        }
+        
+        if (!originalMember.isAbstract) {
+            val containingClass = originalMember.containingClass()?.toFirRegularClass(context.session)
+            if (containingClass?.isInterface == false) {
+                return false
+            }
+        }
 
         val scope =
             symbol.dispatchReceiverTypeOrNull()?.toRegularClass(context.session)?.unsubstitutedScope(context) ?: return false

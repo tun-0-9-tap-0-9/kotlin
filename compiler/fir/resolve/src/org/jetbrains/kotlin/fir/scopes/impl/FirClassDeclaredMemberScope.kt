@@ -18,7 +18,7 @@ import org.jetbrains.kotlin.name.Name
 
 class FirClassDeclaredMemberScope(
     val useSiteSession: FirSession,
-    klass: FirClass<*>,
+    val klass: FirClass<*>,
     useLazyNestedClassifierScope: Boolean = false,
     existingNames: List<Name>? = null,
     symbolProvider: FirSymbolProvider? = null
