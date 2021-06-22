@@ -306,6 +306,13 @@ internal val checkExternalCallsPhase = makeKonanModuleOpPhase(
         op = { context, _ -> checkLlvmModuleExternalCalls(context) }
 )
 
+internal val addFunctionsListPhase = makeKonanModuleOpPhase(
+        name = "AddFunctionsList",
+        description = "Add list of all function to binary",
+        op = { context, _ -> addFunctionsListSymbolForChecker(context) }
+)
+
+
 
 internal val bitcodeOptimizationPhase = makeKonanModuleOpPhase(
         name = "BitcodeOptimization",

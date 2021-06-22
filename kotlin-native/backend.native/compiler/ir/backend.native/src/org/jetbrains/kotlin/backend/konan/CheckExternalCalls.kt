@@ -151,11 +151,21 @@ internal fun checkLlvmModuleExternalCalls(context: Context) {
     } ?: emptySet()
 
     val checker = CallsChecker(context)
+    getFunctions(context.llvmModule!!)
+            .filter { !it.isExternalFunction() && it.name !in ignoredFunctions }
+            .forEach(checker::processFunction)
+    context.verifyBitCode()
+}
+
+// this should be a separate pass, to handle DCE correctly
+internal fun addFunctionsListSymbolForChecker(context: Context) {
+    val staticData = context.llvm.staticData
+
     val functions = getFunctions(context.llvmModule!!)
             .filter { !it.isExternalFunction() }
+            .map { constPointer(it).bitcast(int8TypePtr) }
             .toList()
-    functions.asSequence().filterNot { it.name in ignoredFunctions }.forEach(checker::processFunction)
-    val functionsArray = staticData.placeGlobalConstArray("", int8TypePtr, functions.map { constPointer(it).bitcast(int8TypePtr) })
+    val functionsArray = staticData.placeGlobalConstArray("", int8TypePtr, functions)
     staticData.getGlobal("Kotlin_callsCheckerKnownFunctions")
             ?.setInitializer(functionsArray)
             ?: throw IllegalStateException("Kotlin_callsCheckerKnownFunctions global not found")
