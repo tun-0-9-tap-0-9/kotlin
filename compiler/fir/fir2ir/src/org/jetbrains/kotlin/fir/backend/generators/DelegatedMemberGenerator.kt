@@ -26,9 +26,13 @@ import org.jetbrains.kotlin.ir.types.*
  * methods and properties in the super-interface, and creates corresponding members in the subclass.
  * TODO: generic super interface types and generic delegated members.
  */
-internal class DelegatedMemberGenerator(
+class DelegatedMemberGenerator(
     private val components: Fir2IrComponents
 ) : Fir2IrComponents by components {
+
+
+    private val baseFunctionSymbols = mutableMapOf<IrFunction, List<FirNamedFunctionSymbol>>()
+    private val basePropertySymbols = mutableMapOf<IrProperty, List<FirPropertySymbol>>()
 
     // Generate delegated members for [subClass]. The synthetic field [irField] has the super interface type.
     fun generate(irField: IrField, firField: FirField, firSubClass: FirClass<*>, subClass: IrClass) {
@@ -77,6 +81,28 @@ internal class DelegatedMemberGenerator(
         }
     }
 
+    fun bindDelegatedMembersOverriddenSymbols(irClass: IrClass) {
+        val superClasses by lazy(LazyThreadSafetyMode.NONE) {
+            irClass.superTypes.mapNotNullTo(mutableSetOf()) { it.classifierOrNull?.owner as? IrClass }
+        }
+        for (declaration in irClass.declarations) {
+            if (declaration.origin != IrDeclarationOrigin.DELEGATED_MEMBER) continue
+            when (declaration) {
+                is IrSimpleFunction -> {
+                    declaration.overriddenSymbols = baseFunctionSymbols[declaration]?.flatMap {
+                        fakeOverrideGenerator.getOverriddenSymbolsInSupertypes(it, superClasses)
+                    }?.filter { it.owner != declaration }.orEmpty()
+                }
+                is IrProperty -> {
+                    declaration.overriddenSymbols = basePropertySymbols[declaration]?.flatMap {
+                        fakeOverrideGenerator.getOverriddenSymbolsInSupertypes(it, superClasses)
+                    }?.filter { it.owner != declaration }.orEmpty()
+                }
+                else -> continue
+            }
+        }
+    }
+
     private fun generateDelegatedFunction(
         subClass: IrClass,
         firSubClass: FirClass<*>,
@@ -89,15 +115,13 @@ internal class DelegatedMemberGenerator(
                 delegateOverride, subClass, origin = IrDeclarationOrigin.DELEGATED_MEMBER,
                 containingClass = firSubClass.symbol.toLookupTag()
             )
-        delegateFunction.overriddenSymbols =
-            delegateOverride.generateOverriddenFunctionSymbols(
-                firSubClass,
-                session,
-                scopeSession,
-                declarationStorage,
-                fakeOverrideGenerator
-            )
-                .filter { it.owner != delegateFunction }
+        val baseSymbols = mutableListOf<FirNamedFunctionSymbol>()
+        // the overridden symbols should be collected only after all fake overrides for all superclases are created and bound to their
+        // overridden symbols, otherwise in some cases they will be left in inconsistent state leading to the errors in IR
+        delegateOverride.processOverriddenFunctionSymbols(firSubClass, session, scopeSession) {
+            baseSymbols.add(it)
+        }
+        baseFunctionSymbols[delegateFunction] = baseSymbols
         annotationGenerator.generate(delegateFunction, delegateOverride)
 
         val body = createDelegateBody(irField, delegateFunction, superFunction)
@@ -161,14 +185,13 @@ internal class DelegatedMemberGenerator(
                 firDelegateProperty, subClass, origin = IrDeclarationOrigin.DELEGATED_MEMBER,
                 containingClass = firSubClass.symbol.toLookupTag()
             )
-        delegateProperty.overriddenSymbols =
-            firDelegateProperty.generateOverriddenPropertySymbols(
-                firSubClass,
-                session,
-                scopeSession,
-                declarationStorage,
-                fakeOverrideGenerator
-            )
+        // the overridden symbols should be collected only after all fake overrides for all superclases are created and bound to their
+        // overridden symbols, otherwise in some cases they will be left in inconsistent state leading to the errors in IR
+        val baseSymbols = mutableListOf<FirPropertySymbol>()
+        firDelegateProperty.processOverriddenPropertySymbols(firSubClass, session, scopeSession) {
+            baseSymbols.add(it)
+        }
+        basePropertySymbols[delegateProperty] = baseSymbols
         annotationGenerator.generate(delegateProperty, firDelegateProperty)
 
         delegateProperty.getter!!.body = createDelegateBody(irField, delegateProperty.getter!!, superProperty.getter!!)
