@@ -3,18 +3,14 @@
  * that can be found in the LICENSE file.
  */
 
-#include <cerrno>
 #include <string_view>
 #include <cstring>
-#include <cstdio>
-#include <unistd.h>
 
 #include "KAssert.h"
 #include "Memory.h"
 #include "Porting.h"
 #include "ThreadData.hpp"
 #include "ThreadRegistry.hpp"
-#include "ThreadState.hpp"
 #include "ExecFormat.h"
 
 using namespace kotlin;
@@ -248,61 +244,45 @@ constexpr const char* goodFunctionNames[] = {
         "llvm.x86.ssse3.*",
 };
 
-thread_local bool recursiveCallGuard = false;
-bool checkerWasDestroyed = false;
-
 class KnownFunctionChecker {
-    std::atomic<int> inited = false;
-    std::unordered_set<const void*> known_functions;
-    std::string_view good_names_copy[sizeof(goodFunctionNames) / sizeof(goodFunctionNames[0])];
-
-    void init() {
-        if (inited.load() == 2) return;
-        int actual = 0;
-        if (!inited.compare_exchange_strong(actual, 1)) {
-            while (inited.load() != 2) {
-            }
-            return;
-        }
-        for (int i = 0; i < Kotlin_callsCheckerKnownFunctionsCount; i++) {
-            known_functions.insert(Kotlin_callsCheckerKnownFunctions[i]);
-        }
-        std::copy(std::begin(goodFunctionNames), std::end(goodFunctionNames), std::begin(good_names_copy));
-        std::sort(std::begin(good_names_copy), std::end(good_names_copy));
-
-        inited.store(2);
-    }
-
 public:
-    bool isKnown(const void* fun) noexcept {
-        init();
-        return known_functions.find(fun) != known_functions.end();
+    KnownFunctionChecker() {
+        for (int i = 0; i < Kotlin_callsCheckerKnownFunctionsCount; i++) {
+            known_functions_.insert(Kotlin_callsCheckerKnownFunctions[i]);
+        }
+        std::copy(std::begin(goodFunctionNames), std::end(goodFunctionNames), std::begin(good_names_copy_));
+        std::sort(std::begin(good_names_copy_), std::end(good_names_copy_));
     }
 
-    bool isSafeByName(std::string_view name) noexcept {
-        init();
-        auto it = std::lower_bound(std::begin(good_names_copy), std::end(good_names_copy), name);
+    bool isKnown(const void* fun) const noexcept {
+        return known_functions_.find(fun) != known_functions_.end();
+    }
+
+    bool isSafeByName(std::string_view name) const noexcept {
+        auto it = std::lower_bound(std::begin(good_names_copy_), std::end(good_names_copy_), name);
         auto check = [&](std::string_view banned) {
             if (banned.back() != '*') {
                 return banned == name;
             }
             return name.substr(0, banned.size() - 1) == banned.substr(0, banned.size() - 1);
         };
-        if (it != std::end(good_names_copy) && check(*it)) {
+        if (it != std::end(good_names_copy_) && check(*it)) {
            return true;
         }
-        if (it != std::begin(good_names_copy) && check(*std::prev(it))) {
+        if (it != std::begin(good_names_copy_) && check(*std::prev(it))) {
            return true;
         }
         return false;
     }
 
-    ~KnownFunctionChecker() {
-        checkerWasDestroyed = true;
-    }
+    ~KnownFunctionChecker() = delete;
+
+private:
+    KStdUnorderedSet<const void*> known_functions_;
+    std::string_view good_names_copy_[sizeof(goodFunctionNames) / sizeof(goodFunctionNames[0])];
 };
 
-KnownFunctionChecker checker;
+[[clang::no_destroy]] const KnownFunctionChecker checker;
 
 
 constexpr int MSG_SEND_TO_NULL = -1;
@@ -322,8 +302,8 @@ constexpr int CALLED_LLVM_BUILTIN = -2;
  */
 extern "C" RUNTIME_NOTHROW void Kotlin_mm_checkStateAtExternalFunctionCall(const char* caller, const char *callee, const void *calleePtr) noexcept {
     if (reinterpret_cast<int64_t>(calleePtr) == MSG_SEND_TO_NULL) return; // objc_sendMsg called on nil, it does nothing, so it's ok
-    if (!strcmp(caller, "_ZN5konan36isOnThreadExitNotSetOrAlreadyStartedEv")) return;
-    if (checkerWasDestroyed || konan::isOnThreadExitNotSetOrAlreadyStarted()) return;
+    if (konan::isOnThreadExitNotSetOrAlreadyStarted()) return;
+    static thread_local bool recursiveCallGuard = false;
     if (recursiveCallGuard) return;
     if (!mm::ThreadRegistry::Instance().IsCurrentThreadRegistered()) return;
     struct unlockGuard {
