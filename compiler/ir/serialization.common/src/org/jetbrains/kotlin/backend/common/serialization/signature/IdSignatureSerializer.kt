@@ -167,7 +167,11 @@ class PublicIdSignatureComputer(val mangler: KotlinMangler.IrMangler) : IdSignat
             parent.accept(this, null)
             createContainer()
 
-            classFqnSegments.add(MangleConstant.TYPE_PARAMETER_MARKER_NAME)
+            if (parent is IrProperty && parent.setter == rawParent) {
+                classFqnSegments.add(MangleConstant.TYPE_PARAMETER_MARKER_NAME_SETTER)
+            } else {
+                classFqnSegments.add(MangleConstant.TYPE_PARAMETER_MARKER_NAME)
+            }
             hashId = declaration.index.toLong()
             description = declaration.render()
         }
