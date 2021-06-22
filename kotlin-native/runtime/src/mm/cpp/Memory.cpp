@@ -107,7 +107,7 @@ extern "C" void DeinitMemory(MemoryState* state, bool destroyRuntime) {
     }
     mm::ThreadRegistry::Instance().Unregister(node);
     if (destroyRuntime) {
-        mm::ThreadRegistry::TestSupport::ClearCurrentThreadData();
+        mm::ThreadRegistry::ClearCurrentThreadData();
     }
 }
 
