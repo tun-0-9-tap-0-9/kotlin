@@ -86,7 +86,6 @@ open class IdSignatureSerializer(val mangler: KotlinMangler.IrMangler) : IdSigna
         }
 
         override fun visitScript(declaration: IrScript) {
-            hashId = mangler.run { declaration.signatureMangle }
             collectFqNames(declaration)
         }
 

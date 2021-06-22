@@ -74,7 +74,6 @@ open class IdSignatureDescriptor(private val mangler: KotlinMangler.DescriptorMa
 
         override fun visitScriptDescriptor(scriptDescriptor: ScriptDescriptor, data: Nothing?) {
             collectFqNames(scriptDescriptor)
-            hashId = mangler.run { scriptDescriptor.signatureMangle }
         }
 
         override fun visitPropertyDescriptor(descriptor: PropertyDescriptor, data: Nothing?) {
