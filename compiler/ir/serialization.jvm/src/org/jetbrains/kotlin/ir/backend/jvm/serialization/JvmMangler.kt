@@ -33,11 +33,16 @@ abstract class AbstractJvmManglerIr : IrBasedKotlinManglerImpl() {
 
     private class JvmIrExportChecker : IrExportCheckerVisitor() {
         override fun IrDeclaration.isPlatformSpecificExported(): Boolean {
-            // We need public signatures for monitorEnter/monitorExit
-            return (this as? IrSimpleFunction)?.let {
-                name.asString().let { it == "monitorEnter" || it == "monitorExit" } &&
-                        fqNameWhenAvailable?.toString()?.startsWith("kotlin.jvm.internal.unsafe") == true
-            } == true
+            // We need to handle references to file-level declarations from classes declared in those files.
+            // Thus we give them all public signatures
+            return (parent as? IrDeclaration)?.origin?.let {
+                it == IrDeclarationOrigin.FILE_CLASS || it == IrDeclarationOrigin.JVM_MULTIFILE_CLASS
+            } == true ||
+                    // We also need public signatures for monitorEnter/monitorExit
+                    (this as? IrSimpleFunction)?.let {
+                        name.asString().let { it == "monitorEnter" || it == "monitorExit" } &&
+                                fqNameWhenAvailable?.toString()?.startsWith("kotlin.jvm.internal.unsafe") == true
+                    } == true
         }
 
         override fun visitField(declaration: IrField, data: Nothing?): Boolean {
