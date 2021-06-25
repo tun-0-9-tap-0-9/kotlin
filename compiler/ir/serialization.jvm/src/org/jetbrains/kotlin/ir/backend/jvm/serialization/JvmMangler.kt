@@ -19,10 +19,8 @@ import org.jetbrains.kotlin.descriptors.DeclarationDescriptor
 import org.jetbrains.kotlin.descriptors.FunctionDescriptor
 import org.jetbrains.kotlin.descriptors.PropertyDescriptor
 import org.jetbrains.kotlin.idea.MainFunctionDetector
-import org.jetbrains.kotlin.ir.declarations.IrDeclaration
-import org.jetbrains.kotlin.ir.declarations.IrDeclarationOrigin
-import org.jetbrains.kotlin.ir.declarations.IrFunction
-import org.jetbrains.kotlin.ir.declarations.IrField
+import org.jetbrains.kotlin.ir.declarations.*
+import org.jetbrains.kotlin.ir.util.fqNameWhenAvailable
 import org.jetbrains.kotlin.ir.util.isFromJava
 import org.jetbrains.kotlin.load.java.descriptors.JavaMethodDescriptor
 import org.jetbrains.kotlin.load.java.lazy.descriptors.isJavaField
@@ -34,7 +32,13 @@ abstract class AbstractJvmManglerIr : IrBasedKotlinManglerImpl() {
     }
 
     private class JvmIrExportChecker : IrExportCheckerVisitor() {
-        override fun IrDeclaration.isPlatformSpecificExported() = false
+        override fun IrDeclaration.isPlatformSpecificExported(): Boolean {
+            // We need public signatures for monitorEnter/monitorExit
+            return (this as? IrSimpleFunction)?.let {
+                name.asString().let { it == "monitorEnter" || it == "monitorExit" } &&
+                        fqNameWhenAvailable?.toString()?.startsWith("kotlin.jvm.internal.unsafe") == true
+            } == true
+        }
 
         override fun visitField(declaration: IrField, data: Nothing?): Boolean {
             if (declaration.origin == IrDeclarationOrigin.IR_EXTERNAL_JAVA_DECLARATION_STUB) return true
