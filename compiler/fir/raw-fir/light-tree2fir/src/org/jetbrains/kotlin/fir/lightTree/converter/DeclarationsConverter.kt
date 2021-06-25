@@ -225,30 +225,30 @@ class DeclarationsConverter(
      * @see org.jetbrains.kotlin.parsing.KotlinParsing.parseTypeModifierList
      */
     private fun convertTypeModifierList(modifiers: LighterASTNode): TypeModifier {
-        val typeModifierList = TypeModifier()
+        val typeModifier = TypeModifier()
         modifiers.forEachChildren {
             when (it.tokenType) {
-                ANNOTATION -> typeModifierList.annotations += convertAnnotation(it)
-                ANNOTATION_ENTRY -> typeModifierList.annotations += convertAnnotationEntry(it)
-                is KtModifierKeywordToken -> typeModifierList.addModifier(it)
+                ANNOTATION -> typeModifier.annotations += convertAnnotation(it)
+                ANNOTATION_ENTRY -> typeModifier.annotations += convertAnnotationEntry(it)
+                is KtModifierKeywordToken -> typeModifier.addModifier(it)
             }
         }
-        return typeModifierList
+        return typeModifier
     }
 
     /**
      * @see org.jetbrains.kotlin.parsing.KotlinParsing.parseTypeArgumentModifierList
      */
     private fun convertTypeArgumentModifierList(modifiers: LighterASTNode): TypeProjectionModifier {
-        val typeArgumentModifierList = TypeProjectionModifier()
+        val typeArgumentModifier = TypeProjectionModifier()
         modifiers.forEachChildren {
             when (it.tokenType) {
-                ANNOTATION -> typeArgumentModifierList.annotations += convertAnnotation(it)
-                ANNOTATION_ENTRY -> typeArgumentModifierList.annotations += convertAnnotationEntry(it)
-                is KtModifierKeywordToken -> typeArgumentModifierList.addModifier(it)
+                ANNOTATION -> typeArgumentModifier.annotations += convertAnnotation(it)
+                ANNOTATION_ENTRY -> typeArgumentModifier.annotations += convertAnnotationEntry(it)
+                is KtModifierKeywordToken -> typeArgumentModifier.addModifier(it)
             }
         }
-        return typeArgumentModifierList
+        return typeArgumentModifier
     }
 
     /**
@@ -1135,8 +1135,7 @@ class DeclarationsConverter(
         var isVar = false
         val entries = mutableListOf<FirVariable<*>?>()
         val source = destructingDeclaration.toFirSourceElement()
-        var firExpression: FirExpression =
-            buildErrorExpression(null, ConeSimpleDiagnostic("Initializer required for destructuring declaration", DiagnosticKind.Syntax))
+        var firExpression: FirExpression? = null
         destructingDeclaration.forEachChildren {
             when (it.tokenType) {
                 VAR_KEYWORD -> isVar = true
@@ -1146,7 +1145,15 @@ class DeclarationsConverter(
             }
         }
 
-        return DestructuringDeclaration(isVar, entries, firExpression, source)
+        return DestructuringDeclaration(
+            isVar,
+            entries,
+            firExpression ?: buildErrorExpression(
+                null,
+                ConeSimpleDiagnostic("Initializer required for destructuring declaration", DiagnosticKind.Syntax)
+            ),
+            source
+        )
     }
 
     /**
@@ -1566,9 +1573,7 @@ class DeclarationsConverter(
      */
     private fun convertExplicitDelegation(explicitDelegation: LighterASTNode, delegateFields: MutableList<FirField>): FirTypeRef {
         lateinit var firTypeRef: FirTypeRef
-        var firExpression: FirExpression? = buildErrorExpression(
-            explicitDelegation.toFirSourceElement(), ConeSimpleDiagnostic("Should have delegate", DiagnosticKind.Syntax)
-        )
+        var firExpression: FirExpression? = null
         explicitDelegation.forEachChildren {
             when (it.tokenType) {
                 TYPE_REFERENCE -> firTypeRef = convertType(it)
@@ -1576,10 +1581,14 @@ class DeclarationsConverter(
             }
         }
 
+        val calculatedFirExpression = firExpression ?: buildErrorExpression(
+            explicitDelegation.toFirSourceElement(), ConeSimpleDiagnostic("Should have delegate", DiagnosticKind.Syntax)
+        )
+
         val delegateName = Name.special("<\$\$delegate_${delegateFields.size}>")
         delegateFields.add(
             buildField {
-                source = firExpression!!.source?.fakeElement(FirFakeSourceElementKind.ClassDelegationField)
+                source = calculatedFirExpression.source?.fakeElement(FirFakeSourceElementKind.ClassDelegationField)
                 moduleData = baseModuleData
                 origin = FirDeclarationOrigin.Synthetic
                 name = delegateName
@@ -1587,7 +1596,7 @@ class DeclarationsConverter(
                 symbol = FirFieldSymbol(CallableId(name))
                 isVar = false
                 status = FirDeclarationStatusImpl(Visibilities.Local, Modality.FINAL)
-                initializer = firExpression
+                initializer = calculatedFirExpression
             }
         )
         return firTypeRef
@@ -1702,10 +1711,7 @@ class DeclarationsConverter(
         // TODO: Report MODIFIER_LIST_NOT_ALLOWED error when there are multiple modifier lists. How do we report on each of them?
         val allTypeModifiers = mutableListOf<TypeModifier>()
 
-        var firType: FirTypeRef = buildErrorTypeRef {
-            source = typeRefSource
-            diagnostic = ConeSimpleDiagnostic("Incomplete code", DiagnosticKind.Syntax)
-        }
+        var firType: FirTypeRef? = null
         type.forEachChildren {
             when (it.tokenType) {
                 TYPE_REFERENCE -> firType = convertType(it)
@@ -1726,10 +1732,15 @@ class DeclarationsConverter(
             }
         }
 
-        for (modifierList in allTypeModifiers) {
-            (firType.annotations as MutableList<FirAnnotationCall>) += modifierList.annotations
+        val calculatedFirType = firType ?: buildErrorTypeRef {
+            source = typeRefSource
+            diagnostic = ConeSimpleDiagnostic("Incomplete code", DiagnosticKind.Syntax)
         }
-        return firType
+
+        for (modifierList in allTypeModifiers) {
+            (calculatedFirType.annotations as MutableList<FirAnnotationCall>) += modifierList.annotations
+        }
+        return calculatedFirType
     }
 
     private fun Collection<TypeModifier>.hasSuspend() = any { it.hasSuspend() }
