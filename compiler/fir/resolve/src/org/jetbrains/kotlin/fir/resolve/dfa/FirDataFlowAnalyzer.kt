@@ -205,7 +205,7 @@ abstract class FirDataFlowAnalyzer<FLOW : Flow>(
 
     // ----------------------------------- Named function -----------------------------------
 
-    fun enterFunction(function: FirFunction<*>) {
+    fun enterFunction(function: FirFunction) {
         if (function is FirAnonymousFunction) {
             enterAnonymousFunction(function)
             return
@@ -215,7 +215,7 @@ abstract class FirDataFlowAnalyzer<FLOW : Flow>(
         functionEnterNode.mergeIncomingFlow(shouldForkFlow = previousNode != null)
     }
 
-    fun exitFunction(function: FirFunction<*>): FirControlFlowGraphReference {
+    fun exitFunction(function: FirFunction): FirControlFlowGraphReference {
         if (function is FirAnonymousFunction) {
             return exitAnonymousFunction(function)
         }
@@ -276,7 +276,7 @@ abstract class FirDataFlowAnalyzer<FLOW : Flow>(
     }
 
     fun exitRegularClass(klass: FirRegularClass): ControlFlowGraph {
-        if (klass.isLocal && components.container !is FirClass<*>) return exitLocalClass(klass)
+        if (klass.isLocal && components.container !is FirClass) return exitLocalClass(klass)
         return graphBuilder.exitClass(klass)
     }
 

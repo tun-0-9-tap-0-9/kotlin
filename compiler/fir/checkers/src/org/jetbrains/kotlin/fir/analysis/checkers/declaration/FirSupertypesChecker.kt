@@ -24,7 +24,7 @@ import org.jetbrains.kotlin.fir.types.isExtensionFunctionType
 import org.jetbrains.kotlin.utils.addToStdlib.safeAs
 
 object FirSupertypesChecker : FirClassChecker() {
-    override fun check(declaration: FirClass<*>, context: CheckerContext, reporter: DiagnosticReporter) {
+    override fun check(declaration: FirClass, context: CheckerContext, reporter: DiagnosticReporter) {
         val isInterface = declaration.classKind == ClassKind.INTERFACE
         var nullableSupertypeReported = false
         var extensionFunctionSupertypeReported = false

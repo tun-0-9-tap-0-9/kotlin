@@ -793,7 +793,7 @@ internal val KT_DIAGNOSTIC_CONVERTER = KtDiagnosticConverterBuilder.buildConvert
     add(FirErrors.EXPOSED_TYPEALIAS_EXPANDED_TYPE) { firDiagnostic ->
         ExposedTypealiasExpandedTypeImpl(
             firDiagnostic.a,
-            firSymbolBuilder.buildSymbol(firDiagnostic.b as FirDeclaration<*>),
+            firSymbolBuilder.buildSymbol(firDiagnostic.b as FirDeclaration),
             firDiagnostic.c,
             firDiagnostic as FirPsiDiagnostic,
             token,
@@ -802,7 +802,7 @@ internal val KT_DIAGNOSTIC_CONVERTER = KtDiagnosticConverterBuilder.buildConvert
     add(FirErrors.EXPOSED_FUNCTION_RETURN_TYPE) { firDiagnostic ->
         ExposedFunctionReturnTypeImpl(
             firDiagnostic.a,
-            firSymbolBuilder.buildSymbol(firDiagnostic.b as FirDeclaration<*>),
+            firSymbolBuilder.buildSymbol(firDiagnostic.b as FirDeclaration),
             firDiagnostic.c,
             firDiagnostic as FirPsiDiagnostic,
             token,
@@ -811,7 +811,7 @@ internal val KT_DIAGNOSTIC_CONVERTER = KtDiagnosticConverterBuilder.buildConvert
     add(FirErrors.EXPOSED_RECEIVER_TYPE) { firDiagnostic ->
         ExposedReceiverTypeImpl(
             firDiagnostic.a,
-            firSymbolBuilder.buildSymbol(firDiagnostic.b as FirDeclaration<*>),
+            firSymbolBuilder.buildSymbol(firDiagnostic.b as FirDeclaration),
             firDiagnostic.c,
             firDiagnostic as FirPsiDiagnostic,
             token,
@@ -820,7 +820,7 @@ internal val KT_DIAGNOSTIC_CONVERTER = KtDiagnosticConverterBuilder.buildConvert
     add(FirErrors.EXPOSED_PROPERTY_TYPE) { firDiagnostic ->
         ExposedPropertyTypeImpl(
             firDiagnostic.a,
-            firSymbolBuilder.buildSymbol(firDiagnostic.b as FirDeclaration<*>),
+            firSymbolBuilder.buildSymbol(firDiagnostic.b as FirDeclaration),
             firDiagnostic.c,
             firDiagnostic as FirPsiDiagnostic,
             token,
@@ -829,7 +829,7 @@ internal val KT_DIAGNOSTIC_CONVERTER = KtDiagnosticConverterBuilder.buildConvert
     add(FirErrors.EXPOSED_PROPERTY_TYPE_IN_CONSTRUCTOR) { firDiagnostic ->
         ExposedPropertyTypeInConstructorImpl(
             firDiagnostic.a,
-            firSymbolBuilder.buildSymbol(firDiagnostic.b as FirDeclaration<*>),
+            firSymbolBuilder.buildSymbol(firDiagnostic.b as FirDeclaration),
             firDiagnostic.c,
             firDiagnostic as FirPsiDiagnostic,
             token,
@@ -838,7 +838,7 @@ internal val KT_DIAGNOSTIC_CONVERTER = KtDiagnosticConverterBuilder.buildConvert
     add(FirErrors.EXPOSED_PARAMETER_TYPE) { firDiagnostic ->
         ExposedParameterTypeImpl(
             firDiagnostic.a,
-            firSymbolBuilder.buildSymbol(firDiagnostic.b as FirDeclaration<*>),
+            firSymbolBuilder.buildSymbol(firDiagnostic.b as FirDeclaration),
             firDiagnostic.c,
             firDiagnostic as FirPsiDiagnostic,
             token,
@@ -847,7 +847,7 @@ internal val KT_DIAGNOSTIC_CONVERTER = KtDiagnosticConverterBuilder.buildConvert
     add(FirErrors.EXPOSED_SUPER_INTERFACE) { firDiagnostic ->
         ExposedSuperInterfaceImpl(
             firDiagnostic.a,
-            firSymbolBuilder.buildSymbol(firDiagnostic.b as FirDeclaration<*>),
+            firSymbolBuilder.buildSymbol(firDiagnostic.b as FirDeclaration),
             firDiagnostic.c,
             firDiagnostic as FirPsiDiagnostic,
             token,
@@ -856,7 +856,7 @@ internal val KT_DIAGNOSTIC_CONVERTER = KtDiagnosticConverterBuilder.buildConvert
     add(FirErrors.EXPOSED_SUPER_CLASS) { firDiagnostic ->
         ExposedSuperClassImpl(
             firDiagnostic.a,
-            firSymbolBuilder.buildSymbol(firDiagnostic.b as FirDeclaration<*>),
+            firSymbolBuilder.buildSymbol(firDiagnostic.b as FirDeclaration),
             firDiagnostic.c,
             firDiagnostic as FirPsiDiagnostic,
             token,
@@ -865,7 +865,7 @@ internal val KT_DIAGNOSTIC_CONVERTER = KtDiagnosticConverterBuilder.buildConvert
     add(FirErrors.EXPOSED_TYPE_PARAMETER_BOUND) { firDiagnostic ->
         ExposedTypeParameterBoundImpl(
             firDiagnostic.a,
-            firSymbolBuilder.buildSymbol(firDiagnostic.b as FirDeclaration<*>),
+            firSymbolBuilder.buildSymbol(firDiagnostic.b as FirDeclaration),
             firDiagnostic.c,
             firDiagnostic as FirPsiDiagnostic,
             token,
@@ -1252,7 +1252,7 @@ internal val KT_DIAGNOSTIC_CONVERTER = KtDiagnosticConverterBuilder.buildConvert
     add(FirErrors.WRONG_NUMBER_OF_TYPE_ARGUMENTS) { firDiagnostic ->
         WrongNumberOfTypeArgumentsImpl(
             firDiagnostic.a,
-            firSymbolBuilder.classifierBuilder.buildClassLikeSymbol(firDiagnostic.b.fir as FirClass<*>),
+            firSymbolBuilder.classifierBuilder.buildClassLikeSymbol(firDiagnostic.b.fir as FirClass),
             firDiagnostic as FirPsiDiagnostic,
             token,
         )
@@ -1260,7 +1260,7 @@ internal val KT_DIAGNOSTIC_CONVERTER = KtDiagnosticConverterBuilder.buildConvert
     add(FirErrors.NO_TYPE_ARGUMENTS_ON_RHS) { firDiagnostic ->
         NoTypeArgumentsOnRhsImpl(
             firDiagnostic.a,
-            firSymbolBuilder.classifierBuilder.buildClassLikeSymbol(firDiagnostic.b.fir as FirClass<*>),
+            firSymbolBuilder.classifierBuilder.buildClassLikeSymbol(firDiagnostic.b.fir as FirClass),
             firDiagnostic as FirPsiDiagnostic,
             token,
         )
@@ -1542,7 +1542,7 @@ internal val KT_DIAGNOSTIC_CONVERTER = KtDiagnosticConverterBuilder.buildConvert
     }
     add(FirErrors.NOTHING_TO_OVERRIDE) { firDiagnostic ->
         NothingToOverrideImpl(
-            firSymbolBuilder.buildSymbol(firDiagnostic.a as FirDeclaration<*>),
+            firSymbolBuilder.buildSymbol(firDiagnostic.a as FirDeclaration),
             firDiagnostic as FirPsiDiagnostic,
             token,
         )
@@ -1639,32 +1639,32 @@ internal val KT_DIAGNOSTIC_CONVERTER = KtDiagnosticConverterBuilder.buildConvert
     }
     add(FirErrors.RETURN_TYPE_MISMATCH_ON_OVERRIDE) { firDiagnostic ->
         ReturnTypeMismatchOnOverrideImpl(
-            firSymbolBuilder.buildSymbol(firDiagnostic.a as FirDeclaration<*>),
-            firSymbolBuilder.buildSymbol(firDiagnostic.b as FirDeclaration<*>),
+            firSymbolBuilder.buildSymbol(firDiagnostic.a as FirDeclaration),
+            firSymbolBuilder.buildSymbol(firDiagnostic.b as FirDeclaration),
             firDiagnostic as FirPsiDiagnostic,
             token,
         )
     }
     add(FirErrors.PROPERTY_TYPE_MISMATCH_ON_OVERRIDE) { firDiagnostic ->
         PropertyTypeMismatchOnOverrideImpl(
-            firSymbolBuilder.buildSymbol(firDiagnostic.a as FirDeclaration<*>),
-            firSymbolBuilder.buildSymbol(firDiagnostic.b as FirDeclaration<*>),
+            firSymbolBuilder.buildSymbol(firDiagnostic.a as FirDeclaration),
+            firSymbolBuilder.buildSymbol(firDiagnostic.b as FirDeclaration),
             firDiagnostic as FirPsiDiagnostic,
             token,
         )
     }
     add(FirErrors.VAR_TYPE_MISMATCH_ON_OVERRIDE) { firDiagnostic ->
         VarTypeMismatchOnOverrideImpl(
-            firSymbolBuilder.buildSymbol(firDiagnostic.a as FirDeclaration<*>),
-            firSymbolBuilder.buildSymbol(firDiagnostic.b as FirDeclaration<*>),
+            firSymbolBuilder.buildSymbol(firDiagnostic.a as FirDeclaration),
+            firSymbolBuilder.buildSymbol(firDiagnostic.b as FirDeclaration),
             firDiagnostic as FirPsiDiagnostic,
             token,
         )
     }
     add(FirErrors.VAR_OVERRIDDEN_BY_VAL) { firDiagnostic ->
         VarOverriddenByValImpl(
-            firSymbolBuilder.buildSymbol(firDiagnostic.a as FirDeclaration<*>),
-            firSymbolBuilder.buildSymbol(firDiagnostic.b as FirDeclaration<*>),
+            firSymbolBuilder.buildSymbol(firDiagnostic.a as FirDeclaration),
+            firSymbolBuilder.buildSymbol(firDiagnostic.b as FirDeclaration),
             firDiagnostic as FirPsiDiagnostic,
             token,
         )
@@ -1683,7 +1683,7 @@ internal val KT_DIAGNOSTIC_CONVERTER = KtDiagnosticConverterBuilder.buildConvert
     }
     add(FirErrors.VIRTUAL_MEMBER_HIDDEN) { firDiagnostic ->
         VirtualMemberHiddenImpl(
-            firSymbolBuilder.buildSymbol(firDiagnostic.a as FirDeclaration<*>),
+            firSymbolBuilder.buildSymbol(firDiagnostic.a as FirDeclaration),
             firSymbolBuilder.classifierBuilder.buildClassLikeSymbol(firDiagnostic.b) as KtNamedClassOrObjectSymbol,
             firDiagnostic as FirPsiDiagnostic,
             token,
@@ -1735,7 +1735,7 @@ internal val KT_DIAGNOSTIC_CONVERTER = KtDiagnosticConverterBuilder.buildConvert
     }
     add(FirErrors.ABSTRACT_FUNCTION_IN_NON_ABSTRACT_CLASS) { firDiagnostic ->
         AbstractFunctionInNonAbstractClassImpl(
-            firSymbolBuilder.buildSymbol(firDiagnostic.a as FirDeclaration<*>),
+            firSymbolBuilder.buildSymbol(firDiagnostic.a as FirDeclaration),
             firSymbolBuilder.classifierBuilder.buildClassLikeSymbol(firDiagnostic.b),
             firDiagnostic as FirPsiDiagnostic,
             token,
@@ -1743,28 +1743,28 @@ internal val KT_DIAGNOSTIC_CONVERTER = KtDiagnosticConverterBuilder.buildConvert
     }
     add(FirErrors.ABSTRACT_FUNCTION_WITH_BODY) { firDiagnostic ->
         AbstractFunctionWithBodyImpl(
-            firSymbolBuilder.buildSymbol(firDiagnostic.a as FirDeclaration<*>),
+            firSymbolBuilder.buildSymbol(firDiagnostic.a as FirDeclaration),
             firDiagnostic as FirPsiDiagnostic,
             token,
         )
     }
     add(FirErrors.NON_ABSTRACT_FUNCTION_WITH_NO_BODY) { firDiagnostic ->
         NonAbstractFunctionWithNoBodyImpl(
-            firSymbolBuilder.buildSymbol(firDiagnostic.a as FirDeclaration<*>),
+            firSymbolBuilder.buildSymbol(firDiagnostic.a as FirDeclaration),
             firDiagnostic as FirPsiDiagnostic,
             token,
         )
     }
     add(FirErrors.PRIVATE_FUNCTION_WITH_NO_BODY) { firDiagnostic ->
         PrivateFunctionWithNoBodyImpl(
-            firSymbolBuilder.buildSymbol(firDiagnostic.a as FirDeclaration<*>),
+            firSymbolBuilder.buildSymbol(firDiagnostic.a as FirDeclaration),
             firDiagnostic as FirPsiDiagnostic,
             token,
         )
     }
     add(FirErrors.NON_MEMBER_FUNCTION_NO_BODY) { firDiagnostic ->
         NonMemberFunctionNoBodyImpl(
-            firSymbolBuilder.buildSymbol(firDiagnostic.a as FirDeclaration<*>),
+            firSymbolBuilder.buildSymbol(firDiagnostic.a as FirDeclaration),
             firDiagnostic as FirPsiDiagnostic,
             token,
         )
@@ -1856,7 +1856,7 @@ internal val KT_DIAGNOSTIC_CONVERTER = KtDiagnosticConverterBuilder.buildConvert
     }
     add(FirErrors.ABSTRACT_PROPERTY_IN_NON_ABSTRACT_CLASS) { firDiagnostic ->
         AbstractPropertyInNonAbstractClassImpl(
-            firSymbolBuilder.buildSymbol(firDiagnostic.a as FirDeclaration<*>),
+            firSymbolBuilder.buildSymbol(firDiagnostic.a as FirDeclaration),
             firSymbolBuilder.classifierBuilder.buildClassLikeSymbol(firDiagnostic.b),
             firDiagnostic as FirPsiDiagnostic,
             token,
