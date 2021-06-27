@@ -227,22 +227,20 @@ class IrDescriptorBasedFunctionFactory(
         return rDeclaration
     }
 
-    private val kotlinPackageFragment: IrPackageFragment by lazy {
+    private val kotlinPackageFragment: IrPackageFragment =
         irBuiltIns.builtIns.getFunction(0).let {
             symbolTable.declareExternalPackageFragment(it.containingDeclaration as PackageFragmentDescriptor)
         }
-    }
-    private val kotlinCoroutinesPackageFragment: IrPackageFragment by lazy {
+
+    private val kotlinCoroutinesPackageFragment: IrPackageFragment =
         irBuiltIns.builtIns.getSuspendFunction(0).let {
             symbolTable.declareExternalPackageFragment(it.containingDeclaration as PackageFragmentDescriptor)
         }
-    }
 
-    private val kotlinReflectPackageFragment: IrPackageFragment by lazy {
+    private val kotlinReflectPackageFragment: IrPackageFragment =
         irBuiltIns.builtIns.kProperty.let {
             symbolTable.declareExternalPackageFragment(it.containingDeclaration as PackageFragmentDescriptor)
         }
-    }
 
     private fun IrClass.createThisReceiver(descriptorFactory: FunctionDescriptorFactory): IrValueParameter {
         val vDescriptor = descriptorFactory.classReceiverParameterDescriptor()

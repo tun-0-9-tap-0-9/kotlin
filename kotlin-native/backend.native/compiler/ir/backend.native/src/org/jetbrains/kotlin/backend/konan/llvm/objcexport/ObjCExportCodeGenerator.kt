@@ -22,6 +22,7 @@ import org.jetbrains.kotlin.descriptors.konan.CompiledKlibModuleOrigin
 import org.jetbrains.kotlin.descriptors.konan.CurrentKlibModuleOrigin
 import org.jetbrains.kotlin.incremental.components.NoLookupLocation
 import org.jetbrains.kotlin.ir.declarations.*
+import org.jetbrains.kotlin.ir.descriptors.IrBuiltInsOverDescriptors
 import org.jetbrains.kotlin.ir.expressions.IrClassReference
 import org.jetbrains.kotlin.ir.expressions.IrVararg
 import org.jetbrains.kotlin.ir.symbols.IrClassSymbol
@@ -664,42 +665,43 @@ private fun ObjCExportCodeGenerator.generateContinuationToCompletionConverter(
 }
 
 // TODO: find out what to use instead here and in the dependent code
-//private val ObjCExportBlockCodeGenerator.mappedFunctionNClasses get() =
-//    context.ir.symbols.functionIrClassFactory.builtFunctionNClasses
-//        .filter { it.descriptor.isMappedFunctionClass() }
+private val ObjCExportBlockCodeGenerator.mappedFunctionNClasses get() =
+    // failed attempt to migrate to descriptor-less IrBuiltIns
+    ((context.irBuiltIns as IrBuiltInsOverDescriptors).functionFactory as BuiltInFictitiousFunctionIrClassFactory).builtFunctionNClasses
+        .filter { it.descriptor.isMappedFunctionClass() }
 
 private fun ObjCExportBlockCodeGenerator.emitFunctionConverters() {
-//    require(context.producedLlvmModuleContainsStdlib)
-//    mappedFunctionNClasses.forEach { functionClass ->
-//        val converter = kotlinFunctionToBlockConverter(BlockPointerBridge(functionClass.arity, returnsVoid = false))
-//
-//        val writableTypeInfoValue = buildWritableTypeInfoValue(converter = constPointer(converter))
-//        setOwnWritableTypeInfo(functionClass.irClass, writableTypeInfoValue)
-//    }
+    require(context.producedLlvmModuleContainsStdlib)
+    mappedFunctionNClasses.forEach { functionClass ->
+        val converter = kotlinFunctionToBlockConverter(BlockPointerBridge(functionClass.arity, returnsVoid = false))
+
+        val writableTypeInfoValue = buildWritableTypeInfoValue(converter = constPointer(converter))
+        setOwnWritableTypeInfo(functionClass.irClass, writableTypeInfoValue)
+    }
 }
 
 private fun ObjCExportBlockCodeGenerator.emitBlockToKotlinFunctionConverters() {
     require(context.producedLlvmModuleContainsStdlib)
-//    val functionClassesByArity = mappedFunctionNClasses.associateBy { it.arity }
-//
-//    val arityLimit = (functionClassesByArity.keys.maxOrNull() ?: -1) + 1
-//
-//    val converters = (0 until arityLimit).map { arity ->
-//        functionClassesByArity[arity]?.let {
-//            val bridge = BlockPointerBridge(numberOfParameters = arity, returnsVoid = false)
-//            constPointer(blockToKotlinFunctionConverter(bridge))
-//        } ?: NullPointer(objCToKotlinFunctionType)
-//    }
-//
-//    val ptr = staticData.placeGlobalArray(
-//            "",
-//            pointerType(objCToKotlinFunctionType),
-//            converters
-//    ).pointer.getElementPtr(0)
-//
-//    // Note: defining globals declared in runtime.
-//    staticData.placeGlobal("Kotlin_ObjCExport_blockToFunctionConverters", ptr, isExported = true)
-//    staticData.placeGlobal("Kotlin_ObjCExport_blockToFunctionConverters_size", Int32(arityLimit), isExported = true)
+    val functionClassesByArity = mappedFunctionNClasses.associateBy { it.arity }
+
+    val arityLimit = (functionClassesByArity.keys.maxOrNull() ?: -1) + 1
+
+    val converters = (0 until arityLimit).map { arity ->
+        functionClassesByArity[arity]?.let {
+            val bridge = BlockPointerBridge(numberOfParameters = arity, returnsVoid = false)
+            constPointer(blockToKotlinFunctionConverter(bridge))
+        } ?: NullPointer(objCToKotlinFunctionType)
+    }
+
+    val ptr = staticData.placeGlobalArray(
+            "",
+            pointerType(objCToKotlinFunctionType),
+            converters
+    ).pointer.getElementPtr(0)
+
+    // Note: defining globals declared in runtime.
+    staticData.placeGlobal("Kotlin_ObjCExport_blockToFunctionConverters", ptr, isExported = true)
+    staticData.placeGlobal("Kotlin_ObjCExport_blockToFunctionConverters_size", Int32(arityLimit), isExported = true)
 }
 
 private fun ObjCExportCodeGenerator.emitSpecialClassesConvertions() {
