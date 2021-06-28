@@ -5,18 +5,15 @@
 
 #include "StackTrace.hpp"
 
-#if KONAN_NO_EXCEPTIONS
-#define OMIT_BACKTRACE 1
-#endif
-#ifndef OMIT_BACKTRACE
-#if USE_GCC_UNWIND
+#if KONAN_NO_BACKTRACE
+// Nothing to include
+#elif USE_GCC_UNWIND
 // GCC unwinder for backtrace.
 #include <unwind.h>
 #else
 // Glibc backtrace() function.
 #include <execinfo.h>
 #endif
-#endif // OMIT_BACKTRACE
 
 #include "Common.h"
 #include "ExecFormat.h"
@@ -79,7 +76,7 @@ _Unwind_Reason_Code unwindCallback(struct _Unwind_Context* context, void* arg) {
 
 THREAD_LOCAL_VARIABLE bool disallowSourceInfo = false;
 
-#if !OMIT_BACKTRACE && !USE_GCC_UNWIND
+#if !KONAN_NO_BACKTRACE && !USE_GCC_UNWIND
 SourceInfo getSourceInfo(KConstRef stackTrace, int32_t index) {
     return disallowSourceInfo ? SourceInfo{.fileName = nullptr, .lineNumber = -1, .column = -1}
                               : Kotlin_getSourceInfo(*PrimitiveArrayAddressOfElementAt<KNativePtr>(stackTrace->array(), index));
@@ -91,7 +88,7 @@ SourceInfo getSourceInfo(KConstRef stackTrace, int32_t index) {
 // TODO: this implementation is just a hack, e.g. the result is inexact;
 // however it is better to have an inexact stacktrace than not to have any.
 extern "C" NO_INLINE OBJ_GETTER0(Kotlin_getCurrentStackTrace) {
-#if OMIT_BACKTRACE
+#if KONAN_NO_BACKTRACE
     return AllocArrayInstance(theNativePtrArrayTypeInfo, 0, OBJ_RESULT);
 #else
     // Skips first 2 elements as irrelevant: this function and primary Throwable constructor.
@@ -118,11 +115,11 @@ extern "C" NO_INLINE OBJ_GETTER0(Kotlin_getCurrentStackTrace) {
     }
     RETURN_OBJ(result);
 #endif
-#endif // !OMIT_BACKTRACE
+#endif // !KONAN_NO_BACKTRACE
 }
 
 OBJ_GETTER(kotlin::GetStackTraceStrings, KConstRef stackTrace) {
-#if OMIT_BACKTRACE
+#if KONAN_NO_BACKTRACE
     ObjHeader* result = AllocArrayInstance(theArrayTypeInfo, 1, OBJ_RESULT);
     ObjHolder holder;
     CreateStringFromCString("<UNIMPLEMENTED>", holder.slot());
@@ -177,7 +174,7 @@ OBJ_GETTER(kotlin::GetStackTraceStrings, KConstRef stackTrace) {
     }
 #endif
     RETURN_OBJ(strings);
-#endif // !OMIT_BACKTRACE
+#endif // !KONAN_NO_BACKTRACE
 }
 
 void kotlin::DisallowSourceInfo() {
