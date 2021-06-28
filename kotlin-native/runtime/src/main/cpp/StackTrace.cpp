@@ -22,6 +22,8 @@
 #include "Natives.h"
 #include "SourceInfo.h"
 
+#include "utf8.h"
+
 using namespace kotlin;
 
 namespace {
@@ -179,4 +181,25 @@ OBJ_GETTER(kotlin::GetStackTraceStrings, KConstRef stackTrace) {
 
 void kotlin::DisallowSourceInfo() {
     disallowSourceInfo = true;
+}
+
+void kotlin::PrintStackTraceStderr() {
+    // TODO: This is intended for runtime use. Try to avoid memory allocations and signal unsafe functions.
+
+    kotlin::ThreadStateGuard guard(kotlin::ThreadState::kRunnable, true);
+
+    ObjHolder stackTrace;
+    Kotlin_getCurrentStackTrace(stackTrace.slot());
+    ObjHolder stackTraceStrings;
+    kotlin::GetStackTraceStrings(stackTrace.obj(), stackTraceStrings.slot());
+    ArrayHeader* stackTraceStringsArray = stackTraceStrings.obj()->array();
+    for (uint32_t i = 0; i < stackTraceStringsArray->count_; ++i) {
+        ArrayHeader* symbol = (*ArrayAddressOfElementAt(stackTraceStringsArray, i))->array();
+        auto* utf16 = CharArrayAddressOfElementAt(symbol, 0);
+        KStdString utf8;
+        utf8::with_replacement::utf16to8(utf16, utf16 + symbol->count_, std::back_inserter(utf8));
+        kotlin::ThreadStateGuard guard(kotlin::ThreadState::kNative);
+        konan::consoleErrorUtf8(utf8.c_str(), utf8.size());
+        konan::consoleErrorf("\n");
+    }
 }

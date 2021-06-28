@@ -13,6 +13,8 @@ OBJ_GETTER(GetStackTraceStrings, KConstRef stackTrace);
 // It's not always safe to extract SourceInfo during unhandled exception termination.
 void DisallowSourceInfo();
 
+void PrintStackTraceStderr();
+
 } // namespace kotlin
 
 // Returns current stacktrace as Array<String>.
