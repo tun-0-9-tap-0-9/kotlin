@@ -21,6 +21,7 @@ import org.jetbrains.kotlin.gradle.util.createTempDir
 import org.jetbrains.kotlin.gradle.util.modify
 import org.jetbrains.kotlin.gradle.util.runProcess
 import org.jetbrains.kotlin.konan.target.HostManager
+import org.jetbrains.kotlin.konan.target.KonanTarget
 import org.junit.AfterClass
 import org.junit.Assume.assumeTrue
 import org.junit.Before
@@ -1406,6 +1407,9 @@ class CocoaPodsIT : BaseGradleIT() {
             if (cocoapodsInstallationRequired) {
                 if (cocoapodsInstallationAllowed) {
                     gem("install", "--install-dir", cocoapodsInstallationRoot.absolutePath, "cocoapods", "cocoapods-generate")
+                    if (HostManager.host == KonanTarget.MACOS_ARM64) {
+                        gem("install", "--install-dir", cocoapodsInstallationRoot.absolutePath, "ffi")
+                    }
                 } else {
                     fail(
                         """
@@ -1454,7 +1458,14 @@ class CocoaPodsIT : BaseGradleIT() {
         }
 
         private fun gem(vararg args: String): String {
-            val result = runProcess(listOf("gem", *args), File("."))
+            // https://stackoverflow.com/questions/64901180/running-cocoapods-on-apple-silicon-m1
+            val command = if (HostManager.host == KonanTarget.MACOS_ARM64) {
+                listOf("arch", "-x86_64", "gem", *args)
+            } else {
+                listOf("gem", *args)
+            }
+            println("Run command: ${command.joinToString(separator = " ")}")
+            val result = runProcess(command, File("."), options = BuildOptions(forceOutputToStdout = true))
             check(result.isSuccessful) {
                 "Process 'gem ${args.joinToString(separator = " ")}' exited with error code ${result.exitCode}. See log for details."
             }
