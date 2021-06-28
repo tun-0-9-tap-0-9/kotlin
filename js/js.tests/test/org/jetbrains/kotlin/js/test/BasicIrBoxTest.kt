@@ -153,7 +153,7 @@ abstract class BasicIrBoxTest(
                     es6mode = runEs6Mode,
                     multiModule = splitPerModule || perModule,
                     propertyLazyInitialization = propertyLazyInitialization,
-                    lowerPerModule = lowerPerModule
+                    lowerPerModule = lowerPerModule,
                     verifySignatures = !skipMangleVerification
                 )
 
