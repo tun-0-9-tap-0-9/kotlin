@@ -244,6 +244,18 @@ public class K2JVMCompileMojo extends KotlinCompileMojoBase<K2JVMCompilerArgumen
             List<File> sourceRoots
     ) throws MojoExecutionException {
         getLog().warn("Using experimental Kotlin incremental compilation");
+
+        // Check java version
+        val javaVersion = System.getProperty("java.specification.version")?.toInt();
+
+        if (javaVersion != null && javaVersion >= 16) {
+            getLog().error("You are using JDK version >= 16. " +
+                           "Please add \"MAVEN_OPTS=--illegal-access=permit\", if you are using command line. " +
+                           "Othrwise, if you build with Intellij Idea, add \"--illegal-access=permit\" " +
+                           "to Idea -> Settings -> Build, Execution, Deployment -> Build Tools -> Maven -> Runner -> VM options");
+            return ExitCode.COMPILATION_ERROR;
+        }
+
         File cachesDir = getCachesDir();
         //noinspection ResultOfMethodCallIgnored
         cachesDir.mkdirs();
