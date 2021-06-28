@@ -1,3 +1,25 @@
+# What this repository is
+
+This repository contains sources of:
+1. Kotlin compiler (frontend +  jvm, js, wasm, native backends).
+2. Plugins extending compiler functionality.
+3. Kotlin standard library and others including
+    * kotlin-test
+    * kotlinx-metadata
+    * kotlin-reflect 
+5. Build systems support: Gradle (incl. Dukat), Maven, JPS and Ant. 
+7. Kotlin scripting support.
+
+# What this repository is not
+
+There are other activities around the language residing if different repositories.
+
+* Intellij IDEA supports Kotlin via corresponding [plugin](https://plugins.jetbrains.com/plugin/6954-kotlin) comprising the compiler and IDE specifics (code highlighting,
+intentions, inspections, refactorings, etc.).\
+Starting from intellij version `2021.2` (i.e. branch `212`) its code is a part of
+[JetBrains/intellij](https://github.com/JetBrains/intellij-community) repository.\
+Platforms `2021.1` (branch `211`) and earlier get plugin built from [JetBrains/intellij-kotlin](https://github.com/JetBrains/intellij-kotlin).
+
 # Contributing
 
 We love contributions! There is [a lot to do on Kotlin](https://youtrack.jetbrains.com/issues/KT) and on the
@@ -35,11 +57,6 @@ git config --global pull.rebase true
 ```
 This will avoid your local repo having too many merge commits
 which will help keep your pull request simple and easy to apply.
-
-## Intention/QuickFix/Inspection
-
-Please read the [Intention/QuickFix/Inspection Quick Notes](intentions_inspections_quickfixes.md) if you are
-going to implement an inspection or intention or add a quick fix.
 
 ## Checklist
 
