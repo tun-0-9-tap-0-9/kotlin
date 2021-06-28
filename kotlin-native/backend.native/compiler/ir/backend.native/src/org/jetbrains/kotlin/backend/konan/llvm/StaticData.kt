@@ -86,6 +86,10 @@ internal class StaticData(override val context: Context): ContextUtils {
             LLVMSetSection(llvmGlobal, name)
         }
 
+        fun setExternallyInitialized(value: Boolean) {
+            LLVMSetExternallyInitialized(llvmGlobal, if (value) 1 else 0)
+        }
+
         val pointer = Pointer.to(this)
     }
 

@@ -147,6 +147,9 @@ private class CallsChecker(val context: Context, goodFunctions: List<String>) {
     }
 }
 
+private const val functionListGlobal = "Kotlin_callsCheckerKnownFunctions"
+private const val functionListSizeGlobal = "Kotlin_callsCheckerKnownFunctionsCount"
+
 internal fun checkLlvmModuleExternalCalls(context: Context) {
     val staticData = context.llvm.staticData
 
@@ -173,6 +176,9 @@ internal fun checkLlvmModuleExternalCalls(context: Context) {
     getFunctions(context.llvmModule!!)
             .filter { !it.isExternalFunction() && it.name !in ignoredFunctions }
             .forEach(checker::processFunction)
+    // otherwise optimiser can inline it
+    staticData.getGlobal(functionListGlobal)?.setExternallyInitialized(true);
+    staticData.getGlobal(functionListSizeGlobal)?.setExternallyInitialized(true);
     context.verifyBitCode()
 }
 
@@ -185,11 +191,11 @@ internal fun addFunctionsListSymbolForChecker(context: Context) {
             .map { constPointer(it).bitcast(int8TypePtr) }
             .toList()
     val functionsArray = staticData.placeGlobalConstArray("", int8TypePtr, functions)
-    staticData.getGlobal("Kotlin_callsCheckerKnownFunctions")
+    staticData.getGlobal(functionListGlobal)
             ?.setInitializer(functionsArray)
-            ?: throw IllegalStateException("Kotlin_callsCheckerKnownFunctions global not found")
-    staticData.getGlobal("Kotlin_callsCheckerKnownFunctionsCount")
+            ?: throw IllegalStateException("$functionListGlobal global not found")
+    staticData.getGlobal(functionListSizeGlobal)
             ?.setInitializer(Int32(functions.size))
-            ?: throw IllegalStateException("Kotlin_callsCheckerKnownFunctionsCount global not found")
+            ?: throw IllegalStateException("$functionListSizeGlobal global not found")
     context.verifyBitCode()
 }
