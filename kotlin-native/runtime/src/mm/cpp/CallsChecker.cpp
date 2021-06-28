@@ -19,10 +19,7 @@ using namespace kotlin;
 extern "C" const void **Kotlin_callsCheckerKnownFunctions = nullptr;
 extern "C" int Kotlin_callsCheckerKnownFunctionsCount = 0;
 
-
-namespace {
-
-constexpr const char* goodFunctionNames[] = {
+extern "C" const char* Kotlin_callsCheckerGoodFunctionNames[] = {
         "\x01_close",
         "\x01_mprotect",
 
@@ -244,13 +241,15 @@ constexpr const char* goodFunctionNames[] = {
         "llvm.x86.ssse3.*",
 };
 
+namespace {
+
 class KnownFunctionChecker {
 public:
     KnownFunctionChecker() {
         for (int i = 0; i < Kotlin_callsCheckerKnownFunctionsCount; i++) {
             known_functions_.insert(Kotlin_callsCheckerKnownFunctions[i]);
         }
-        std::copy(std::begin(goodFunctionNames), std::end(goodFunctionNames), std::begin(good_names_copy_));
+        std::copy(std::begin(Kotlin_callsCheckerGoodFunctionNames), std::end(Kotlin_callsCheckerGoodFunctionNames), std::begin(good_names_copy_));
         std::sort(std::begin(good_names_copy_), std::end(good_names_copy_));
     }
 
@@ -279,7 +278,7 @@ public:
 
 private:
     KStdUnorderedSet<const void*> known_functions_;
-    std::string_view good_names_copy_[sizeof(goodFunctionNames) / sizeof(goodFunctionNames[0])];
+    std::string_view good_names_copy_[sizeof(Kotlin_callsCheckerGoodFunctionNames) / sizeof(Kotlin_callsCheckerGoodFunctionNames[0])];
 };
 
 [[clang::no_destroy]] const KnownFunctionChecker checker;

@@ -26,7 +26,18 @@ private fun LLVMValueRef.isLLVMBuiltin(): Boolean {
 }
 
 
-private class CallsChecker(val context: Context) {
+private class CallsChecker(val context: Context, goodFunctions: List<String>) {
+    private val goodFunctionsExact = goodFunctions.filterNot { it.endsWith("*") }.toSet()
+    private val goodFunctionsByPrefix = goodFunctions.filter { it.endsWith("*") }.map { it.substring(0, it.length - 1) }.sorted()
+
+    private fun isGoodFunction(name: String) : Boolean {
+        if (name in goodFunctionsExact) return true
+        val insertionPoint = goodFunctionsByPrefix.binarySearch(name).let { if (it < 0) it.inv() else it }
+        if (insertionPoint < goodFunctionsByPrefix.size && name.startsWith(goodFunctionsByPrefix[insertionPoint])) return true
+        if (insertionPoint > 0 && name.startsWith(goodFunctionsByPrefix[insertionPoint - 1])) return true
+        return false
+    }
+
     private fun externalFunction(name: String, type: LLVMTypeRef) =
             context.llvm.externalFunction(name, type, context.stdlibModule.llvmSymbolOrigin)
 
@@ -78,6 +89,7 @@ private class CallsChecker(val context: Context) {
 
         for (call in calls) {
             val calleeInfo = call.getPossiblyExternalCalledFunction() ?: continue
+            if (calleeInfo.name != null && isGoodFunction(calleeInfo.name)) continue
             LLVMPositionBuilderBefore(builder, call)
             LLVMBuilderResetDebugLocation(builder)
             val callSiteDescription: String
@@ -151,7 +163,13 @@ internal fun checkLlvmModuleExternalCalls(context: Context) {
         }.toSet()
     } ?: emptySet()
 
-    val checker = CallsChecker(context)
+    val goodFunctions = staticData.getGlobal("Kotlin_callsCheckerGoodFunctionNames")?.getInitializer()?.run {
+        getOperands(this).map {
+            LLVMGetInitializer(LLVMGetOperand(it, 0))!!.getAsCString()
+        }.toList()
+    } ?: emptyList()
+
+    val checker = CallsChecker(context, goodFunctions)
     getFunctions(context.llvmModule!!)
             .filter { !it.isExternalFunction() && it.name !in ignoredFunctions }
             .forEach(checker::processFunction)
