@@ -15,6 +15,7 @@ import org.jetbrains.kotlin.descriptors.PropertyDescriptor
 import org.jetbrains.kotlin.ir.builders.*
 import org.jetbrains.kotlin.ir.declarations.*
 import org.jetbrains.kotlin.ir.IrBuiltIns
+import org.jetbrains.kotlin.ir.descriptors.IrBuiltInsOverDescriptors
 import org.jetbrains.kotlin.ir.expressions.IrExpression
 import org.jetbrains.kotlin.ir.expressions.impl.IrEnumConstructorCallImpl
 import org.jetbrains.kotlin.ir.expressions.impl.IrExpressionBodyImpl
@@ -153,7 +154,9 @@ internal class CEnumClassGenerator(
 
     private fun createEnumPrimaryConstructor(descriptor: ClassDescriptor): IrConstructor {
         val irConstructor = createConstructor(descriptor.unsubstitutedPrimaryConstructor!!)
-        val enumConstructor = context.irBuiltIns.enumClass.constructors.single()
+        val builtIns = (irBuiltIns as IrBuiltInsOverDescriptors).builtIns
+        val enumConstructor = builtIns.enum.constructors.single()
+        val constructorSymbol = symbolTable.referenceConstructor(enumConstructor)
         val classSymbol = symbolTable.referenceClass(descriptor)
         val type = descriptor.defaultType.toIrType()
         postLinkageSteps.add {
@@ -162,9 +165,9 @@ internal class CEnumClassGenerator(
                         +IrEnumConstructorCallImpl(
                                 startOffset, endOffset,
                                 context.irBuiltIns.unitType,
-                                enumConstructor,
+                                constructorSymbol,
                                 typeArgumentsCount = 1, // kotlin.Enum<T> has a single type parameter.
-                                valueArgumentsCount = enumConstructor.owner.valueParameters.size
+                                valueArgumentsCount = constructorSymbol.owner.valueParameters.size
                         ).apply {
                             putTypeArgument(0, type)
                         }
