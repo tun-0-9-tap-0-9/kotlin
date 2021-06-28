@@ -6,18 +6,14 @@
 package org.jetbrains.kotlin.backend.common.serialization
 
 import org.jetbrains.kotlin.backend.common.serialization.signature.IdSignatureSerializer
-import org.jetbrains.kotlin.descriptors.ClassKind
-import org.jetbrains.kotlin.descriptors.DescriptorVisibilities
-import org.jetbrains.kotlin.ir.IrElement
-import org.jetbrains.kotlin.ir.declarations.*
 import org.jetbrains.kotlin.backend.common.serialization.signature.PublicIdSignatureComputer
 import org.jetbrains.kotlin.ir.declarations.IrDeclaration
+import org.jetbrains.kotlin.ir.declarations.IrFile
 import org.jetbrains.kotlin.ir.declarations.IrSymbolOwner
 import org.jetbrains.kotlin.ir.descriptors.IrBuiltIns
-import org.jetbrains.kotlin.ir.expressions.IrFunctionExpression
-import org.jetbrains.kotlin.ir.util.*
-import org.jetbrains.kotlin.ir.visitors.IrElementVisitorVoid
-import org.jetbrains.kotlin.ir.visitors.acceptChildrenVoid
+import org.jetbrains.kotlin.ir.util.IdSignature
+import org.jetbrains.kotlin.ir.util.KotlinMangler
+import org.jetbrains.kotlin.ir.util.render
 
 
 interface IdSignatureClashTracker {
@@ -47,9 +43,9 @@ abstract class GlobalDeclarationTable(
         }
     }
 
-    open fun computeSignatureByDeclaration(declaration: IrDeclaration): IdSignature {
+    open fun computeSignatureByDeclaration(declaration: IrDeclaration, compatibleMode: Boolean): IdSignature {
         return table.getOrPut(declaration) {
-            publicIdSignatureComputer.composePublicIdSignature(declaration).also { clashTracker.commit(declaration, it) }
+            publicIdSignatureComputer.composePublicIdSignature(declaration, compatibleMode).also { clashTracker.commit(declaration, it) }
         }
     }
 
@@ -63,8 +59,6 @@ open class DeclarationTable(globalTable: GlobalDeclarationTable) {
     open val signaturer: IdSignatureSerializer = IdSignatureSerializer(globalTable.publicIdSignatureComputer, this)
 
     fun inFile(file: IrFile?, block: () -> Unit) {
-        signaturer.reset()
-        signaturer.table = this
         signaturer.inFile(file?.symbol, block)
     }
 
@@ -86,7 +80,7 @@ open class DeclarationTable(globalTable: GlobalDeclarationTable) {
         tryComputeBackendSpecificSignature(declaration)?.let { return it }
         return if (declaration.isLocalDeclaration(compatibleMode)) {
             allocateIndexedSignature(declaration, compatibleMode)
-        } else globalDeclarationTable.computeSignatureByDeclaration(declaration)
+        } else globalDeclarationTable.computeSignatureByDeclaration(declaration, compatibleMode)
     }
 
     fun privateDeclarationSignature(declaration: IrDeclaration, compatibleMode: Boolean, builder: () -> IdSignature): IdSignature {

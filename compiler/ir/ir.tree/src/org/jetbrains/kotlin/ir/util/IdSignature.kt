@@ -158,7 +158,7 @@ sealed class IdSignature {
         override fun hashCode(): Int = accessorSignature.hashCode()
     }
 
-    class FileSignature(private val fileSymbol: IrFileSymbol) : IdSignature() {
+    class FileSignature(val fileSymbol: IrFileSymbol) : IdSignature() {
         override fun equals(other: Any?): Boolean = other is FileSignature && fileSymbol == other.fileSymbol
 
         override fun hashCode(): Int = fileSymbol.owner.hashCode()
@@ -338,14 +338,14 @@ sealed class IdSignature {
     }
 
     class GlobalFileLocalSignature(val container: IdSignature, val id: Long, val filePath: String) : IdSignature() {
-        override val isPublic: Boolean get() = true
+        override val isPubliclyVisible: Boolean get() = true
 
         override fun packageFqName(): FqName = container.packageFqName()
 
         override fun topLevelSignature(): IdSignature {
             val topLevelContainer = container.topLevelSignature()
             if (topLevelContainer === container) {
-                if (topLevelContainer is PublicSignature && topLevelContainer.declarationFqName.isEmpty()) {
+                if (topLevelContainer is CommonSignature && topLevelContainer.declarationFqName.isEmpty()) {
                     // private top level
                     return this
                 }
@@ -365,7 +365,7 @@ sealed class IdSignature {
 
     // Used to reference local variable and value parameters in function
     class GlobalScopeLocalDeclaration(val id: Int, val description: String = "<no description>", val filePath: String) : IdSignature() {
-        override val isPublic: Boolean get() = false
+        override val isPubliclyVisible: Boolean get() = false
 
         override val hasTopLevel: Boolean get() = false
 
@@ -383,8 +383,8 @@ sealed class IdSignature {
         override fun hashCode(): Int = id * 31 + filePath.hashCode()
     }
 
-    class LoweredDeclarationSignature(val original: IdSignature, val stage: Int, val index: Int): IdSignature() {
-        override val isPublic: Boolean get() = true
+    class LoweredDeclarationSignature(val original: IdSignature, val stage: Int, val index: Int) : IdSignature() {
+        override val isPubliclyVisible: Boolean get() = true
 
         override val hasTopLevel: Boolean get() = false
 

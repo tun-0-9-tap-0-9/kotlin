@@ -8,12 +8,11 @@ package org.jetbrains.kotlin.backend.common.serialization
 import org.jetbrains.kotlin.backend.common.serialization.encodings.BinarySymbolData
 import org.jetbrains.kotlin.backend.common.serialization.proto.Actual
 import org.jetbrains.kotlin.backend.common.serialization.proto.IdSignature.IdsigCase.*
+import org.jetbrains.kotlin.ir.declarations.path
 import org.jetbrains.kotlin.ir.symbols.IrFileSymbol
 import org.jetbrains.kotlin.ir.symbols.IrPropertySymbol
 import org.jetbrains.kotlin.ir.symbols.IrSimpleFunctionSymbol
 import org.jetbrains.kotlin.ir.symbols.IrSymbol
-import org.jetbrains.kotlin.ir.declarations.path
-import org.jetbrains.kotlin.ir.symbols.*
 import org.jetbrains.kotlin.ir.symbols.impl.IrAnonymousInitializerSymbolImpl
 import org.jetbrains.kotlin.ir.symbols.impl.IrLocalDelegatedPropertySymbolImpl
 import org.jetbrains.kotlin.ir.symbols.impl.IrValueParameterSymbolImpl
@@ -25,11 +24,11 @@ import org.jetbrains.kotlin.backend.common.serialization.proto.AccessorIdSignatu
 import org.jetbrains.kotlin.backend.common.serialization.proto.CommonIdSignature as ProtoCommonIdSignature
 import org.jetbrains.kotlin.backend.common.serialization.proto.CompositeSignature as ProtoCompositeSignature
 import org.jetbrains.kotlin.backend.common.serialization.proto.FileLocalIdSignature as ProtoFileLocalIdSignature
-import org.jetbrains.kotlin.backend.common.serialization.proto.ScopeLocalIdSignature as ProtoScopeLocalIdSignature
 import org.jetbrains.kotlin.backend.common.serialization.proto.FileSignature as ProtoFileSignature
 import org.jetbrains.kotlin.backend.common.serialization.proto.IdSignature as ProtoIdSignature
 import org.jetbrains.kotlin.backend.common.serialization.proto.LocalSignature as ProtoLocalSignature
 import org.jetbrains.kotlin.backend.common.serialization.proto.LoweredIdSignature as ProtoLoweredIdSignature
+import org.jetbrains.kotlin.backend.common.serialization.proto.ScopeLocalIdSignature as ProtoScopeLocalIdSignature
 
 class IrSymbolDeserializer(
     val symbolTable: ReferenceSymbolTable,
@@ -43,8 +42,6 @@ class IrSymbolDeserializer(
     val deserializedSymbols: MutableMap<IdSignature, IrSymbol> = mutableMapOf(), // Per-file signature cache. TODO: do we really need it?
     val deserializePublicSymbol: (IdSignature, BinarySymbolData.SymbolKind) -> IrSymbol,
 ) {
-
-    val deserializedSymbols = mutableMapOf<IdSignature, IrSymbol>()
 
     private val fileSignature: IdSignature.FileSignature = IdSignature.FileSignature(fileSymbol)
 
@@ -73,7 +70,7 @@ class IrSymbolDeserializer(
             BinarySymbolData.SymbolKind.RECEIVER_PARAMETER_SYMBOL -> IrValueParameterSymbolImpl()
             BinarySymbolData.SymbolKind.LOCAL_DELEGATED_PROPERTY_SYMBOL ->
                 IrLocalDelegatedPropertySymbolImpl()
-            BinarySymbolData.SymbolKind.FILE_SYMBOL -> (idSig as IdSignature.FileSignature).symbol
+            BinarySymbolData.SymbolKind.FILE_SYMBOL -> (idSig as IdSignature.FileSignature).fileSymbol
             else -> error("Unexpected classifier symbol kind: $symbolKind for signature $idSig")
         }
     }

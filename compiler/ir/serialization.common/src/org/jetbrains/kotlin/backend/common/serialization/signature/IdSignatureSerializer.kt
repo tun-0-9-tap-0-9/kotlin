@@ -203,17 +203,21 @@ open class IdSignatureSerializer(
     private val mangler: KotlinMangler.IrMangler = publicSignatureBuilder.mangler
 
     override fun computeSignature(declaration: IrDeclaration): IdSignature {
-        publicSignatureBuilder.composePublicIdSignature(declaration)
+        return publicSignatureBuilder.computeSignature(declaration)
     }
 
     fun composeSignatureForDeclaration(declaration: IrDeclaration, compatibleMode: Boolean): IdSignature {
         return if (mangler.run { declaration.isExported(compatibleMode) }) {
-            publicSignatureBuilder.composePublicIdSignature(declaration)
-        } else composeFileLocalIdSignature(declaration)
+            publicSignatureBuilder.composePublicIdSignature(declaration, compatibleMode)
+        } else composeFileLocalIdSignature(declaration, compatibleMode)
     }
 
     private var localIndex: Long = localIndexOffset
     private var scopeIndex: Int = scopeIndexOffset
+
+    override fun inFile(file: IrFileSymbol?, block: () -> Unit) {
+        publicSignatureBuilder.inFile(file, block)
+    }
 
     private fun composeContainerIdSignature(container: IrDeclarationParent, compatibleMode: Boolean): IdSignature =
         when (container) {
@@ -222,22 +226,18 @@ open class IdSignatureSerializer(
             else -> error("Unexpected container ${container.render()}")
         }
 
-    fun composePublicIdSignature(declaration: IrDeclaration): IdSignature {
-        return PublicIdSigBuilder().buildSignature(declaration)
-    }
-
     fun composeFileLocalIdSignature(declaration: IrDeclaration, compatibleMode: Boolean): IdSignature {
         assert(!mangler.run { declaration.isExported(compatibleMode) })
 
         return table.privateDeclarationSignature(declaration, compatibleMode) {
             when (declaration) {
-                is IrValueDeclaration -> IdSignature.ScopeLocalDeclaration(scopeCounter++, declaration.name.asString())
-                is IrAnonymousInitializer -> IdSignature.ScopeLocalDeclaration(scopeCounter++, "ANON INIT")
-                is IrLocalDelegatedProperty -> IdSignature.ScopeLocalDeclaration(scopeCounter++, declaration.name.asString())
+                is IrValueDeclaration -> IdSignature.ScopeLocalDeclaration(scopeIndex++, declaration.name.asString())
+                is IrAnonymousInitializer -> IdSignature.ScopeLocalDeclaration(scopeIndex++, "ANON INIT")
+                is IrLocalDelegatedProperty -> IdSignature.ScopeLocalDeclaration(scopeIndex++, declaration.name.asString())
                 is IrField -> {
                     val p = declaration.correspondingPropertySymbol?.let { composeSignatureForDeclaration(it.owner, true) }
                         ?: composeContainerIdSignature(declaration.parent, compatibleMode)
-                    IdSignature.FileLocalSignature(p, ++localCounter)
+                    IdSignature.FileLocalSignature(p, ++localIndex)
                 }
                 is IrSimpleFunction -> {
                     val parent = declaration.parent
@@ -248,7 +248,7 @@ open class IdSignatureSerializer(
                         if (declaration.isOverridableFunction()) {
                             mangler.run { declaration.signatureMangle() }
                         } else {
-                            ++localCounter
+                            ++localIndex
                         },
                         declaration.render()
                     )
@@ -261,13 +261,13 @@ open class IdSignatureSerializer(
                         if (declaration.isOverridableProperty()) {
                             mangler.run { declaration.signatureMangle() }
                         } else {
-                            ++localCounter
+                            ++localIndex
                         },
                         declaration.render()
                     )
                 }
                 else -> {
-                    IdSignature.FileLocalSignature(composeContainerIdSignature(declaration.parent, compatibleMode), ++localCounter, declaration.render())
+                    IdSignature.FileLocalSignature(composeContainerIdSignature(declaration.parent, compatibleMode), ++localIndex, declaration.render())
                 }
             }
         }
