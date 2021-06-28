@@ -79,6 +79,7 @@ private class CallsChecker(val context: Context) {
         for (call in calls) {
             val calleeInfo = call.getPossiblyExternalCalledFunction() ?: continue
             LLVMPositionBuilderBefore(builder, call)
+            LLVMBuilderResetDebugLocation(builder)
             val callSiteDescription: String
             val calledName: String?
             val calledPtrLlvm: LLVMValueRef?
