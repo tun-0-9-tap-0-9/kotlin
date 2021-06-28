@@ -12,6 +12,7 @@ import org.jetbrains.kotlin.backend.konan.ir.*
 import org.jetbrains.kotlin.builtins.StandardNames
 import org.jetbrains.kotlin.ir.IrBuiltIns
 import org.jetbrains.kotlin.ir.declarations.*
+import org.jetbrains.kotlin.ir.descriptors.IrBuiltInsOverDescriptors
 import org.jetbrains.kotlin.ir.types.*
 import org.jetbrains.kotlin.ir.util.fqNameForIrSerialization
 import org.jetbrains.kotlin.ir.util.hasAnnotation
@@ -69,12 +70,15 @@ internal fun IrType.isObjCReferenceType(target: KonanTarget, irBuiltIns: IrBuilt
 
     if (isObjCObjectType()) return true
 
-    return when (this) {
-        irBuiltIns.anyType,
-        irBuiltIns.stringType,
-        irBuiltIns.listClass.defaultType , irBuiltIns.mutableListClass.defaultType,
-        irBuiltIns.setClass.defaultType,
-        irBuiltIns.mapClass.defaultType -> true
+    val descriptor = classifierOrNull?.descriptor ?: return false
+    val builtIns = (irBuiltIns as IrBuiltInsOverDescriptors).builtIns
+
+    return when (descriptor) {
+        builtIns.any,
+        builtIns.string,
+        builtIns.list, builtIns.mutableList,
+        builtIns.set,
+        builtIns.map -> true
         else -> false
     }
 }
