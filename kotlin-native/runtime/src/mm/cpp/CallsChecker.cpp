@@ -22,6 +22,8 @@ extern "C" int Kotlin_callsCheckerKnownFunctionsCount = 0;
 extern "C" const char* Kotlin_callsCheckerGoodFunctionNames[] = {
         "\x01_close",
         "\x01_mprotect",
+        "close",
+        "mprotect",
 
         "_ZL15_objc_terminatev", // _objc_terminate()
         "_ZNSt13exception_ptrC1ERKS_", // std::exception_ptr::exception_ptr(std::exception_ptr const&)
@@ -94,6 +96,7 @@ extern "C" const char* Kotlin_callsCheckerGoodFunctionNames[] = {
         "pthread_cond_broadcast",
         "pthread_cond_destroy",
         "pthread_cond_signal",
+        "pthread_cond_init",
         "pthread_create",
         "pthread_equal",
         "pthread_main_np",
@@ -185,10 +188,6 @@ extern "C" const char* Kotlin_callsCheckerGoodFunctionNames[] = {
 
         // @objc Swift._ContiguousArrayStorage.count.getter : Swift.Int
         "$ss23_ContiguousArrayStorageC5countSivgTo",
-        // reabstraction thunk helper from @escaping @callee_guaranteed (@guaranteed __C.KtKotlinUnit?, @guaranteed Swift.Error?) -> () to @escaping @callee_unowned @convention(block) (@unowned __C.KtKotlinUnit?, @unowned __C.NSError?) -> ()
-        "$sSo12KtKotlinUnitCSgs5Error_pSgIeggg_ACSo7NSErrorCSgIeyByy_TR",
-        // reabstraction thunk helper from @escaping @callee_guaranteed (@guaranteed __C.KtInt?, @guaranteed Swift.Error?) -> () to @escaping @callee_unowned @convention(block) (@unowned __C.KtInt?, @unowned __C.NSError?) -> ()
-        "$sSo5KtIntCSgs5Error_pSgIeggg_ACSo7NSErrorCSgIeyByy_TR",
         // @objc Swift.__SwiftDeferredNSArray.count.getter : Swift.Int
         "$ss22__SwiftDeferredNSArrayC5countSivgTo",
         // @objc Swift._ContiguousArrayStorage.objectAt(Swift.Int) -> Swift.Unmanaged<Swift.AnyObject>
@@ -203,8 +202,6 @@ extern "C" const char* Kotlin_callsCheckerGoodFunctionNames[] = {
         "$ss26_SwiftDeferredNSDictionaryC13keyEnumerators13_NSEnumerator_pyFTo",
         // @objc Swift._SwiftDictionaryNSEnumerator.nextObject() -> Swift.AnyObject?
         "$ss28_SwiftDictionaryNSEnumeratorC10nextObjectyXlSgyFTo",
-        // reabstraction thunk helper from @escaping @callee_guaranteed (@in_guaranteed Any?, @guaranteed Swift.Error?) -> () to @escaping @callee_unowned @convention(block) (@unowned Swift.AnyObject?, @unowned __C.NSError?) -> ()
-        "$sypSgs5Error_pSgIegng_yXlSgSo7NSErrorCSgIeyByy_TR",
 
         "llvm.assume",
         "llvm.ceil.*",
